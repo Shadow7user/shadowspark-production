@@ -1,0 +1,387 @@
+// ShadowSpark Technologies - Database Schema v2.0
+// Prisma 7 Compatible - Connection URLs in prisma.config.ts
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// 🔐 AUTHENTICATION & AUTHORIZATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  password      String?   // Hashed with bcrypt (for credentials provider)
+  role          UserRole  @default(CUSTOMER)
+  
+  // Metadata
+  phone         String?
+  company       String?
+  location      String?   // e.g., "Lagos, Nigeria"
+  
+  // Relationships
+  accounts      Account[]
+  sessions      Session[]
+  enrollments   Enrollment[]
+  projects      Project[]       @relation("ClientProjects")
+  ownedProjects Project[]       @relation("ProjectOwner") // For ADMIN role
+  
+  // Soft delete
+  deletedAt     DateTime?
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN         // ShadowSpark team members
+  CUSTOMER      // B2B clients (project management access)
+  STUDENT       // Academy learners (course access only)
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// 🎓 AI ACADEMY MODULE
+// ============================================
+
+model Course {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  title       String
+  description String      @db.Text
+  thumbnail   String      // Cloudinary URL
+  category    CourseCategory
+  level       CourseLevel @default(BEGINNER)
+  
+  // Pricing
+  price       Decimal     @db.Decimal(10, 2)
+  currency    String      @default("NGN")
+  
+  // Content metadata
+  duration    Int?        // Total minutes
+  studentCount Int        @default(0) // Denormalized for performance
+  
+  // Status
+  published   Boolean     @default(false)
+  featured    Boolean     @default(false)
+  
+  // Relationships
+  modules     Module[]
+  enrollments Enrollment[]
+  
+  // Soft delete
+  deletedAt   DateTime?
+  
+  // Timestamps
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  @@index([category])
+  @@index([published])
+  @@index([slug])
+  @@map("courses")
+}
+
+enum CourseCategory {
+  AI_PROMPTING
+  WEB_DEVELOPMENT
+  AUTOMATION
+  BUSINESS
+  GRAPHIC_DESIGN
+  PRODUCT_DESIGN
+  SEO_MARKETING
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  PROFESSIONAL
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?  @db.Text
+  order       Int      // For sorting
+  
+  // Relationships
+  lessons     Lesson[]
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([courseId])
+  @@index([order])
+  @@map("modules")
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?  @db.Text
+  videoUrl    String?  // Cloudinary/YouTube URL
+  duration    Int?     // Minutes
+  order       Int      // For sorting
+  
+  // Content
+  content     String?  @db.Text // Markdown or HTML
+  resources   Json?    // Links, PDFs, code samples (JSON array)
+  
+  // Access control
+  isFree      Boolean  @default(false) // Preview lessons
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([moduleId])
+  @@index([order])
+  @@map("lessons")
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  // Progress tracking
+  progress   Int      @default(0) // Percentage (0-100)
+  completed  Boolean  @default(false)
+  
+  // Payment reference
+  paymentRef String?  @unique // Paystack/Stripe reference
+  
+  // Timestamps
+  enrolledAt DateTime @default(now())
+  completedAt DateTime?
+  
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+// ============================================
+// 💼 PROJECT MANAGEMENT MODULE
+// ============================================
+
+model Project {
+  id          String        @id @default(cuid())
+  
+  // Client relationship
+  clientId    String
+  client      User          @relation("ClientProjects", fields: [clientId], references: [id], onDelete: Cascade)
+  
+  // Project manager (ADMIN)
+  ownerId     String
+  owner       User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  
+  // Project details
+  name        String
+  description String        @db.Text
+  status      ProjectStatus @default(PLANNING)
+  priority    Priority      @default(MEDIUM)
+  
+  // Financial
+  budget      Decimal       @db.Decimal(10, 2)
+  currency    String        @default("NGN")
+  
+  // Dates
+  startDate   DateTime?
+  endDate     DateTime?
+  
+  // Relationships
+  milestones  Milestone[]
+  
+  // Soft delete
+  deletedAt   DateTime?
+  
+  // Timestamps
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@index([clientId])
+  @@index([ownerId])
+  @@index([status])
+  @@map("projects")
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String    @db.Text
+  order       Int       // For sorting
+  
+  // Dates
+  dueDate     DateTime
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([projectId])
+  @@index([order])
+  @@map("milestones")
+}
+
+// ============================================
+// 💳 PAYMENT TRACKING
+// ============================================
+
+model Payment {
+  id            String        @id @default(cuid())
+  
+  // User relationship
+  userId        String
+  
+  // Payment details
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("NGN")
+  status        PaymentStatus @default(PENDING)
+  
+  // Gateway
+  provider      PaymentProvider
+  reference     String        @unique // Paystack/Stripe transaction reference
+  
+  // Metadata
+  metadata      Json?         // Course ID, project ID, etc.
+  
+  // Timestamps
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  @@index([userId])
+  @@index([reference])
+  @@index([status])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  PAYSTACK
+  STRIPE
+}
+
+// ============================================
+// 📝 BLOG & CONTENT (Optional for v1)
+// ============================================
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String   @db.Text
+  content     String   @db.Text // Markdown
+  thumbnail   String?
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  
+  // Status
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  
+  // Author (ADMIN user)
+  authorId    String
+  
+  // Timestamps
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([published])
+  @@map("blog_posts")
+}
