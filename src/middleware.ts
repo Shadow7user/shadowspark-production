@@ -1,33 +1,31 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+﻿import { auth } from '@/lib/auth';
+import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get("authjs.session-token") || 
-                request.cookies.get("__Secure-authjs.session-token");
-  
-  const isLoggedIn = !!token;
-  
-  const isProtectedRoute = 
-    request.nextUrl.pathname.startsWith("/dashboard") ||
-    request.nextUrl.pathname.startsWith("/admin") ||
-    request.nextUrl.pathname.startsWith("/profile");
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const isAuthPage = req.nextUrl.pathname === '/login' || 
+                    req.nextUrl.pathname === '/register';
 
-  const isAuthRoute = 
-    request.nextUrl.pathname === "/login" || 
-    request.nextUrl.pathname === "/register";
-
-  if (isProtectedRoute && !isLoggedIn) {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
+  if (isAuthPage) {
+    if (isLoggedIn) {
+      return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    }
+    return NextResponse.next();
   }
 
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  if (!isLoggedIn) {
+    let from = req.nextUrl.pathname;
+    if (req.nextUrl.search) {
+      from += req.nextUrl.search;
+    }
+    return NextResponse.redirect(
+      new URL(`/login?from=${encodeURIComponent(from)}`, req.nextUrl)
+    );
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)"]
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

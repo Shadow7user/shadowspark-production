@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Run architecture validator
+echo "🔍 Running ShadowSpark architecture validation..."
+npm run validate:architecture
+
+# Capture exit code
+VALIDATION_RESULT=$?
+
+if [ $VALIDATION_RESULT -ne 0 ]; then
+  echo "❌ Architecture validation failed!"
+  echo "💡 Fix the violations before committing."
+  exit 1
+fi
+
+echo "✅ Architecture validation passed!"
