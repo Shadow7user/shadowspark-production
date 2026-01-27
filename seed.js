@@ -101,6 +101,25 @@ async function main() {
     console.log("📧 Architect: architect@shadowspark-technologies.com / architect123");
     console.log("");
 
+    // Seed courses
+    console.log("📚 Seeding courses...");
+    const course = await prisma.course.upsert({
+      where: { slug: "ai-prompting-mastery" },
+      update: {},
+      create: {
+        title: "AI Prompting Mastery",
+        slug: "ai-prompting-mastery",
+        description: "Learn effective AI prompting techniques and best practices to maximize productivity",
+        category: "AI_PROMPTING",
+        level: "BEGINNER",
+        price: 15000,
+        currency: "NGN",
+        published: true,
+        featured: true,
+      },
+    });
+    console.log(`✅ Course: ${course.title}`);
+
   } catch (error) {
     if (error.code === "P2002") {
       console.log("⚠️  Some users already exist (unique constraint)");

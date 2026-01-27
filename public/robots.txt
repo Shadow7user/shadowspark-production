@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shadowspark-technologies.com/sitemap.xml

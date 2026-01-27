@@ -1,10 +1,22 @@
-﻿import { auth } from '@/lib/auth';
+﻿import NextAuth from 'next-auth';
+import authConfig from '@/lib/auth.config';
 import { NextResponse } from 'next/server';
+
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const isAuthPage = req.nextUrl.pathname === '/login' || 
                     req.nextUrl.pathname === '/register';
+  const isPublicPage = req.nextUrl.pathname === '/' ||
+                       req.nextUrl.pathname === '/services' ||
+                       req.nextUrl.pathname === '/contact' ||
+                       req.nextUrl.pathname.startsWith('/courses');
+
+  // Allow public pages
+  if (isPublicPage) {
+    return NextResponse.next();
+  }
 
   if (isAuthPage) {
     if (isLoggedIn) {

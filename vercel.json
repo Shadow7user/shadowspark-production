@@ -1,29 +1,19 @@
 {
   "version": 2,
-  "buildCommand": "pnpm build",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
   "regions": ["fra1"],
-  "env": {
-    "DATABASE_URL": {
-      "description": "Neon PostgreSQL connection string"
-    },
-    "DIRECT_DATABASE_URL": {
-      "description": "Direct Neon PostgreSQL connection string"
-    },
-    "NEXTAUTH_SECRET": {
-      "description": "Secret for NextAuth.js encryption"
-    },
-    "NEXTAUTH_URL": {
-      "description": "URL of your application"
-    },
-    "RESEND_API_KEY": {
-      "description": "API key for Resend email service"
-    },
-    "EMAIL_FROM": {
-      "description": "Default email sender"
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
-  }
+  ]
 }

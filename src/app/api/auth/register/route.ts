@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import type { UserRole } from '@prisma/client';
 
 const RegisterSchema = z.object({
   email: z.string().email(),
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         name,
-        role,
+        role: role as UserRole,
       },
     });
 
