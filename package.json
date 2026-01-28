@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "seed": "node prisma/seed.js",
+    "postinstall": "prisma generate",
     "validate:architecture": "node scripts/validate-architecture.js",
     "validate:watch": "nodemon --watch src --ext ts,tsx --exec npm run validate:architecture",
     "prisma:generate": "prisma generate",
