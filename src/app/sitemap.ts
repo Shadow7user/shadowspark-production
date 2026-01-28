@@ -4,17 +4,25 @@ import { prisma } from "@/lib/prisma";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://shadowspark-technologies.com";
   
-  const courses = await prisma.course.findMany({
-    where: { published: true },
-    select: { slug: true, updatedAt: true },
-  });
+  let courseUrls: MetadataRoute.Sitemap = [];
+  
+  try {
+    const courses = await prisma.course.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+    });
 
-  const courseUrls = courses.map((course) => ({
-    url: `${baseUrl}/courses/${course.slug}`,
-    lastModified: course.updatedAt,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+    courseUrls = courses.map((course) => ({
+      url: `${baseUrl}/courses/${course.slug}`,
+      lastModified: course.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+  } catch (error) {
+    // During build, database might not be accessible
+    // Continue with static routes only
+    console.warn("Could not fetch courses for sitemap during build:", error);
+  }
 
   return [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
