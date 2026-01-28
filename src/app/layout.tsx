@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ShadowSpark Technologies | AI-Powered Digital Agency",
-    template: "%s | ShadowSpark",
+    default: "ShadowSpark Technologies | Engineering Tomorrow's Digital Infrastructure",
+    template: "%s | ShadowSpark Technologies",
   },
   description: "Nigeria's premier AI-powered digital agency. Web development, AI chatbots, design, SEO, and tech training.",
   keywords: ["AI agency Nigeria", "web development Lagos", "AI chatbots", "digital marketing Nigeria", "tech training"],
