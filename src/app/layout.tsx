@@ -21,18 +21,27 @@ export const metadata: Metadata = {
   description: "Nigeria's premier AI-powered digital agency. Web development, AI chatbots, design, SEO, and tech training.",
   keywords: ["AI agency Nigeria", "web development Lagos", "AI chatbots", "digital marketing Nigeria", "tech training"],
   authors: [{ name: "ShadowSpark Technologies" }],
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/logo-icon.svg", type: "image/svg+xml", sizes: "any" },
+    ],
+    apple: "/logo-icon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_NG",
     url: "https://shadowspark-technologies.com",
     siteName: "ShadowSpark Technologies",
-    title: "ShadowSpark Technologies | AI-Powered Digital Agency",
-    description: "Nigeria's premier AI-powered digital agency",
+    title: "ShadowSpark Technologies | Engineering Tomorrow's Digital Infrastructure",
+    description: "The Spark is Lit. The Shadow is Secure.",
+    images: [{ url: "/logo.svg", width: 400, height: 100 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "ShadowSpark Technologies",
-    description: "AI-Powered Digital Agency in Nigeria",
+    description: "Engineering Tomorrow's Digital Infrastructure",
+    images: ["/logo.svg"],
   },
   robots: { index: true, follow: true },
 };

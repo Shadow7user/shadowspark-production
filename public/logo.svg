@@ -1,0 +1,26 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Shadow text -->
+  <text x="20" y="60" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#C0C0C0">
+    Shadow
+  </text>
+  
+  <!-- Spark text with glow -->
+  <text x="180" y="60" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#00D9FF" filter="url(#glow)">
+    Spark
+  </text>
+  
+  <!-- Technologies text -->
+  <text x="22" y="85" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#808080" letter-spacing="2">
+    TECHNOLOGIES
+  </text>
+</svg>
