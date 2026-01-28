@@ -1,0 +1,10 @@
+.git
+.gitignore
+npm-debug.log
+README.md
+Docs/
+*.md
+.env.local
+.env.*.local
+node_modules/.cache
+.next/.cache
