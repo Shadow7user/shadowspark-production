@@ -127,20 +127,35 @@ export async function markLessonComplete(lessonId: string) {
   if (!session?.user?.id) return { error: "Unauthorized" };
 
   try {
-    await prisma.lessonCompletion.upsert({
-      where: {
-        userId_lessonId: { userId: session.user.id, lessonId },
-      },
-      create: {
-        userId: session.user.id,
-        lessonId,
-        completedAt: new Date(),
-      },
-      update: {},
+    const lesson = await prisma.lesson.findUnique({
+      where: { id: lessonId },
+      include: { module: true },
     });
 
-    revalidatePath("/courses");
-    return { success: true };
+    if (!lesson) {
+      return { error: "Lesson not found" };
+    }
+
+    const { moduleId } = lesson;
+    const { courseId } = lesson.module;
+
+    // Reuse calculation logic
+    const result = await updateLessonProgress({
+      courseId,
+      moduleId,
+      lessonId,
+      progress: 100,
+    });
+
+    if (result.error) {
+      return { error: result.error };
+    }
+
+    // Determine completion status based on progress
+    const progress = result.progress ?? 0;
+    const completed = progress >= 100;
+
+    return { success: true, progress, completed };
   } catch (error) {
     console.error("Failed to mark complete", error);
     return { error: "Failed to mark complete" };

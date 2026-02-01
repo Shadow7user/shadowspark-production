@@ -27,8 +27,7 @@ export function MarkCompleteButton({
         throw new Error("Failed to mark lesson complete");
       }
 
-      const data = await response.json();
-      onComplete(data.progress, data.completed);
+      onComplete(response.progress ?? 0, response.completed ?? false);
     } catch (error) {
       console.error("Error marking lesson complete:", error);
     } finally {
