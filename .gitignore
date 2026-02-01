@@ -40,3 +40,5 @@ prisma/migrations/*
 !prisma/migrations/.gitkeep
 prisma/*.db
 prisma/*.db-journal
+
+desktop.ini

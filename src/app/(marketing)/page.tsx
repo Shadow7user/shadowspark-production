@@ -1,120 +1,84 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+'use client';
 
-const services = [
-  {
-    title: "Web Development",
-    description: "Modern, responsive websites and web applications built with cutting-edge technologies.",
-    icon: "🌐",
-  },
-  {
-    title: "AI Chatbots",
-    description: "Intelligent conversational agents that automate customer support and engagement.",
-    icon: "🤖",
-  },
-  {
-    title: "UI/UX Design",
-    description: "Beautiful, intuitive interfaces that delight users and drive conversions.",
-    icon: "🎨",
-  },
-  {
-    title: "SEO & Marketing",
-    description: "Data-driven strategies to increase visibility and grow your online presence.",
-    icon: "📈",
-  },
-  {
-    title: "AI Academy",
-    description: "Learn AI prompting, automation, and emerging technologies from industry experts.",
-    icon: "🎓",
-  },
-  {
-    title: "Consulting",
-    description: "Strategic guidance to help your business leverage technology for growth.",
-    icon: "💡",
-  },
-];
-
-const stats = [
-  { value: "50+", label: "Projects" },
-  { value: "500+", label: "Students" },
-  { value: "98%", label: "Satisfaction" },
-];
+import { AnimatedBackground } from '@/components/ui/animated-background';
+import { AnimatedLogo } from '@/components/ui/animated-logo';
+import { ServiceIconsGrid } from '@/components/ui/service-icons';
+import { TrustLogos } from '@/components/ui/trust-logos';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-            Transform Your Business
-          </span>
-          <br />
-          <span className="text-foreground">With AI-Powered Solutions</span>
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          AI-powered solutions for Nigerian businesses. We build intelligent systems, 
-          stunning websites, and train the next generation of tech professionals.
-        </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Button size="lg" asChild>
-            <Link href="/contact">Get Started</Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/courses">View Courses</Link>
-          </Button>
-        </div>
-      </section>
+    <>
+      {/* Animated Background */}
+      <AnimatedBackground />
 
-      {/* Services Section */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-4">Our Services</h2>
-        <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-          From web development to AI solutions, we provide comprehensive digital services 
-          tailored to your business needs.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => (
-            <Card key={service.title} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="text-4xl mb-2">{service.icon}</div>
-                <CardTitle>{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{service.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {/* HERO SECTION */}
+      <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <AnimatedLogo />
+          </div>
 
-      {/* Stats Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-8 md:p-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {stats.map((stat) => (
-              <div key={stat.label}>
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                  {stat.value}
-                </div>
-                <div className="text-muted-foreground mt-2">{stat.label}</div>
-              </div>
-            ))}
+          {/* Main Headline */}
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Master <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">AI</span>
+            <br />
+            Get Hired in Nigeria
+          </h1>
+
+          {/* Subheading */}
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Learn practical AI skills from industry experts. Join 500+ Nigerian professionals building the future.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link href="/academy/courses">
+              <Button className="px-8 py-6 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold rounded-lg hover:scale-105 transition-transform shadow-lg shadow-cyan-500/50">
+                Explore Courses
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button
+                variant="outline"
+                className="px-8 py-6 border-cyan-500/50 text-cyan-400 font-bold rounded-lg hover:bg-cyan-500/10 transition-colors"
+              >
+                Contact Sales
+              </Button>
+            </Link>
+          </div>
+
+          {/* Social Proof */}
+          <div className="grid grid-cols-3 gap-8 mb-16 text-center">
+            <div>
+              <p className="text-3xl font-bold text-cyan-400">500+</p>
+              <p className="text-gray-400 text-sm">Students Enrolled</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-cyan-400">50+</p>
+              <p className="text-gray-400 text-sm">Courses Available</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-cyan-400">4.8★</p>
+              <p className="text-gray-400 text-sm">Average Rating</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-        <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-          Let&apos;s discuss how we can help transform your business with modern technology solutions.
+      {/* SERVICES SECTION */}
+      <section className="py-20 px-4 max-w-6xl mx-auto">
+        <h2 className="text-4xl font-bold text-white mb-4 text-center">Our Services</h2>
+        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+          Enterprise-grade solutions powered by AI for African businesses
         </p>
-        <Button size="lg" asChild>
-          <Link href="/contact">Start Your Project</Link>
-        </Button>
+        <ServiceIconsGrid />
       </section>
-    </div>
+
+      {/* TRUST LOGOS */}
+      <TrustLogos />
+    </>
   );
 }

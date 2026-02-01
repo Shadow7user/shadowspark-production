@@ -42,21 +42,31 @@ export default async function CourseAnalyticsPage({ params }: Props) {
   // Calculate analytics
   const totalEnrollments = course.enrollments.length;
   const completedCount = course.enrollments.filter((e) => e.completed).length;
-  const completionRate = totalEnrollments > 0 
-    ? Math.round((completedCount / totalEnrollments) * 100) 
-    : 0;
-  const avgProgress = totalEnrollments > 0
-    ? Math.round(
-        course.enrollments.reduce((acc, e) => acc + e.progress, 0) / totalEnrollments
-      )
-    : 0;
+  const completionRate =
+    totalEnrollments > 0
+      ? Math.round((completedCount / totalEnrollments) * 100)
+      : 0;
+
+  const getProgress = (e: any) => Number(e.progressPercentage || 0);
+
+  const avgProgress =
+    totalEnrollments > 0
+      ? Math.round(
+          course.enrollments.reduce((acc, e) => acc + getProgress(e), 0) /
+            totalEnrollments,
+        )
+      : 0;
 
   // Progress distribution
   const progressBuckets = {
-    "0-25%": course.enrollments.filter((e) => e.progress <= 25).length,
-    "26-50%": course.enrollments.filter((e) => e.progress > 25 && e.progress <= 50).length,
-    "51-75%": course.enrollments.filter((e) => e.progress > 50 && e.progress <= 75).length,
-    "76-100%": course.enrollments.filter((e) => e.progress > 75).length,
+    "0-25%": course.enrollments.filter((e) => getProgress(e) <= 25).length,
+    "26-50%": course.enrollments.filter(
+      (e) => getProgress(e) > 25 && getProgress(e) <= 50,
+    ).length,
+    "51-75%": course.enrollments.filter(
+      (e) => getProgress(e) > 50 && getProgress(e) <= 75,
+    ).length,
+    "76-100%": course.enrollments.filter((e) => getProgress(e) > 75).length,
   };
 
   // Lesson completion rates
@@ -66,17 +76,21 @@ export default async function CourseAnalyticsPage({ params }: Props) {
       title: lesson.title,
       moduleTitle: mod.title,
       completions: lesson.completions.length,
-      rate: totalEnrollments > 0
-        ? Math.round((lesson.completions.length / totalEnrollments) * 100)
-        : 0,
-    }))
+      rate:
+        totalEnrollments > 0
+          ? Math.round((lesson.completions.length / totalEnrollments) * 100)
+          : 0,
+    })),
   );
 
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <Link href="/admin/courses" className="text-muted-foreground hover:underline text-sm">
+          <Link
+            href="/admin/courses"
+            className="text-muted-foreground hover:underline text-sm"
+          >
             ← Back to Courses
           </Link>
           <h1 className="text-3xl font-bold mt-2">{course.title}</h1>
@@ -139,7 +153,9 @@ export default async function CourseAnalyticsPage({ params }: Props) {
               <div className="space-y-4">
                 {Object.entries(progressBuckets).map(([range, count]) => (
                   <div key={range} className="flex items-center gap-4">
-                    <span className="w-20 text-sm text-muted-foreground">{range}</span>
+                    <span className="w-20 text-sm text-muted-foreground">
+                      {range}
+                    </span>
                     <div className="flex-1 bg-muted rounded-full h-4 overflow-hidden">
                       <div
                         className="bg-primary h-full transition-all"
@@ -148,7 +164,9 @@ export default async function CourseAnalyticsPage({ params }: Props) {
                         }}
                       />
                     </div>
-                    <span className="w-12 text-sm font-medium text-right">{count}</span>
+                    <span className="w-12 text-sm font-medium text-right">
+                      {count}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -163,7 +181,7 @@ export default async function CourseAnalyticsPage({ params }: Props) {
             <CardContent>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {course.enrollments
-                  .filter((e) => e.progress < 25 && !e.completed)
+                  .filter((e) => getProgress(e) < 25 && !e.completed)
                   .slice(0, 10)
                   .map((enrollment) => (
                     <div
@@ -175,16 +193,21 @@ export default async function CourseAnalyticsPage({ params }: Props) {
                           {enrollment.user.name || enrollment.user.email}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          Enrolled {new Date(enrollment.enrolledAt).toLocaleDateString()}
+                          Enrolled{" "}
+                          {new Date(enrollment.enrolledAt).toLocaleDateString()}
                         </p>
                       </div>
                       <span className="text-sm font-medium text-red-600">
-                        {enrollment.progress}%
+                        {getProgress(enrollment)}%
                       </span>
                     </div>
                   ))}
-                {course.enrollments.filter((e) => e.progress < 25 && !e.completed).length === 0 && (
-                  <p className="text-muted-foreground text-sm">No at-risk students!</p>
+                {course.enrollments.filter(
+                  (e) => getProgress(e) < 25 && !e.completed,
+                ).length === 0 && (
+                  <p className="text-muted-foreground text-sm">
+                    No at-risk students!
+                  </p>
                 )}
               </div>
             </CardContent>
@@ -203,17 +226,25 @@ export default async function CourseAnalyticsPage({ params }: Props) {
                   key={lesson.id}
                   className="flex items-center gap-4 py-2 border-b last:border-0"
                 >
-                  <span className="w-8 text-sm text-muted-foreground">{idx + 1}</span>
+                  <span className="w-8 text-sm text-muted-foreground">
+                    {idx + 1}
+                  </span>
                   <div className="flex-1">
                     <p className="text-sm font-medium">{lesson.title}</p>
-                    <p className="text-xs text-muted-foreground">{lesson.moduleTitle}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {lesson.moduleTitle}
+                    </p>
                   </div>
                   <div className="w-32 bg-muted rounded-full h-2 overflow-hidden">
                     <div
                       className={`h-full transition-all ${
-                        lesson.rate > 75 ? "bg-green-500" :
-                        lesson.rate > 50 ? "bg-yellow-500" :
-                        lesson.rate > 25 ? "bg-orange-500" : "bg-red-500"
+                        lesson.rate > 75
+                          ? "bg-green-500"
+                          : lesson.rate > 50
+                            ? "bg-yellow-500"
+                            : lesson.rate > 25
+                              ? "bg-orange-500"
+                              : "bg-red-500"
                       }`}
                       style={{ width: `${lesson.rate}%` }}
                     />
@@ -265,10 +296,10 @@ export default async function CourseAnalyticsPage({ params }: Props) {
                           <div className="w-24 bg-muted rounded-full h-2 overflow-hidden">
                             <div
                               className="bg-primary h-full"
-                              style={{ width: `${enrollment.progress}%` }}
+                              style={{ width: `${getProgress(enrollment)}%` }}
                             />
                           </div>
-                          <span>{enrollment.progress}%</span>
+                          <span>{getProgress(enrollment)}%</span>
                         </div>
                       </td>
                       <td className="py-3">
@@ -276,14 +307,14 @@ export default async function CourseAnalyticsPage({ params }: Props) {
                           className={`px-2 py-1 text-xs rounded ${
                             enrollment.completed
                               ? "bg-green-100 text-green-800"
-                              : enrollment.progress > 0
+                              : getProgress(enrollment) > 0
                                 ? "bg-blue-100 text-blue-800"
                                 : "bg-gray-100 text-gray-800"
                           }`}
                         >
                           {enrollment.completed
                             ? "Completed"
-                            : enrollment.progress > 0
+                            : getProgress(enrollment) > 0
                               ? "In Progress"
                               : "Not Started"}
                         </span>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { markLessonComplete } from "@/lib/actions/progress";
 
 interface MarkCompleteButtonProps {
   lessonId: string;
@@ -20,11 +21,9 @@ export function MarkCompleteButton({
   const handleMarkComplete = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/lessons/${lessonId}/complete`, {
-        method: "POST",
-      });
+      const response = await markLessonComplete(lessonId);
 
-      if (!response.ok) {
+      if (response.error) {
         throw new Error("Failed to mark lesson complete");
       }
 

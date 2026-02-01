@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../Downloads/grok"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "grok"
+	}
+}

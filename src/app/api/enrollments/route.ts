@@ -19,7 +19,7 @@ export async function GET() {
     console.error("Error fetching enrollments:", error);
     return NextResponse.json(
       { error: "Failed to fetch enrollments" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     if (existing) {
       return NextResponse.json(
         { error: "Already enrolled in this course" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         userId: user.id,
         courseId,
         paymentRef,
-        progress: 0,
+        progressPercentage: 0,
         completed: false,
       },
     });
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
     console.error("Error creating enrollment:", error);
     return NextResponse.json(
       { error: "Failed to create enrollment" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -33,14 +33,24 @@ export default async function AdminDashboard() {
     prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, email: true, role: true, createdAt: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
     }),
   ]);
 
   const stats = [
     { label: "Total Users", value: totalUsers, href: "/admin/users" },
     { label: "Total Courses", value: totalCourses, href: "/admin/courses" },
-    { label: "Enrollments", value: totalEnrollments, href: "/admin/enrollments" },
+    {
+      label: "Enrollments",
+      value: totalEnrollments,
+      href: "/admin/enrollments",
+    },
     { label: "Projects", value: totalProjects, href: "/admin/projects" },
   ];
 
@@ -81,7 +91,9 @@ export default async function AdminDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {recentEnrollments.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">No enrollments yet</p>
+                  <p className="text-muted-foreground text-sm">
+                    No enrollments yet
+                  </p>
                 ) : (
                   recentEnrollments.map((enrollment) => (
                     <div
@@ -97,7 +109,7 @@ export default async function AdminDashboard() {
                         </p>
                       </div>
                       <span className="text-xs text-muted-foreground">
-                        {enrollment.progress}%
+                        {Number(enrollment.progressPercentage ?? 0)}%
                       </span>
                     </div>
                   ))

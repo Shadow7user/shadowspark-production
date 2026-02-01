@@ -62,6 +62,9 @@ export default async function LearnPage({ params, searchParams }: Props) {
       allLessons={allLessons}
       completedLessonIds={Array.from(completedLessonIds)}
       userEmail={session.user.email}
+      userName={user.name || undefined}
+      courseTitle={enrollment.course.title}
+      enrollmentId={enrollment.id}
     />
   );
 }

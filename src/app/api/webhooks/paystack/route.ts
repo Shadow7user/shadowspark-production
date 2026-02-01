@@ -45,7 +45,7 @@ export async function POST(req: Request) {
             userId: metadata.userId,
             courseId: metadata.courseId,
             paymentRef: reference,
-            progress: 0,
+            progressPercentage: 0,
             completed: false,
           },
         });
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     console.error("❌ Webhook error:", error);
     return NextResponse.json(
       { error: "Webhook processing failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

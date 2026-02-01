@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { submitContactForm } from "@/lib/actions/contact";
+
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -15,25 +17,23 @@ export default function ContactPage() {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    await fetch("/api/contact", {
-      method: "POST",
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        message: formData.get("message"),
-      }),
-      headers: { "Content-Type": "application/json" },
-    });
+    const result = await submitContactForm(formData);
+
+    if (result.success) {
+      setSent(true);
+    }
     setLoading(false);
-    setSent(true);
   }
 
-  if (sent) return (
-    <div className="container mx-auto px-4 py-16 text-center">
-      <h1 className="text-3xl font-bold">Message Sent!</h1>
-      <p className="text-muted-foreground mt-2">We&apos;ll respond within 24 hours.</p>
-    </div>
-  );
+  if (sent)
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-3xl font-bold">Message Sent!</h1>
+        <p className="text-muted-foreground mt-2">
+          We&apos;ll respond within 24 hours.
+        </p>
+      </div>
+    );
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-lg">

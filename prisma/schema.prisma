@@ -199,7 +199,8 @@ model Enrollment {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  progress   Int      @default(0)
+  progressPercentage Decimal @default(0)
+  moduleProgress     Json?
   completed  Boolean  @default(false)
   paymentRef String?  @unique
 

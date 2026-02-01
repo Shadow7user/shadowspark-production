@@ -75,7 +75,7 @@ export async function POST(req: Request, { params }: Props) {
     if (!enrollment) {
       return NextResponse.json(
         { error: "Not enrolled in this course" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -95,28 +95,32 @@ export async function POST(req: Request, { params }: Props) {
     });
 
     const progressPercentage = Math.round(
-      (completedCount / allLessons.length) * 100
+      (completedCount / allLessons.length) * 100,
     );
+
+    const isCompleted = progressPercentage === 100;
 
     // Update enrollment progress
     const updatedEnrollment = await prisma.enrollment.update({
       where: { id: enrollment.id },
       data: {
-        progress: progressPercentage,
-        completed: progressPercentage === 100,
+        progressPercentage,
+        completed: isCompleted,
+        completedAt:
+          isCompleted && !enrollment.completed ? new Date() : undefined,
       },
     });
 
     return NextResponse.json({
       completion,
-      progress: updatedEnrollment.progress,
+      progress: Number(updatedEnrollment.progressPercentage),
       completed: updatedEnrollment.completed,
     });
   } catch (error) {
     console.error("Error marking lesson complete:", error);
     return NextResponse.json(
       { error: "Failed to mark lesson complete" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
