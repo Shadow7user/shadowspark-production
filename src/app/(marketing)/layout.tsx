@@ -15,7 +15,12 @@ export default function MarketingLayout({
       <header className="border-b">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo-icon.svg" alt="ShadowSpark Technologies" width={32} height={32} />
+            <Image
+              src="/logo-icon.svg"
+              alt="ShadowSpark Technologies"
+              width={32}
+              height={32}
+            />
             <span className="text-xl font-bold">
               <span className="text-foreground">Shadow</span>
               <span className="text-cyan-400">Spark</span>
@@ -35,16 +40,16 @@ export default function MarketingLayout({
               Pricing
             </Link>
             <Link
-              href="/enterprise"
+              href="/case-studies"
               className="text-muted-foreground hover:text-foreground"
             >
-              Enterprise
+              Case Studies
             </Link>
             <Link
-              href="/courses"
+              href="/free-audit"
               className="text-muted-foreground hover:text-foreground"
             >
-              Academy
+              Free Audit
             </Link>
             <Link
               href="/contact"
@@ -94,26 +99,27 @@ export default function MarketingLayout({
               Pricing
             </Link>
             <Link
-              href="/enterprise"
+              href="/courses"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
-              For Business
+              Academy
             </Link>
           </div>
           <div className="text-center text-sm text-muted-foreground">
-<<<<<<< HEAD
             <p className="flex items-center justify-center gap-2">
-              © 2026 
-              <Image src="/logo-icon.svg" alt="" width={16} height={16} className="inline" />
+              © 2026
+              <Image
+                src="/logo-icon.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="inline"
+              />
               ShadowSpark Technologies. All rights reserved.
             </p>
-            <p className="mt-2 italic text-cyan-400/70">The Spark is Lit. The Shadow is Secure.</p>
-=======
-            <p>© 2026 ShadowSpark Technologies. All rights reserved.</p>
-            <p className="mt-2">
-              Empowering Nigerian businesses with AI solutions
+            <p className="mt-2 italic text-cyan-400/70">
+              The Spark is Lit. The Shadow is Secure.
             </p>
->>>>>>> 7f53c19 (feat: implement revenue levers + refactor to server actions)
           </div>
         </div>
       </footer>
