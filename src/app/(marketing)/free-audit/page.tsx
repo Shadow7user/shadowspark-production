@@ -18,18 +18,32 @@ import {
   Globe,
   BarChart,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { submitFreeAudit } from "@/lib/actions/marketing";
 
 export default function FreeAuditPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In production, connect to your backend
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await submitFreeAudit(undefined, formData);
+
+    setLoading(false);
+
+    if (result.success) {
+      setSubmitted(true);
+    } else {
+      setError(result.error || "An error occurred. Please try again.");
+    }
   };
 
   if (submitted) {
@@ -157,6 +171,8 @@ export default function FreeAuditPage() {
                         <Label htmlFor="name">Full Name</Label>
                         <Input
                           id="name"
+                          name="name"
+                          required
                           placeholder="John Okoro"
                           className="mt-2 border-gray-700 bg-gray-900"
                         />
@@ -165,6 +181,8 @@ export default function FreeAuditPage() {
                         <Label htmlFor="business">Business Name</Label>
                         <Input
                           id="business"
+                          name="business"
+                          required
                           placeholder="Okoro Enterprises"
                           className="mt-2 border-gray-700 bg-gray-900"
                         />
@@ -173,7 +191,9 @@ export default function FreeAuditPage() {
                         <Label htmlFor="email">Business Email</Label>
                         <Input
                           id="email"
+                          name="email"
                           type="email"
+                          required
                           placeholder="john@okoroenterprises.com"
                           className="mt-2 border-gray-700 bg-gray-900"
                         />
@@ -182,6 +202,7 @@ export default function FreeAuditPage() {
                         <Label htmlFor="phone">WhatsApp Number</Label>
                         <Input
                           id="phone"
+                          name="phone"
                           placeholder="+234 80X XXX XXXX"
                           className="mt-2 border-gray-700 bg-gray-900"
                         />
@@ -192,6 +213,8 @@ export default function FreeAuditPage() {
                         </Label>
                         <Textarea
                           id="challenge"
+                          name="challenge"
+                          required
                           placeholder="e.g., We're missing customer messages, manual processes are slowing us down, our website isn't generating leads..."
                           className="mt-2 min-h-[120px] border-gray-700 bg-gray-900"
                         />
@@ -202,6 +225,7 @@ export default function FreeAuditPage() {
                         </Label>
                         <select
                           id="service"
+                          name="service"
                           className="mt-2 w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2 text-white"
                         >
                           <option value="">Select an option</option>
@@ -216,12 +240,24 @@ export default function FreeAuditPage() {
                         </select>
                       </div>
                     </div>
+
+                    {error && (
+                      <div className="p-3 text-sm text-red-500 bg-red-500/10 rounded-md border border-red-500/20">
+                        {error}
+                      </div>
+                    )}
+
                     <Button
                       type="submit"
+                      disabled={loading}
                       className="w-full bg-gradient-to-r from-purple-600 to-cyan-600"
                     >
-                      <Zap className="mr-2 h-5 w-5" />
-                      Request Free AI Audit
+                      {loading ? (
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      ) : (
+                        <Zap className="mr-2 h-5 w-5" />
+                      )}
+                      {loading ? "Submitting..." : "Request Free AI Audit"}
                     </Button>
                     <p className="text-center text-xs text-gray-500">
                       By submitting, you agree to our 30-minute consultation. No

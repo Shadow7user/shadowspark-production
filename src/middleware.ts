@@ -1,17 +1,20 @@
-﻿import NextAuth from 'next-auth';
-import authConfig from '@/lib/auth.config';
-import { NextResponse } from 'next/server';
+﻿import NextAuth from "next-auth";
+import authConfig from "@/lib/auth.config";
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isAuthPage = req.nextUrl.pathname === '/login' || 
-                    req.nextUrl.pathname === '/register';
-  const isPublicPage = req.nextUrl.pathname === '/' ||
-                       req.nextUrl.pathname === '/services' ||
-                       req.nextUrl.pathname === '/contact' ||
-                       req.nextUrl.pathname.startsWith('/courses');
+  const isAuthPage =
+    req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/register";
+  const isPublicPage =
+    req.nextUrl.pathname === "/" ||
+    req.nextUrl.pathname === "/services" ||
+    req.nextUrl.pathname === "/contact" ||
+    req.nextUrl.pathname === "/free-audit" ||
+    req.nextUrl.pathname.startsWith("/case-studies") ||
+    req.nextUrl.pathname.startsWith("/courses");
 
   // Allow public pages
   if (isPublicPage) {
@@ -20,7 +23,7 @@ export default auth((req) => {
 
   if (isAuthPage) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
     return NextResponse.next();
   }
@@ -31,7 +34,7 @@ export default auth((req) => {
       from += req.nextUrl.search;
     }
     return NextResponse.redirect(
-      new URL(`/login?from=${encodeURIComponent(from)}`, req.nextUrl)
+      new URL(`/login?from=${encodeURIComponent(from)}`, req.nextUrl),
     );
   }
 
@@ -39,5 +42,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
