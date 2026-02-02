@@ -1,13 +1,13 @@
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import * as Sentry from "@sentry/nextjs";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   let webhookEvent = null;
-  
+
   try {
     const body = await req.text();
     const signature = req.headers.get("x-paystack-signature");
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // 1. Verify HMAC signature
     if (hash !== signature) {
       console.warn("❌ Invalid Paystack signature");
-      
+
       // Log failed signature verification
       await prisma.webhookEvent.create({
         data: {
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
           error: "HMAC signature mismatch",
         },
       });
-      
+
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
         }
 
         console.log("✅ Invoice payment processed:", reference);
-        
+
         // 4. Update status to processed
         await prisma.webhookEvent.update({
           where: { id: webhookEvent.id },
@@ -132,12 +132,12 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("❌ Webhook error:", error);
     Sentry.captureException(error);
-    
+
     // Update webhook event status to failed
     if (webhookEvent) {
       await prisma.webhookEvent.update({
         where: { id: webhookEvent.id },
-        data: { 
+        data: {
           status: "failed",
           error: error instanceof Error ? error.message : "Unknown error",
         },

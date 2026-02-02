@@ -1,20 +1,20 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useState } from "react";
 
 interface OptimizedImageProps {
-  src: string
-  alt: string
-  width: number
-  height: number
-  blurDataURL?: string
-  priority?: boolean
-  className?: string
-  fill?: boolean
-  sizes?: string
-  quality?: number
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  blurDataURL?: string;
+  priority?: boolean;
+  className?: string;
+  fill?: boolean;
+  sizes?: string;
+  quality?: number;
 }
 
 /**
@@ -36,25 +36,25 @@ export function OptimizedImage({
   sizes,
   quality = 75,
 }: OptimizedImageProps) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // Fallback placeholder for images without blur data
-  const fallbackBlur = 
-    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg=='
+  const fallbackBlur =
+    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2UyZThmMCIvPjwvc3ZnPg==";
 
   if (hasError) {
     return (
-      <div 
+      <div
         className={cn(
           "flex items-center justify-center bg-muted text-muted-foreground",
-          className
+          className,
         )}
         style={fill ? undefined : { width, height }}
       >
         <span className="text-sm">Image unavailable</span>
       </div>
-    )
+    );
   }
 
   return (
@@ -65,21 +65,24 @@ export function OptimizedImage({
         width={fill ? undefined : width}
         height={fill ? undefined : height}
         fill={fill}
-        sizes={sizes || `(max-width: 768px) 100vw, (max-width: 1200px) 50vw, ${width}px`}
+        sizes={
+          sizes ||
+          `(max-width: 768px) 100vw, (max-width: 1200px) 50vw, ${width}px`
+        }
         quality={quality}
         priority={priority}
-        placeholder={blurDataURL || fallbackBlur ? 'blur' : 'empty'}
+        placeholder={blurDataURL || fallbackBlur ? "blur" : "empty"}
         blurDataURL={blurDataURL || fallbackBlur}
         className={cn(
           "duration-700 ease-in-out",
           isLoading
             ? "scale-105 blur-lg grayscale"
             : "scale-100 blur-0 grayscale-0",
-          fill && "object-cover"
+          fill && "object-cover",
         )}
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
       />
     </div>
-  )
+  );
 }

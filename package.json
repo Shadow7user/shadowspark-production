@@ -17,10 +17,10 @@
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm run validate ; vercel --prod",
+    "deploy": "npm run validate && vercel --prod",
     "deploy:preview": "vercel",
     "deploy:info": "vercel inspect",
-    "validate": "npm run type-check ; npm run build"
+    "validate": "npm run type-check && npm run build"
   },
   "keywords": [
     "next.js",

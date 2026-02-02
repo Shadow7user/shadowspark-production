@@ -1,30 +1,30 @@
-import { prisma } from '@/lib/prisma'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
+import { Activity, CheckCircle, Clock, XCircle } from "lucide-react";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function WebhooksPage() {
   const events = await prisma.webhookEvent.findMany({
     take: 50,
-    orderBy: { createdAt: 'desc' },
-    include: { invoice: true }
-  })
+    orderBy: { createdAt: "desc" },
+    include: { invoice: true },
+  });
 
   const stats = await prisma.webhookEvent.groupBy({
-    by: ['status'],
-    _count: true
-  })
+    by: ["status"],
+    _count: true,
+  });
 
-  const totalEvents = stats.reduce((acc, s) => acc + s._count, 0)
-  const processedCount = stats.find(s => s.status === 'processed')?._count ?? 0
-  const failedCount = stats.find(s => s.status === 'failed')?._count ?? 0
-  const pendingCount = stats.find(s => s.status === 'pending')?._count ?? 0
-  
-  const successRate = totalEvents > 0 
-    ? ((processedCount / totalEvents) * 100).toFixed(1) 
-    : '0.0'
+  const totalEvents = stats.reduce((acc, s) => acc + s._count, 0);
+  const processedCount =
+    stats.find((s) => s.status === "processed")?._count ?? 0;
+  const failedCount = stats.find((s) => s.status === "failed")?._count ?? 0;
+  const pendingCount = stats.find((s) => s.status === "pending")?._count ?? 0;
+
+  const successRate =
+    totalEvents > 0 ? ((processedCount / totalEvents) * 100).toFixed(1) : "0.0";
 
   return (
     <div className="space-y-6 p-6">
@@ -35,7 +35,7 @@ export default async function WebhooksPage() {
           Live
         </Badge>
       </div>
-      
+
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
@@ -44,7 +44,9 @@ export default async function WebhooksPage() {
             <CheckCircle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-500">{successRate}%</div>
+            <div className="text-2xl font-bold text-green-500">
+              {successRate}%
+            </div>
             <p className="text-xs text-muted-foreground">of all webhooks</p>
           </CardContent>
         </Card>
@@ -77,7 +79,9 @@ export default async function WebhooksPage() {
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-500">{pendingCount}</div>
+            <div className="text-2xl font-bold text-yellow-500">
+              {pendingCount}
+            </div>
             <p className="text-xs text-muted-foreground">in queue</p>
           </CardContent>
         </Card>
@@ -91,24 +95,29 @@ export default async function WebhooksPage() {
         <CardContent>
           {events.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              No webhook events yet. Events will appear here when Paystack sends webhooks.
+              No webhook events yet. Events will appear here when Paystack sends
+              webhooks.
             </p>
           ) : (
             <div className="space-y-2">
-              {events.map(e => (
-                <div 
-                  key={e.id} 
+              {events.map((e) => (
+                <div
+                  key={e.id}
                   className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <Badge 
+                    <Badge
                       variant={
-                        e.status === 'processed' ? 'default' : 
-                        e.status === 'failed' ? 'destructive' : 
-                        'secondary'
+                        e.status === "processed"
+                          ? "default"
+                          : e.status === "failed"
+                            ? "destructive"
+                            : "secondary"
                       }
                       className={
-                        e.status === 'processed' ? 'bg-green-500 hover:bg-green-600' : ''
+                        e.status === "processed"
+                          ? "bg-green-500 hover:bg-green-600"
+                          : ""
                       }
                     >
                       {e.status}
@@ -116,15 +125,16 @@ export default async function WebhooksPage() {
                     <div>
                       <p className="font-medium">{e.event}</p>
                       <p className="text-sm text-muted-foreground">
-                        {e.provider} • {e.invoice?.invoiceNumber || 'No invoice'}
+                        {e.provider} •{" "}
+                        {e.invoice?.invoiceNumber || "No invoice"}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">
-                      {new Date(e.createdAt).toLocaleString('en-NG', {
-                        dateStyle: 'short',
-                        timeStyle: 'short'
+                      {new Date(e.createdAt).toLocaleString("en-NG", {
+                        dateStyle: "short",
+                        timeStyle: "short",
                       })}
                     </p>
                     {e.error && (
@@ -140,5 +150,5 @@ export default async function WebhooksPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
