@@ -1,21 +1,20 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 import {
-  MessageSquare,
-  Globe,
-  Zap,
-  CheckCircle2,
-  XCircle,
-  Clock,
   ArrowRight,
+  CheckCircle2,
+  Clock,
+  Globe,
+  MessageSquare,
+  Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function ServicesPage() {
   return (
@@ -32,7 +31,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Service Cards */}
-      <section className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8 mb-24">
+      <section className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 lg:grid-cols-4 gap-8 mb-24">
         {/* Chatbots */}
         <Card className="bg-[#0A0A0F] border-gray-800 flex flex-col hover:border-green-500/50 transition-all duration-300">
           <CardHeader>
@@ -167,6 +166,53 @@ export default function ServicesPage() {
             <Link href="/free-audit" className="w-full">
               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                 Request Quote
+              </Button>
+            </Link>
+          </CardFooter>
+        </Card>
+
+        {/* Mobile & System Apps */}
+        <Card className="bg-[#0A0A0F] border-gray-800 flex flex-col hover:border-orange-500/50 transition-all duration-300">
+          <CardHeader>
+            <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
+              <Smartphone className="w-6 h-6 text-orange-500" />
+            </div>
+            <CardTitle className="text-2xl text-white">
+              Mobile & System Apps
+            </CardTitle>
+            <p className="text-gray-400">
+              Native iOS, Android, Windows, and macOS applications
+            </p>
+          </CardHeader>
+          <CardContent className="flex-1 space-y-6">
+            <div className="text-3xl font-bold text-white">
+              ₦800k - ₦5M
+              <span className="text-sm font-normal text-gray-500 block">
+                Based on complexity
+              </span>
+            </div>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-gray-300">
+                <CheckCircle2 className="w-5 h-5 text-orange-500" /> React
+                Native/Flutter
+              </li>
+              <li className="flex items-center gap-3 text-gray-300">
+                <CheckCircle2 className="w-5 h-5 text-orange-500" /> Native
+                Swift/Kotlin
+              </li>
+              <li className="flex items-center gap-3 text-gray-300">
+                <CheckCircle2 className="w-5 h-5 text-orange-500" /> Electron
+                desktop apps
+              </li>
+              <li className="flex items-center gap-3 text-gray-300">
+                <Clock className="w-5 h-5 text-gray-500" /> Delivery: 3-8 weeks
+              </li>
+            </ul>
+          </CardContent>
+          <CardFooter>
+            <Link href="/services/apps" className="w-full">
+              <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                View Details
               </Button>
             </Link>
           </CardFooter>
