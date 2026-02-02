@@ -11,6 +11,7 @@
 ## Manual Payment Flow Test
 
 ### Step 1: Create Test Prospect
+
 ```
 1. Login: https://shadowspark-tech.org/login
    Email: architect@shadowspark-technologies.com
@@ -34,6 +35,7 @@
 ```
 
 ### Step 2: Generate Invoice
+
 ```
 1. Click: "View" on Test Company prospect
 
@@ -51,6 +53,7 @@
 ```
 
 ### Step 3: Test Paystack Payment
+
 ```
 Use Paystack test card:
 
@@ -69,6 +72,7 @@ Steps:
 ```
 
 ### Step 4: Verify Webhook Processing
+
 ```
 Expected Results:
 ✅ Payment success page displayed
@@ -90,6 +94,7 @@ Verification:
 ## Webhook Verification
 
 ### Check Webhook Logs
+
 ```bash
 # View recent webhook calls
 vercel logs --prod | grep "webhooks/paystack"
@@ -102,6 +107,7 @@ Status: paid
 ```
 
 ### Manual Webhook Test
+
 ```bash
 # Test webhook endpoint directly
 curl -X POST https://shadowspark-tech.org/api/webhooks/paystack \
@@ -125,18 +131,22 @@ curl -X POST https://shadowspark-tech.org/api/webhooks/paystack \
 ## Test Scenarios
 
 ### ✅ Scenario 1: Happy Path
+
 - Create prospect → Generate invoice → Pay → Verify status
 - **Expected**: All updates successful
 
 ### ✅ Scenario 2: Multiple Invoices
+
 - Create prospect → Generate 2 invoices → Pay first only
 - **Expected**: Only paid invoice updates
 
 ### ✅ Scenario 3: Failed Payment
+
 - Use declined card: 5060666666666666667
 - **Expected**: Invoice remains "pending", no status change
 
 ### ✅ Scenario 4: PDF Download
+
 - Generate invoice → Click "Download PDF"
 - **Expected**: PDF downloads with correct data
 
@@ -145,6 +155,7 @@ curl -X POST https://shadowspark-tech.org/api/webhooks/paystack \
 ## Known Issues & Workarounds
 
 ### Issue 1: Database Connection During Build
+
 ```
 Warning: Could not fetch courses for sitemap during build
 Status: Non-blocking (sitemap generation continues)
@@ -152,6 +163,7 @@ Impact: None on production functionality
 ```
 
 ### Issue 2: Webhook Signature Verification
+
 ```
 If webhook fails with "Invalid signature":
 1. Check PAYSTACK_SECRET_KEY in Vercel env
@@ -164,6 +176,7 @@ If webhook fails with "Invalid signature":
 ## Paystack Dashboard Setup
 
 ### Configure Webhook (Required)
+
 ```
 1. Go to: https://dashboard.paystack.com/#/settings/developers
 2. Navigate to: "Webhooks" section
@@ -176,6 +189,7 @@ If webhook fails with "Invalid signature":
 ```
 
 ### Test Cards Reference
+
 ```
 Success:
 5060666666666666666 (OTP: 123456)
@@ -193,6 +207,7 @@ Expired:
 ## Success Criteria
 
 ### Must Pass:
+
 - [ ] Prospect creation works
 - [ ] Invoice generation creates Paystack link
 - [ ] Test card payment completes
@@ -202,6 +217,7 @@ Expired:
 - [ ] Email sent (check Resend logs)
 
 ### Nice to Have:
+
 - [ ] Webhook logs visible in Vercel
 - [ ] Payment recorded in Paystack dashboard
 - [ ] Activity log updated in prospect notes
@@ -211,6 +227,7 @@ Expired:
 ## Troubleshooting
 
 ### Payment Link Not Showing
+
 ```
 1. Check browser console for errors
 2. Verify PAYSTACK_PUBLIC_KEY in .env.local
@@ -218,6 +235,7 @@ Expired:
 ```
 
 ### Webhook Not Firing
+
 ```
 1. Verify webhook URL in Paystack dashboard
 2. Check x-paystack-signature header
@@ -226,6 +244,7 @@ Expired:
 ```
 
 ### Invoice Not Updating
+
 ```
 1. Check webhook received (Paystack logs)
 2. Verify invoiceNumber in metadata
@@ -239,12 +258,14 @@ Expired:
 ## Next Steps After Testing
 
 ### If All Tests Pass:
+
 1. Switch to live Paystack keys
 2. Update webhook URL to live mode
 3. Test with real ₦100 transaction
 4. Create first real client invoice
 
 ### If Tests Fail:
+
 1. Document exact failure point
 2. Check error logs in Vercel
 3. Review webhook payload structure
@@ -255,6 +276,7 @@ Expired:
 ## Production Readiness
 
 ### Before Going Live:
+
 - [ ] Replace test keys with live keys
 - [ ] Update webhook mode to "live"
 - [ ] Test ₦100 real transaction
