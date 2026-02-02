@@ -12,6 +12,7 @@ import {
   Clock,
   Globe,
   MessageSquare,
+  Smartphone,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -193,8 +194,8 @@ export default function ServicesPage() {
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
-                <CheckCircle2 className="w-5 h-5 text-orange-500" /> React
-                Native/Flutter
+                <CheckCircle2 className="w-5 h-5 text-orange-500" />{" "}
+                React Native/Flutter
               </li>
               <li className="flex items-center gap-3 text-gray-300">
                 <CheckCircle2 className="w-5 h-5 text-orange-500" /> Native
@@ -205,14 +206,14 @@ export default function ServicesPage() {
                 desktop apps
               </li>
               <li className="flex items-center gap-3 text-gray-300">
-                <Clock className="w-5 h-5 text-gray-500" /> Delivery: 3-8 weeks
+                <Clock className="w-5 h-5 text-gray-500" /> Delivery: 3-6 weeks
               </li>
             </ul>
           </CardContent>
           <CardFooter>
             <Link href="/services/apps" className="w-full">
               <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                View Details
+                Learn More
               </Button>
             </Link>
           </CardFooter>
@@ -232,11 +233,15 @@ export default function ServicesPage() {
                 <th className="p-6 text-white font-bold">Chatbots</th>
                 <th className="p-6 text-white font-bold">Websites</th>
                 <th className="p-6 text-white font-bold">Automation</th>
+                <th className="p-6 text-white font-bold">Apps</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
               <tr>
                 <td className="p-6 text-gray-300">AI Integration</td>
+                <td className="p-6">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
+                </td>
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
@@ -256,6 +261,9 @@ export default function ServicesPage() {
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
                 <td className="p-6 text-gray-600">—</td>
+                <td className="p-6">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
+                </td>
               </tr>
               <tr>
                 <td className="p-6 text-gray-300">Paystack Payments</td>
@@ -266,11 +274,17 @@ export default function ServicesPage() {
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
                 <td className="p-6 text-gray-600">—</td>
+                <td className="p-6">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
+                </td>
               </tr>
               <tr>
                 <td className="p-6 text-gray-300">Admin Dashboard</td>
                 <td className="p-6 text-gray-600">—</td>
                 <td className="p-6 text-gray-600">—</td>
+                <td className="p-6">
+                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
+                </td>
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
@@ -280,6 +294,7 @@ export default function ServicesPage() {
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
+                <td className="p-6 text-gray-600">—</td>
                 <td className="p-6 text-gray-600">—</td>
                 <td className="p-6 text-gray-600">—</td>
               </tr>
