@@ -1,5 +1,6 @@
 "use client";
 
+import { FAQ } from "@/components/marketing/faq";
 import { AnimatedBackground } from "@/components/ui/animated-background";
 import { Button } from "@/components/ui/button";
 import { ServiceIconsGrid } from "@/components/ui/service-icons";
@@ -258,6 +259,100 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Case Studies Preview */}
+      <section className="py-20" id="case-studies">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Real Results</h2>
+            <p className="text-muted-foreground">
+              Nigerian businesses we&apos;ve helped scale
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="border rounded-xl p-6">
+              <div className="text-sm text-cyan-400 mb-2">Co-working Space</div>
+              <h3 className="text-xl font-bold mb-4">TechHub Lagos</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-3xl font-bold text-cyan-400">70%</div>
+                  <div className="text-sm text-muted-foreground">
+                    Support queries automated
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-purple-400">
+                    15hrs
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Staff time saved/week
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/case-studies"
+                className="text-cyan-400 text-sm mt-4 inline-block"
+              >
+                Read full case study →
+              </Link>
+            </div>
+
+            <div className="border rounded-xl p-6">
+              <div className="text-sm text-cyan-400 mb-2">E-commerce</div>
+              <h3 className="text-xl font-bold mb-4">NaijaMart</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-3xl font-bold text-cyan-400">+34%</div>
+                  <div className="text-sm text-muted-foreground">
+                    Checkout completion
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-purple-400">1.2s</div>
+                  <div className="text-sm text-muted-foreground">
+                    Page load time (from 5s)
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/case-studies"
+                className="text-cyan-400 text-sm mt-4 inline-block"
+              >
+                Read full case study →
+              </Link>
+            </div>
+
+            <div className="border rounded-xl p-6">
+              <div className="text-sm text-cyan-400 mb-2">Logistics</div>
+              <h3 className="text-xl font-bold mb-4">LogiTrack</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-3xl font-bold text-cyan-400">0</div>
+                  <div className="text-sm text-muted-foreground">
+                    Tracking calls (from 50/day)
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-purple-400">24/7</div>
+                  <div className="text-sm text-muted-foreground">
+                    Self-service availability
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/case-studies"
+                className="text-cyan-400 text-sm mt-4 inline-block"
+              >
+                Read full case study →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* TRUST LOGOS */}
       <TrustLogos />
