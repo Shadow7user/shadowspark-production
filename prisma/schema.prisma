@@ -15,25 +15,25 @@ model User {
   password      String?
   role          UserRole  @default(STUDENT)
 
-  phone         String?
-  company       String?
-  location      String?
+  phone    String?
+  company  String?
+  location String?
 
-  accounts      Account[]
-  sessions      Session[]
-  enrollments   Enrollment[]
+  accounts          Account[]
+  sessions          Session[]
+  enrollments       Enrollment[]
   lessonCompletions LessonCompletion[]
-  clientProjects Project[]       @relation("ClientProjects")
-  managedProjects Project[]       @relation("ProjectManager")
-  blogPosts     BlogPost[]
-  prospects     Prospect[]
-  proposals     Proposal[]
-  invoices      Invoice[]
+  clientProjects    Project[]          @relation("ClientProjects")
+  managedProjects   Project[]          @relation("ProjectManager")
+  blogPosts         BlogPost[]
+  prospects         Prospect[]
+  proposals         Proposal[]
+  invoices          Invoice[]
 
-  deletedAt     DateTime?
+  deletedAt DateTime?
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([email])
   @@index([role])
@@ -88,30 +88,30 @@ model VerificationToken {
 }
 
 model Course {
-  id          String      @id @default(cuid())
-  slug        String      @unique
+  id          String         @id @default(cuid())
+  slug        String         @unique
   title       String
-  description String      @db.Text
+  description String         @db.Text
   thumbnail   String?
   category    CourseCategory
-  level       CourseLevel @default(BEGINNER)
+  level       CourseLevel    @default(BEGINNER)
 
-  price       Decimal     @db.Decimal(10, 2)
-  currency    String      @default("NGN")
+  price    Decimal @db.Decimal(10, 2)
+  currency String  @default("NGN")
 
-  duration    Int?
-  studentCount Int        @default(0)
+  duration     Int?
+  studentCount Int  @default(0)
 
-  published   Boolean     @default(false)
-  featured    Boolean     @default(false)
+  published Boolean @default(false)
+  featured  Boolean @default(false)
 
   modules     Module[]
   enrollments Enrollment[]
 
-  deletedAt   DateTime?
+  deletedAt DateTime?
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([category])
   @@index([published])
@@ -137,18 +137,18 @@ enum CourseLevel {
 }
 
 model Module {
-  id          String   @id @default(cuid())
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   title       String
-  description String?  @db.Text
+  description String? @db.Text
   order       Int
 
-  lessons     Lesson[]
+  lessons Lesson[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([courseId])
   @@index([order])
@@ -156,24 +156,24 @@ model Module {
 }
 
 model Lesson {
-  id          String   @id @default(cuid())
-  moduleId    String
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   title       String
-  description String?  @db.Text
+  description String? @db.Text
   videoUrl    String?
   duration    Int?
   order       Int
-  content     String?  @db.Text
+  content     String? @db.Text
   resources   Json?
 
-  isFree      Boolean  @default(false)
+  isFree Boolean @default(false)
 
   completions LessonCompletion[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([moduleId])
   @@index([order])
@@ -181,11 +181,11 @@ model Lesson {
 }
 
 model LessonCompletion {
-  id        String   @id @default(cuid())
-  userId    String
-  lessonId  String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  userId   String
+  lessonId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   completedAt DateTime @default(now())
 
@@ -196,18 +196,18 @@ model LessonCompletion {
 }
 
 model Enrollment {
-  id         String   @id @default(cuid())
-  userId     String
-  courseId   String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   progressPercentage Decimal @default(0)
   moduleProgress     Json?
-  completed  Boolean  @default(false)
-  paymentRef String?  @unique
+  completed          Boolean @default(false)
+  paymentRef         String? @unique
 
-  enrolledAt DateTime @default(now())
+  enrolledAt  DateTime  @default(now())
   completedAt DateTime?
 
   @@unique([userId, courseId])
@@ -217,30 +217,30 @@ model Enrollment {
 }
 
 model Project {
-  id          String        @id @default(cuid())
-  clientId    String
-  client      User          @relation("ClientProjects", fields: [clientId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  clientId String
+  client   User   @relation("ClientProjects", fields: [clientId], references: [id], onDelete: Cascade)
 
-  managerId   String
-  manager     User          @relation("ProjectManager", fields: [managerId], references: [id])
+  managerId String
+  manager   User   @relation("ProjectManager", fields: [managerId], references: [id])
 
   name        String
   description String        @db.Text
   status      ProjectStatus @default(PLANNING)
   priority    Priority      @default(MEDIUM)
 
-  budget      Decimal       @db.Decimal(10, 2)
-  currency    String        @default("NGN")
+  budget   Decimal @db.Decimal(10, 2)
+  currency String  @default("NGN")
 
-  startDate   DateTime?
-  endDate     DateTime?
+  startDate DateTime?
+  endDate   DateTime?
 
-  milestones  Milestone[]
+  milestones Milestone[]
 
-  deletedAt   DateTime?
+  deletedAt DateTime?
 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([clientId])
   @@index([managerId])
@@ -265,9 +265,9 @@ enum Priority {
 }
 
 model Milestone {
-  id          String    @id @default(cuid())
-  projectId   String
-  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   title       String
   description String    @db.Text
@@ -276,8 +276,8 @@ model Milestone {
   completed   Boolean   @default(false)
   completedAt DateTime?
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([projectId])
   @@index([order])
@@ -285,19 +285,19 @@ model Milestone {
 }
 
 model Payment {
-  id        String        @id @default(cuid())
-  userId    String
-  amount    Decimal       @db.Decimal(10, 2)
-  currency  String        @default("NGN")
-  status    PaymentStatus @default(PENDING)
+  id       String        @id @default(cuid())
+  userId   String
+  amount   Decimal       @db.Decimal(10, 2)
+  currency String        @default("NGN")
+  status   PaymentStatus @default(PENDING)
 
   provider  PaymentProvider
-  reference String        @unique
+  reference String          @unique
 
-  metadata  Json?
+  metadata Json?
 
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([reference])
@@ -318,25 +318,25 @@ enum PaymentProvider {
 }
 
 model BlogPost {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  excerpt     String   @db.Text
-  content     String   @db.Text
-  thumbnail   String?
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  title     String
+  excerpt   String  @db.Text
+  content   String  @db.Text
+  thumbnail String?
 
   metaTitle       String?
   metaDescription String?
 
-  published   Boolean  @default(false)
-  featured    Boolean  @default(false)
+  published Boolean @default(false)
+  featured  Boolean @default(false)
 
-  authorId    String
-  author      User     @relation(fields: [authorId], references: [id])
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
 
   publishedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@index([slug])
   @@index([published])
@@ -345,14 +345,14 @@ model BlogPost {
 }
 
 model Lead {
-  id        String   @id @default(cuid())
-  email     String
-  name      String?
-  company   String?
-  phone     String?
-  message   String?  @db.Text
-  service   String?
-  status    LeadStatus @default(NEW)
+  id      String     @id @default(cuid())
+  email   String
+  name    String?
+  company String?
+  phone   String?
+  message String?    @db.Text
+  service String?
+  status  LeadStatus @default(NEW)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -369,54 +369,54 @@ enum LeadStatus {
 
 // Sales Pipeline CRM
 model Prospect {
-  id                String   @id @default(cuid())
-  name              String
-  email             String
-  phone             String
-  company           String
-  industry          String
-  painPoint         String
-  status            String   @default("contacted")
-  estimatedValue    Int
-  closeProbability  Int      @default(20)
-  nextFollowUp      DateTime?
-  notes             String?
-  
-  userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  proposals         Proposal[]
-  invoices          Invoice[]
-  
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
+  id               String    @id @default(cuid())
+  name             String
+  email            String
+  phone            String
+  company          String
+  industry         String
+  painPoint        String
+  status           String    @default("contacted")
+  estimatedValue   Int
+  closeProbability Int       @default(20)
+  nextFollowUp     DateTime?
+  notes            String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  proposals Proposal[]
+  invoices  Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
   @@index([status])
   @@map("prospects")
 }
 
 model Proposal {
-  id                String   @id @default(cuid())
-  title             String
-  description       String   @db.Text
-  amount            Int
-  timeline          String
-  deliverables      String[]
-  status            String   @default("draft")
-  expiresAt         DateTime?
-  
-  prospectId        String
-  prospect          Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
-  
-  userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  invoices          Invoice[]
-  
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
+  id           String    @id @default(cuid())
+  title        String
+  description  String    @db.Text
+  amount       Int
+  timeline     String
+  deliverables String[]
+  status       String    @default("draft")
+  expiresAt    DateTime?
+
+  prospectId String
+  prospect   Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([prospectId])
   @@index([userId])
   @@index([status])
@@ -424,30 +424,30 @@ model Proposal {
 }
 
 model Invoice {
-  id                String   @id @default(cuid())
-  invoiceNumber     String   @unique
-  amount            Int
-  description       String   @db.Text
-  paymentStatus     String   @default("pending")
-  paymentUrl        String?
-  
-  prospectId        String
-  prospect          Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
-  
-  proposalId        String?
-  proposal          Proposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
-  
-  userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  dueDate           DateTime
-  paidAt            DateTime?
-  
-  webhookEvents     WebhookEvent[]
-  
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  
+  id            String  @id @default(cuid())
+  invoiceNumber String  @unique
+  amount        Int
+  description   String  @db.Text
+  paymentStatus String  @default("pending")
+  paymentUrl    String?
+
+  prospectId String
+  prospect   Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  proposalId String?
+  proposal   Proposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dueDate DateTime
+  paidAt  DateTime?
+
+  webhookEvents WebhookEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([prospectId])
   @@index([userId])
   @@index([paymentStatus])
@@ -464,7 +464,7 @@ model WebhookEvent {
   invoiceId String?
   invoice   Invoice? @relation(fields: [invoiceId], references: [id])
   createdAt DateTime @default(now())
-  
+
   @@index([provider, event])
   @@index([status])
   @@index([createdAt])
