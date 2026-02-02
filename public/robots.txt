@@ -2,8 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /dashboard/
 Disallow: /api/
-Disallow: /admin/
-Disallow: /register/
-Disallow: /verify/
 
-Sitemap: https://shadowspark-technologies.com/sitemap.xml
+Sitemap: https://shadowspark-tech.org/sitemap.xml
