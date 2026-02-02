@@ -194,8 +194,8 @@ export default function ServicesPage() {
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
-                <CheckCircle2 className="w-5 h-5 text-orange-500" />{" "}
-                React Native/Flutter
+                <CheckCircle2 className="w-5 h-5 text-orange-500" /> React
+                Native/Flutter
               </li>
               <li className="flex items-center gap-3 text-gray-300">
                 <CheckCircle2 className="w-5 h-5 text-orange-500" /> Native
