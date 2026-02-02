@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Image from "next/image";
-import Script from "next/script";
-import { Button } from "@/components/ui/button";
 import { TrustBadges } from "@/components/trust-badges";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import Script from "next/script";
 
 export default function MarketingLayout({
   children,
@@ -57,6 +57,12 @@ export default function MarketingLayout({
             >
               Contact
             </Link>
+            <Link
+              href="/investors"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Investors
+            </Link>
           </nav>
           <Button asChild>
             <Link href="/login">Login</Link>
@@ -103,6 +109,12 @@ export default function MarketingLayout({
               className="text-sm text-muted-foreground hover:text-foreground"
             >
               Academy
+            </Link>
+            <Link
+              href="/investors"
+              className="text-sm text-muted-foreground hover:text-foreground md:hidden"
+            >
+              Investors
             </Link>
           </div>
           <div className="text-center text-sm text-muted-foreground">
