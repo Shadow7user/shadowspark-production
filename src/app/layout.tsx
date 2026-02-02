@@ -1,26 +1,44 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://shadowspark-technologies.com"),
   title: {
-    default: "ShadowSpark Technologies | Engineering Tomorrow's Digital Infrastructure",
+    default: "ShadowSpark Technologies | AI-Powered Digital Agency Nigeria",
     template: "%s | ShadowSpark Technologies",
   },
-  description: "Nigeria's premier AI-powered digital agency. Web development, AI chatbots, design, SEO, and tech training.",
-  keywords: ["AI agency Nigeria", "web development Lagos", "AI chatbots", "digital marketing Nigeria", "tech training"],
+  description:
+    "Build AI chatbots, custom Next.js websites, and automation systems for Nigerian businesses. Free audit. Fast results. Proven ROI.",
+  keywords: [
+    "AI chatbot Nigeria",
+    "web development Lagos",
+    "digital agency Nigeria",
+    "business automation",
+    "Next.js development",
+    "AI agency Lagos",
+    "chatbot development",
+    "process automation Nigeria",
+  ],
   authors: [{ name: "ShadowSpark Technologies" }],
+  creator: "ShadowSpark Technologies",
+  publisher: "ShadowSpark Technologies",
+  category: "Technology",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -33,17 +51,43 @@ export const metadata: Metadata = {
     locale: "en_NG",
     url: "https://shadowspark-technologies.com",
     siteName: "ShadowSpark Technologies",
-    title: "ShadowSpark Technologies | Engineering Tomorrow's Digital Infrastructure",
-    description: "The Spark is Lit. The Shadow is Secure.",
-    images: [{ url: "/logo.svg", width: 400, height: 100 }],
+    title: "ShadowSpark Technologies | AI-Powered Digital Agency Nigeria",
+    description:
+      "Build AI chatbots, custom websites, and automation systems. Free audit. Fast results.",
+    images: [
+      {
+        url: "/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "ShadowSpark Technologies Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShadowSpark Technologies",
-    description: "Engineering Tomorrow's Digital Infrastructure",
+    site: "@shadowspark",
+    creator: "@shadowspark",
+    title: "ShadowSpark Technologies | AI-Powered Digital Agency",
+    description: "AI chatbots, websites, automation for Nigerian businesses",
     images: ["/logo.svg"],
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://shadowspark-technologies.com",
+  },
+  verification: {
+    google: "your-google-verification-code", // Add later
+  },
 };
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,9 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -18,15 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   createProposal,
+  downloadInvoicePDF,
   generateInvoice,
-  updateProspectStatus,
   getProspect,
+  updateProspectStatus,
 } from "@/lib/actions/sales";
-import { Mail, Phone, Building, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Building, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ProspectDetail({
   params,
@@ -345,7 +346,7 @@ export default function ProspectDetail({
                       ₦{(invoice.amount / 1000).toFixed(0)}K
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right space-y-2">
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
                         invoice.paymentStatus === "paid"
@@ -357,9 +358,32 @@ export default function ProspectDetail({
                     >
                       {invoice.paymentStatus}
                     </span>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground">
                       Due: {new Date(invoice.dueDate).toLocaleDateString()}
                     </p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={async () => {
+                        const result = await downloadInvoicePDF(invoice.id);
+                        if (result.success && result.pdfBuffer) {
+                          const blob = new Blob(
+                            [new Uint8Array(result.pdfBuffer)],
+                            {
+                              type: "application/pdf",
+                            },
+                          );
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `${invoice.invoiceNumber}.pdf`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        }
+                      }}
+                    >
+                      Download PDF
+                    </Button>
                   </div>
                 </div>
               ))}

@@ -1,0 +1,86 @@
+{
+  "Server Component": {
+    "prefix": "nsc",
+    "body": [
+      "import { prisma } from '@/lib/db'",
+      "",
+      "export default async function ${1:ComponentName}() {",
+      "  const data = await prisma.${2:model}.findMany()",
+      "",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  )",
+      "}"
+    ]
+  },
+  "Client Component": {
+    "prefix": "ncc",
+    "body": [
+      "'use client'",
+      "",
+      "import { useState } from 'react'",
+      "",
+      "export default function ${1:ComponentName}() {",
+      "  const [${2:state}, set${2/(.*)/${1:/capitalize}/}] = useState($3)",
+      "",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  )",
+      "}"
+    ]
+  },
+  "Server Action": {
+    "prefix": "nsa",
+    "body": [
+      "'use server'",
+      "",
+      "import { prisma } from '@/lib/db'",
+      "import { auth } from '@/lib/auth'",
+      "import { z } from 'zod'",
+      "",
+      "const schema = z.object({",
+      "  $1",
+      "})",
+      "",
+      "export async function ${2:actionName}(data: z.infer<typeof schema>) {",
+      "  try {",
+      "    const session = await auth()",
+      "    if (!session?.user?.id) throw new Error('Unauthorized')",
+      "",
+      "    const validated = schema.parse(data)",
+      "",
+      "    const result = await prisma.${3:model}.create({",
+      "      data: validated",
+      "    })",
+      "",
+      "    return { success: true, data: result }",
+      "  } catch (error) {",
+      "    return { success: false, error: error.message }",
+      "  }",
+      "}"
+    ]
+  },
+  "API Route": {
+    "prefix": "napi",
+    "body": [
+      "import { NextResponse } from 'next/server'",
+      "import { prisma } from '@/lib/db'",
+      "",
+      "export async function GET(request: Request) {",
+      "  try {",
+      "    const data = await prisma.${1:model}.findMany()",
+      "    return NextResponse.json(data)",
+      "  } catch (error) {",
+      "    return NextResponse.json(",
+      "      { error: error.message },",
+      "      { status: 500 }",
+      "    )",
+      "  }",
+      "}"
+    ]
+  }
+}

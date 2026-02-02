@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -23,7 +23,29 @@ export async function POST(req: Request) {
     if (event.event === "charge.success") {
       const { reference, amount, customer, metadata } = event.data;
 
-      // Create payment record
+      // Handle invoice payments (B2B Sales)
+      if (metadata?.invoiceNumber) {
+        await prisma.invoice.update({
+          where: { invoiceNumber: reference },
+          data: {
+            paymentStatus: "paid",
+            paidAt: new Date(),
+          },
+        });
+
+        // Update prospect status to "won"
+        if (metadata.prospectId) {
+          await prisma.prospect.update({
+            where: { id: metadata.prospectId },
+            data: { status: "won" },
+          });
+        }
+
+        console.log("✅ Invoice payment processed:", reference);
+        return NextResponse.json({ received: true });
+      }
+
+      // Handle course enrollment payments (EdTech)
       const payment = await prisma.payment.create({
         data: {
           reference,
