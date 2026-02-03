@@ -27,13 +27,20 @@ const RULES = [
     suggestion: 'Move data fetching to server component or use tRPC hooks'
   },
   {
-    name: 'No direct fetch in client components',
-    description: 'Avoid direct fetch calls in client components',
+    name: 'No direct external fetch in client components',
+    description: 'Avoid direct fetch calls to external URLs in client components',
     check: (content, filePath) => {
       if (!content.includes('use client')) return false;
-      return /fetch\([^)]*\)/.test(content);
+      // Allow fetch to internal API routes (/api/*)
+      const fetchMatches = content.match(/fetch\([^)]*\)/g) || [];
+      return fetchMatches.some(match => {
+        // Check if fetch is to an internal API route - these are allowed
+        if (/fetch\s*\(\s*['"`]\/api\//.test(match)) return false;
+        // Flag external fetches
+        return true;
+      });
     },
-    suggestion: 'Use tRPC or create dedicated API routes'
+    suggestion: 'Use tRPC, internal /api routes, or server actions instead of external fetch'
   }
 ];
 

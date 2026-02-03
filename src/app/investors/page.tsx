@@ -1,22 +1,6 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -27,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import {
   ArrowRight,
-  Lock,
   Mail,
   Scale,
   Server,
@@ -35,107 +18,28 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { cookies } from "next/headers";
+import { InvestorGate } from "./investor-gate";
 
-const INVESTOR_PASSWORD = "Seed2026";
-const STORAGE_KEY = "shadowspark_investor_access";
+// Server-side auth check via httpOnly cookie
+async function checkInvestorAccess(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return cookieStore.get("investor_access")?.value === "granted";
+}
 
-export default function InvestorsPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showModal, setShowModal] = useState(true);
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default async function InvestorsPage() {
+  const hasAccess = await checkInvestorAccess();
 
-  useEffect(() => {
-    // Check if already authenticated in this session
-    const hasAccess = sessionStorage.getItem(STORAGE_KEY);
-    if (hasAccess === "true") {
-      setIsAuthenticated(true);
-      setShowModal(false);
-    }
-  }, []);
+  // Wrap content with InvestorGate - shows login form if not authenticated
+  return (
+    <InvestorGate initialAuthenticated={hasAccess}>
+      <InvestorContent />
+    </InvestorGate>
+  );
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === INVESTOR_PASSWORD) {
-      setIsAuthenticated(true);
-      setShowModal(false);
-      sessionStorage.setItem(STORAGE_KEY, "true");
-      setError("");
-    } else {
-      setError("Incorrect password. Hint: Seed2026");
-    }
-  };
-
-  // Teaser content for unauthenticated users
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4">
-        <Dialog open={showModal} onOpenChange={setShowModal}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <div className="flex items-center gap-2 mb-2">
-                <Lock className="h-5 w-5 text-cyan-400" />
-                <DialogTitle>Investor Access</DialogTitle>
-              </div>
-              <DialogDescription>
-                This page contains confidential investment information.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Input
-                  type="password"
-                  placeholder="Enter access password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full"
-                  autoFocus
-                />
-                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-              </div>
-              <Button type="submit" className="w-full">
-                Access Investor Materials
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-
-        {/* Teaser when modal is dismissed */}
-        <Card className="max-w-lg text-center">
-          <CardHeader>
-            <div className="mx-auto mb-4 p-3 rounded-full bg-cyan-400/10 w-fit">
-              <Lock className="h-8 w-8 text-cyan-400" />
-            </div>
-            <CardTitle className="text-2xl">Investor Information</CardTitle>
-            <CardDescription className="text-lg mt-2">
-              Seeking{" "}
-              <span className="text-cyan-400 font-semibold">$5M Seed</span> to
-              fuel 18-month runway to traction.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => setShowModal(true)} className="gap-2">
-              <Lock className="h-4 w-4" />
-              Enter Password to View
-            </Button>
-            <p className="text-xs text-muted-foreground mt-4">
-              Contact{" "}
-              <a
-                href="mailto:investors@shadowspark-technologies.com"
-                className="text-cyan-400 hover:underline"
-              >
-                investors@shadowspark-technologies.com
-              </a>{" "}
-              for access.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Full investor content
+// Extracted investor content component
+function InvestorContent() {
   return (
     <div className="container mx-auto px-4 py-12 max-w-5xl">
       {/* Hero */}
