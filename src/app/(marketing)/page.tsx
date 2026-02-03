@@ -1,9 +1,9 @@
 "use client";
 
 import { FAQ } from "@/components/marketing/faq";
+import { ServiceCarousel } from "@/components/marketing/service-carousel";
 import { AnimatedBackground } from "@/components/ui/animated-background";
 import { Button } from "@/components/ui/button";
-import { ServiceIconsGrid } from "@/components/ui/service-icons";
 import { TrustLogos } from "@/components/ui/trust-logos";
 import { CheckCircle, Shield, Zap } from "lucide-react";
 import Link from "next/link";
@@ -35,8 +35,11 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              AI chatbots, custom websites & automation systems built in 2-4
-              weeks. 60% cheaper than Lagos agencies.
+              Let AI handle your customer conversations 24/7.
+            </p>
+            <p className="text-xl md:text-2xl font-semibold max-w-2xl mx-auto">
+              Enterprise chatbots, websites, mobile & iOS apps built in 2-4 weeks.
+              60% cheaper than Lagos agencies.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -57,15 +60,17 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <div className="flex items-center justify-center gap-8 pt-8 text-sm text-muted-foreground flex-wrap">
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <span>24/7 WhatsApp Support</span>
               </div>
-              <div>●</div>
+              <div className="hidden sm:block">●</div>
               <div>2-4 Week Delivery</div>
-              <div>●</div>
+              <div className="hidden sm:block">●</div>
               <div>99.9% Uptime SLA</div>
+              <div className="hidden sm:block">●</div>
+              <div>Android & iOS Apps</div>
             </div>
           </div>
         </div>
@@ -124,16 +129,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SERVICES SECTION */}
-      <section className="py-20 px-4 max-w-6xl mx-auto">
-        <h2 className="text-4xl font-bold text-white mb-4 text-center">
-          Our Services
-        </h2>
-        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-          Enterprise-grade solutions powered by AI for African businesses
-        </p>
-        <ServiceIconsGrid />
-      </section>
+      {/* SERVICES SECTION - Auto-sliding Carousel */}
+      <ServiceCarousel />
 
       {/* Advanced Features Section */}
       <section className="py-20 bg-gradient-to-br from-background to-muted/30">
