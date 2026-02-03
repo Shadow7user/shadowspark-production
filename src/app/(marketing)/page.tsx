@@ -38,8 +38,8 @@ export default function HomePage() {
               Let AI handle your customer conversations 24/7.
             </p>
             <p className="text-xl md:text-2xl font-semibold max-w-2xl mx-auto">
-              Enterprise chatbots, websites, mobile & iOS apps built in 2-4 weeks.
-              60% cheaper than Lagos agencies.
+              Enterprise chatbots, websites, mobile & iOS apps built in 2-4
+              weeks. 60% cheaper than Lagos agencies.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
