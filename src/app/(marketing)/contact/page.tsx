@@ -214,7 +214,7 @@ export default function ContactPage() {
                   <div>
                     <div className="font-semibold">Phone</div>
                     <div className="text-muted-foreground">
-                      +234 XXX XXX XXXX
+                      +234 803 123 4567
                     </div>
                   </div>
                 </div>
