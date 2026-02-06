@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "leehoyeon.style-sentry-vscode",
-    "rseyferth.sentry-auto-fix"
+    "rseyferth.sentry-auto-fix",
+    "kamikillerto.vscode-colorize"
   ]
 }
