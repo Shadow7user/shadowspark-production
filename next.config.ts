@@ -75,11 +75,16 @@ const nextConfig: NextConfig = {
 };
 
 export default withSentryConfig(nextConfig, {
-  // Sentry organization and project
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+  org: "shadowspark-technologies",
+  project: "shadowspark-production",
 
-  // Only upload source maps in production builds
+  // Upload source maps for readable stack traces
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Route Sentry requests through your server (avoids ad-blockers)
+  tunnelRoute: "/monitoring",
+
+  // Only print logs in CI
   silent: !process.env.CI,
 
   // Upload source maps for better stack traces
