@@ -2,6 +2,11 @@
   "recommendations": [
     "leehoyeon.style-sentry-vscode",
     "rseyferth.sentry-auto-fix",
-    "kamikillerto.vscode-colorize"
+    "kamikillerto.vscode-colorize",
+    "ms-vscode.cmake-tools",
+    "streetsidesoftware.code-spell-checker",
+    "deploy-doctor.deploy-doctor",
+    "bacebu4.sentry-issues",
+    "continue.continue"
   ]
 }
