@@ -24,7 +24,21 @@ import {
   getProspect,
   updateProspectStatus,
 } from "@/lib/actions/sales";
-import { ArrowLeft, Building, Mail, Phone } from "lucide-react";
+import {
+  findMatchingTemplates,
+  generateProposalFromTemplate,
+  type ProposalTemplate,
+} from "@/lib/proposal-templates";
+import {
+  ArrowLeft,
+  Building,
+  Copy,
+  ExternalLink,
+  Mail,
+  MessageSquare,
+  Phone,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -38,6 +52,9 @@ export default function ProspectDetail({
   const [prospect, setProspect] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showProposalForm, setShowProposalForm] = useState(false);
+  const [matchingTemplates, setMatchingTemplates] = useState<
+    ProposalTemplate[]
+  >([]);
   const [proposalData, setProposalData] = useState({
     title: "",
     description: "",
@@ -45,6 +62,48 @@ export default function ProspectDetail({
     timeline: "2-4 weeks",
     deliverables: ["", "", ""],
   });
+
+  useEffect(() => {
+    async function loadProspect() {
+      const result = await getProspect(params.prospectId);
+      if (result.success && result.prospect) {
+        setProspect(result.prospect);
+        // Find matching templates based on prospect data
+        const templates = findMatchingTemplates(
+          result.prospect.industry || "",
+          result.prospect.painPoint || "",
+        );
+        setMatchingTemplates(templates);
+      }
+      setLoading(false);
+    }
+    loadProspect();
+  }, [params.prospectId]);
+
+  const applyTemplate = (template: ProposalTemplate) => {
+    if (!prospect) return;
+    const generated = generateProposalFromTemplate(template, prospect.company);
+    setProposalData({
+      ...generated,
+      deliverables: [...generated.deliverables.slice(0, 5), "", ""],
+    });
+    setShowProposalForm(true);
+  };
+
+  const generateWhatsAppLink = () => {
+    if (!prospect) return "";
+    const phone = prospect.phone.replace(/\D/g, "");
+    const message = encodeURIComponent(
+      `Hi ${prospect.name}, this is from ShadowSpark Technologies. I wanted to follow up on our discussion about ${prospect.painPoint.split(".")[0].toLowerCase()}. Do you have a few minutes to chat?`,
+    );
+    return `https://wa.me/${phone}?text=${message}`;
+  };
+
+  const copyPaymentLink = (invoiceId: string) => {
+    const url = `${window.location.origin}/pay/${invoiceId}`;
+    navigator.clipboard.writeText(url);
+    alert("Payment link copied!");
+  };
 
   useEffect(() => {
     async function loadProspect() {
@@ -143,6 +202,42 @@ export default function ProspectDetail({
         </Select>
       </div>
 
+      {/* Quick Actions */}
+      <Card className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-500/20">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Zap className="h-5 w-5 text-cyan-400" />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          <a
+            href={generateWhatsAppLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" className="gap-2">
+              <MessageSquare className="h-4 w-4 text-green-500" />
+              WhatsApp
+            </Button>
+          </a>
+          <a
+            href={`mailto:${prospect.email}?subject=Follow-up: ${prospect.company}&body=Hi ${prospect.name},%0A%0A`}
+          >
+            <Button variant="outline" className="gap-2">
+              <Mail className="h-4 w-4" />
+              Email
+            </Button>
+          </a>
+          <a href={`tel:${prospect.phone}`}>
+            <Button variant="outline" className="gap-2">
+              <Phone className="h-4 w-4" />
+              Call
+            </Button>
+          </a>
+        </CardContent>
+      </Card>
+
       {/* Contact Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
@@ -193,6 +288,48 @@ export default function ProspectDetail({
           <p className="text-lg">{prospect.painPoint}</p>
         </CardContent>
       </Card>
+
+      {/* Recommended Templates */}
+      {matchingTemplates.length > 0 && !showProposalForm && (
+        <Card className="border-cyan-500/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-cyan-400" />
+              Recommended Solutions
+            </CardTitle>
+            <CardDescription>
+              Based on {prospect.company}&apos;s industry and pain point
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3">
+              {matchingTemplates.slice(0, 3).map((template) => (
+                <div
+                  key={template.id}
+                  className="border rounded-lg p-4 hover:border-cyan-500/50 transition-colors cursor-pointer"
+                  onClick={() => applyTemplate(template)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-semibold">{template.name}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {template.timeline} • ₦
+                        {(template.baseAmount / 1000).toFixed(0)}K
+                      </p>
+                    </div>
+                    <Button size="sm" variant="outline">
+                      Use Template
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                    {template.description.split("\n")[0]}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Proposal Generator */}
       <Card>
@@ -361,29 +498,48 @@ export default function ProspectDetail({
                     <p className="text-xs text-muted-foreground">
                       Due: {new Date(invoice.dueDate).toLocaleDateString()}
                     </p>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={async () => {
-                        const result = await downloadInvoicePDF(invoice.id);
-                        if (result.success && result.pdfBuffer) {
-                          const blob = new Blob(
-                            [new Uint8Array(result.pdfBuffer)],
-                            {
-                              type: "application/pdf",
-                            },
-                          );
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `${invoice.invoiceNumber}.pdf`;
-                          a.click();
-                          URL.revokeObjectURL(url);
-                        }
-                      }}
-                    >
-                      Download PDF
-                    </Button>
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyPaymentLink(invoice.id)}
+                        title="Copy payment link"
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                      <Link href={`/pay/${invoice.id}`} target="_blank">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          title="Open payment portal"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                        </Button>
+                      </Link>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={async () => {
+                          const result = await downloadInvoicePDF(invoice.id);
+                          if (result.success && result.pdfBuffer) {
+                            const blob = new Blob(
+                              [new Uint8Array(result.pdfBuffer)],
+                              {
+                                type: "application/pdf",
+                              },
+                            );
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `${invoice.invoiceNumber}.pdf`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                          }
+                        }}
+                      >
+                        PDF
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
