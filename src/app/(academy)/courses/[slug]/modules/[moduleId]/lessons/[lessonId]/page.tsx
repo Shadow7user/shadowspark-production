@@ -1,24 +1,24 @@
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
 import { LessonVideoPlayer } from "@/components/course/lesson-video-player";
-import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 interface LessonPageProps {
-  params: {
-    courseId: string;
+  params: Promise<{
+    slug: string;
     moduleId: string;
     lessonId: string;
-  };
+  }>;
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
   const session = await auth();
 
-  // Wait for params if needed in Next 15 (though here likely standard)
-  const { courseId, moduleId, lessonId } = params;
+  // Await params in Next 15+
+  const { slug, moduleId, lessonId } = await params;
 
   if (!session?.user?.id) {
     redirect("/login");
@@ -39,14 +39,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
     where: {
       userId_courseId: {
         userId: session.user.id,
-        courseId: courseId,
+        courseId: slug,
       },
     },
   });
 
   if (!enrollment) {
     // Redirect to course page with alert? Or generic 403
-    redirect(`/courses/${courseId}`);
+    redirect(`/courses/${slug}`);
   }
 
   // Extract progress: Json type needs cast
@@ -63,7 +63,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
           asChild
           className="pl-0 hover:pl-2 transition-all"
         >
-          <Link href={`/courses/${courseId}`}>
+          <Link href={`/courses/${slug}`}>
             <ChevronLeft className="mr-2 h-4 w-4" /> Back to Course
           </Link>
         </Button>
@@ -79,7 +79,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <LessonVideoPlayer
               videoUrl={lesson.videoUrl}
               initialProgress={Number(currentLessonProgress)}
-              courseId={courseId}
+              courseId={slug}
               moduleId={moduleId}
               lessonId={lessonId}
             />
