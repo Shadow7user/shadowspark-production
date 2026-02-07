@@ -221,7 +221,7 @@ export default async function ProjectDetailPage({
                   projectId={projectId}
                   comments={project.comments}
                   currentUserId={session.user.id}
-                  currentUserRole={session.user.role ?? "STUDENT"}
+                  currentUserRole={session.user.role ?? ""}
                 />
               </CardContent>
             </Card>

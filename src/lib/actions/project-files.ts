@@ -1,10 +1,16 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { cloudinary } from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { projectFileSchema } from "@/lib/validations/project";
+import { v2 as cloudinary } from "cloudinary";
 import { revalidatePath } from "next/cache";
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 async function requireAuth(): Promise<{ id: string; role: string }> {
   const session = await auth();

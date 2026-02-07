@@ -136,10 +136,7 @@ export function KanbanBoard({ projects, isAdmin }: KanbanBoardProps) {
                 </div>
 
                 <Droppable droppableId={column.id}>
-                  {(
-                    provided: DroppableProvided,
-                    snapshot: DroppableStateSnapshot,
-                  ) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
@@ -153,10 +150,7 @@ export function KanbanBoard({ projects, isAdmin }: KanbanBoardProps) {
                           index={index}
                           isDragDisabled={!isAdmin}
                         >
-                          {(
-                            provided: DraggableProvided,
-                            snapshot: DraggableStateSnapshot,
-                          ) => (
+                          {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
