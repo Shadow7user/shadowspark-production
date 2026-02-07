@@ -1,0 +1,28 @@
+{
+  "name": "@logisticore/sim-engine",
+  "version": "1.0.0",
+  "description": "Logistics simulation engine for LOGISTICORE platform",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "logisticore",
+    "simulation",
+    "logistics",
+    "optimization"
+  ],
+  "author": "ShadowSpark Technologies",
+  "license": "PROPRIETARY",
+  "devDependencies": {
+    "@types/node": "^20.19.30",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@logisticore/data-models": "workspace:*"
+  }
+}
