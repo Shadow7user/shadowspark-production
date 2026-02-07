@@ -1,0 +1,38 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json turbo.json ./
+COPY apps/demo-api/package.json ./apps/demo-api/
+COPY packages/data-models/package.json ./packages/data-models/
+COPY packages/sim-engine/package.json ./packages/sim-engine/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY apps/demo-api ./apps/demo-api
+COPY packages/data-models ./packages/data-models
+COPY packages/sim-engine ./packages/sim-engine
+
+# Build packages and API
+RUN npm run build:packages
+RUN npm run build --workspace=apps/demo-api
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy built application
+COPY --from=builder /app/apps/demo-api/dist ./dist
+COPY --from=builder /app/apps/demo-api/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Expose port
+EXPOSE 4000
+
+# Start application
+CMD ["node", "dist/index.js"]

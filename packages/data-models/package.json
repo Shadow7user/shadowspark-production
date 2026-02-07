@@ -1,0 +1,27 @@
+{
+  "name": "@logisticore/data-models",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types and data models for LOGISTICORE",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "logisticore",
+    "types",
+    "typescript",
+    "data-models"
+  ],
+  "author": "ShadowSpark Technologies",
+  "license": "PROPRIETARY",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  }
+}
