@@ -6,7 +6,33 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Upload, File, X, Download, Trash2 } from 'lucide-react'
 import { getUploadSignature, saveFileRecord, deleteFile } from '@/lib/actions/project-files'
-import { formatFileSize, getFileType } from '@/lib/cloudinary'
+
+// Helper functions (copied from cloudinary.ts to avoid importing server-only code)
+function getFileType(mimeType: string): string {
+  if (mimeType.startsWith('image/')) return 'image'
+  if (mimeType.startsWith('video/')) return 'video'
+  if (
+    mimeType.includes('pdf') ||
+    mimeType.includes('document') ||
+    mimeType.includes('text')
+  )
+    return 'document'
+  if (
+    mimeType.includes('zip') ||
+    mimeType.includes('rar') ||
+    mimeType.includes('tar')
+  )
+    return 'archive'
+  return 'other'
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+}
 
 interface ProjectFile {
   id: string
