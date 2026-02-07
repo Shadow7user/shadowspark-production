@@ -34,6 +34,10 @@ export function MilestoneTracker({ milestones, isAdmin }: MilestoneTrackerProps)
 
     setToggling(milestoneId)
 
+    // Store original milestone for revert
+    const originalMilestone = localMilestones.find((m) => m.id === milestoneId)
+    if (!originalMilestone) return
+
     // Optimistic update
     setLocalMilestones((prev) =>
       prev.map((m) =>
@@ -54,14 +58,14 @@ export function MilestoneTracker({ milestones, isAdmin }: MilestoneTrackerProps)
       })
 
       if (!result.success) {
-        // Revert on error
+        // Revert on error with original data
         setLocalMilestones((prev) =>
           prev.map((m) =>
             m.id === milestoneId
               ? {
                   ...m,
-                  completed: currentCompleted,
-                  completedAt: currentCompleted ? new Date() : null,
+                  completed: originalMilestone.completed,
+                  completedAt: originalMilestone.completedAt,
                 }
               : m
           )
@@ -69,14 +73,14 @@ export function MilestoneTracker({ milestones, isAdmin }: MilestoneTrackerProps)
         console.error(result.error || 'Failed to update milestone')
       }
     } catch (error) {
-      // Revert on error
+      // Revert on error with original data
       setLocalMilestones((prev) =>
         prev.map((m) =>
           m.id === milestoneId
             ? {
                 ...m,
-                completed: currentCompleted,
-                completedAt: currentCompleted ? new Date() : null,
+                completed: originalMilestone.completed,
+                completedAt: originalMilestone.completedAt,
               }
             : m
         )

@@ -69,7 +69,7 @@ export function FileUploader({ projectId, files: initialFiles, currentUserId, is
       const maxSize = 50 * 1024 * 1024 // 50MB
 
       if (file.size > maxSize) {
-        alert('File size exceeds 50MB limit')
+        alert('File size exceeds 50MB limit. Please select a smaller file.')
         return
       }
 
@@ -136,7 +136,9 @@ export function FileUploader({ projectId, files: initialFiles, currentUserId, is
         }
       } catch (error) {
         console.error('Upload failed:', error)
-        alert('Upload failed. Please try again.')
+        const errorMessage =
+          error instanceof Error ? error.message : 'Upload failed. Please check your connection and try again.'
+        alert(errorMessage)
       } finally {
         setUploading(false)
         setUploadProgress(0)

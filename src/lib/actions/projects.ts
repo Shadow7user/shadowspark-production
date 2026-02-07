@@ -59,9 +59,26 @@ export async function getProjects(): Promise<{
       return { success: false, error: 'Not authenticated' }
     }
 
+    // Get user role for filtering
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    })
+
+    const isAdmin = user?.role === 'ADMIN'
+
     const projects = await prisma.project.findMany({
       where: {
         deletedAt: null,
+        // Non-admin users only see projects they're associated with
+        ...(isAdmin
+          ? {}
+          : {
+              OR: [
+                { clientId: session.user.id },
+                { managerId: session.user.id },
+              ],
+            }),
       },
       include: {
         client: {
@@ -126,6 +143,12 @@ export async function getProject(projectId: string): Promise<{
     if (!session?.user?.id) {
       return { success: false, error: 'Not authenticated' }
     }
+
+    // Get user role for authorization
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    })
 
     const project = await prisma.project.findUnique({
       where: { id: projectId, deletedAt: null },
@@ -209,6 +232,17 @@ export async function getProject(projectId: string): Promise<{
 
     if (!project) {
       return { success: false, error: 'Project not found' }
+    }
+
+    // Check authorization: admins can view all, others only their own projects
+    const isAdmin = user?.role === 'ADMIN'
+    const hasAccess =
+      isAdmin ||
+      project.clientId === session.user.id ||
+      project.managerId === session.user.id
+
+    if (!hasAccess) {
+      return { success: false, error: 'Not authorized to view this project' }
     }
 
     return {

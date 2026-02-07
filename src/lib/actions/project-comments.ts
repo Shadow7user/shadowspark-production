@@ -25,11 +25,34 @@ export async function addComment(data: {
     // Verify project access
     const project = await prisma.project.findUnique({
       where: { id: validated.projectId, deletedAt: null },
-      select: { id: true },
+      select: {
+        id: true,
+        clientId: true,
+        managerId: true,
+      },
     })
 
     if (!project) {
       return { success: false, error: 'Project not found' }
+    }
+
+    // Get user role for authorization
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    })
+
+    const isAdmin = user?.role === 'ADMIN'
+    const hasAccess =
+      isAdmin ||
+      project.clientId === session.user.id ||
+      project.managerId === session.user.id
+
+    if (!hasAccess) {
+      return {
+        success: false,
+        error: 'Not authorized to comment on this project',
+      }
     }
 
     // If replying to a comment, verify parent exists
