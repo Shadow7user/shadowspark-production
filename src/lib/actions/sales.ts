@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { sendInvoiceEmail } from "@/lib/email";
+import { sendInvoiceEmail } from "@/lib/actions/emails";
 import { createPaymentLink } from "@/lib/paystack";
 import { generateInvoicePDF } from "@/lib/pdf";
 import { prisma } from "@/lib/prisma";
