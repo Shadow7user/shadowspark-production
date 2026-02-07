@@ -29,6 +29,8 @@ model User {
   prospects         Prospect[]
   proposals         Proposal[]
   invoices          Invoice[]
+  quizAttempts      QuizAttempt[]      @relation("QuizAttempts")
+  certificates      Certificate[]      @relation("Certificates")
 
   deletedAt DateTime?
 
@@ -105,8 +107,9 @@ model Course {
   published Boolean @default(false)
   featured  Boolean @default(false)
 
-  modules     Module[]
-  enrollments Enrollment[]
+  modules      Module[]
+  enrollments  Enrollment[]
+  certificates Certificate[]
 
   deletedAt DateTime?
 
@@ -171,6 +174,7 @@ model Lesson {
   isFree Boolean @default(false)
 
   completions LessonCompletion[]
+  quiz        Quiz?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,10 +206,11 @@ model Enrollment {
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  progressPercentage Decimal @default(0)
+  progressPercentage Decimal      @default(0)
   moduleProgress     Json?
-  completed          Boolean @default(false)
-  paymentRef         String? @unique
+  completed          Boolean      @default(false)
+  paymentRef         String?      @unique
+  certificate        Certificate?
 
   enrolledAt  DateTime  @default(now())
   completedAt DateTime?
@@ -469,4 +474,71 @@ model WebhookEvent {
   @@index([status])
   @@index([createdAt])
   @@map("webhook_events")
+}
+
+model Quiz {
+  id           String         @id @default(cuid())
+  lessonId     String         @unique
+  lesson       Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  passingScore Int            @default(70)
+  timeLimit    Int?
+  questions    QuizQuestion[]
+  attempts     QuizAttempt[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id           String @id @default(cuid())
+  quizId       String
+  quiz         Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question     String
+  options      Json
+  correctIndex Int
+  explanation  String?
+  order        Int    @default(0)
+  points       Int    @default(1)
+
+  @@index([quizId])
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id           String    @id @default(cuid())
+  quizId       String
+  quiz         Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User      @relation("QuizAttempts", fields: [userId], references: [id])
+  answers      Json
+  score        Int
+  totalPoints  Int
+  earnedPoints Int
+  passed       Boolean
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+
+  @@index([quizId, userId])
+  @@index([userId])
+  @@map("quiz_attempts")
+}
+
+model Certificate {
+  id                String     @id @default(cuid())
+  userId            String
+  user              User       @relation("Certificates", fields: [userId], references: [id])
+  courseId          String
+  course            Course     @relation(fields: [courseId], references: [id])
+  enrollmentId      String     @unique
+  enrollment        Enrollment @relation(fields: [enrollmentId], references: [id])
+  certificateNumber String     @unique
+  issuedAt          DateTime   @default(now())
+  pdfUrl            String?
+
+  @@unique([userId, courseId])
+  @@index([certificateNumber])
+  @@map("certificates")
 }
