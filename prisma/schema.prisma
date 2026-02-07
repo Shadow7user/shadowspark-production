@@ -30,6 +30,11 @@ model User {
   proposals         Proposal[]
   invoices          Invoice[]
 
+  // Phase 3B: Client Portal relations
+  projectFiles      ProjectFile[]
+  projectComments   ProjectComment[]
+  projectActivities ProjectActivity[]
+
   deletedAt DateTime?
 
   createdAt DateTime @default(now())
@@ -235,7 +240,15 @@ model Project {
   startDate DateTime?
   endDate   DateTime?
 
+  // Phase 3B: Kanban order for drag-drop
+  kanbanOrder Int @default(0)
+
   milestones Milestone[]
+
+  // Phase 3B: Client Portal relations
+  files      ProjectFile[]
+  comments   ProjectComment[]
+  activities ProjectActivity[]
 
   deletedAt DateTime?
 
@@ -282,6 +295,68 @@ model Milestone {
   @@index([projectId])
   @@index([order])
   @@map("milestones")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 3B: Client Portal Models
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ProjectFile {
+  id           String  @id @default(cuid())
+  projectId    String
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy   User    @relation(fields: [uploadedById], references: [id])
+
+  name         String
+  url          String
+  type         String // "image", "document", "video", "archive", "other"
+  size         Int // bytes
+  cloudinaryId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([uploadedById])
+  @@map("project_files")
+}
+
+model ProjectComment {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User    @relation(fields: [authorId], references: [id])
+
+  content  String           @db.Text
+  parentId String?
+  parent   ProjectComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  ProjectComment[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([parentId])
+  @@map("project_comments")
+}
+
+model ProjectActivity {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+
+  action      String // "status_changed", "file_uploaded", "comment_added", "milestone_completed"
+  description String
+  metadata    Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("project_activities")
 }
 
 model Payment {
