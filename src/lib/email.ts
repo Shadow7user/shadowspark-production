@@ -1,50 +1,54 @@
-import { Resend } from "resend";
+import { Resend } from 'resend'
+import { render } from '@react-email/render'
+import type { ReactElement } from 'react'
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+if (!process.env.RESEND_API_KEY) {
+  console.warn('RESEND_API_KEY not set — emails will be logged, not sent')
+}
 
-export async function sendInvoiceEmail(params: {
-  to: string;
-  invoiceNumber: string;
-  amount: number;
-  paymentUrl: string;
-  pdfBuffer: Buffer;
-}) {
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'ShadowSpark <onboarding@resend.dev>'
+const REPLY_TO = process.env.RESEND_REPLY_TO ?? 'architect@shadowspark-technologies.com'
+
+interface SendEmailOptions {
+  to: string | string[]
+  subject: string
+  template: ReactElement
+  replyTo?: string
+}
+
+export async function sendEmail({ to, subject, template, replyTo }: SendEmailOptions) {
   try {
-    await resend.emails.send({
-      from: "ShadowSpark Technologies <invoices@shadowspark-tech.org>",
-      to: params.to,
-      subject: `Invoice ${params.invoiceNumber} - ₦${params.amount.toLocaleString()}`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>New Invoice from ShadowSpark Technologies</h2>
-          <p>Invoice Number: <strong>${params.invoiceNumber}</strong></p>
-          <p>Amount Due: <strong>₦${params.amount.toLocaleString()}</strong></p>
-          <p>Due Date: <strong>${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}</strong></p>
-          
-          <a href="${params.paymentUrl}" 
-             style="display: inline-block; background: linear-gradient(90deg, #00B8FF, #BD00FF); 
-                    color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; 
-                    margin: 20px 0;">
-            Pay Invoice Now
-          </a>
-          
-          <p>Or copy this link: <a href="${params.paymentUrl}">${params.paymentUrl}</a></p>
-          
-          <p style="color: #666; font-size: 14px; margin-top: 30px;">
-            Questions? Reply to this email or call us at +234 XXX XXX XXXX
-          </p>
-        </div>
-      `,
-      attachments: [
-        {
-          filename: `${params.invoiceNumber}.pdf`,
-          content: params.pdfBuffer,
-        },
-      ],
-    });
+    const html = await render(template)
 
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+    if (!process.env.RESEND_API_KEY) {
+      console.log(`[EMAIL] To: ${to} | Subject: ${subject}`)
+      console.log(`[EMAIL] HTML length: ${html.length} chars`)
+      return { success: true, id: 'dev-mode' }
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      html,
+      replyTo: replyTo ?? REPLY_TO,
+    })
+
+    if (error) {
+      console.error('[EMAIL ERROR]', error)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true, id: data?.id }
+  } catch (err) {
+    console.error('[EMAIL EXCEPTION]', err)
+    return { success: false, error: err instanceof Error ? err.message : 'Failed to send email' }
   }
+}
+
+export async function notifyAdmin(subject: string, template: ReactElement) {
+  const adminEmail = process.env.RESEND_REPLY_TO ?? 'architect@shadowspark-technologies.com'
+  return sendEmail({ to: adminEmail, subject: `[Admin] ${subject}`, template })
 }
