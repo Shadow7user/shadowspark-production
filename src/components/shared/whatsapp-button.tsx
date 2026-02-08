@@ -3,7 +3,7 @@
 import { MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const WHATSAPP_NUMBER = "234XXXXXXXXXX"; // Replace with real number before deploy
+const WHATSAPP_NUMBER = "2349045770572"; // Real number for production
 const PREFILLED_MESSAGE = encodeURIComponent(
   "Hi ShadowSpark, I'd like a free AI audit for my business",
 );

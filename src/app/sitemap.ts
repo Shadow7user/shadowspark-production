@@ -1,8 +1,8 @@
-import { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
+import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://shadowspark-technologies.com";
+  const baseUrl = "https://shadowspark-tech.org";
   
   let courseUrls: MetadataRoute.Sitemap = [];
   

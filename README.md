@@ -335,8 +335,8 @@ npm run test:e2e    # E2E tests
 ### Environments
 ```
 Development  → localhost:3000 (Neon dev branch)
-Staging      → staging.shadowspark-technologies.com (Neon staging branch)
-Production   → www.shadowspark-technologies.com (Neon main branch)
+Staging      → staging.shadowspark-tech.org (Neon staging branch)
+Production   → www.shadowspark-tech.org (Neon main branch)
 ```
 
 ### Vercel Deployment
@@ -415,7 +415,7 @@ vercel --prod
 ## 📞 Support
 
 - **Email:** architect@shadowspark-technologies.com
-- **Domain:** www.shadowspark-technologies.com
+- **Domain:** www.shadowspark-tech.org
 - **GitHub Issues:** Report bugs or request features
 
 ---

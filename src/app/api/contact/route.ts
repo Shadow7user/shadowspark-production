@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const resendClient = getResend();
     if (resendClient) {
       await resendClient.emails.send({
-        from: "leads@shadowspark-technologies.com",
+        from: "leads@shadowspark-tech.org",
         to: "architect@shadowspark-technologies.com",
         subject: `New Lead: ${name} - ${service}`,
         html: `

@@ -1,5 +1,5 @@
-﻿import NextAuth from "next-auth";
-import authConfig from "@/lib/auth.config";
+﻿import authConfig from "@/lib/auth.config";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
@@ -11,10 +11,16 @@ export default auth((req) => {
   const isPublicPage =
     req.nextUrl.pathname === "/" ||
     req.nextUrl.pathname === "/services" ||
+    req.nextUrl.pathname === "/about" ||
     req.nextUrl.pathname === "/contact" ||
+    req.nextUrl.pathname === "/portfolio" ||
+    req.nextUrl.pathname === "/case-studies" ||
+    req.nextUrl.pathname === "/blog" ||
     req.nextUrl.pathname === "/free-audit" ||
-    req.nextUrl.pathname.startsWith("/case-studies") ||
-    req.nextUrl.pathname.startsWith("/courses");
+    req.nextUrl.pathname === "/academy" ||
+    req.nextUrl.pathname.startsWith("/courses") ||
+    req.nextUrl.pathname.startsWith("/pay/") ||
+    req.nextUrl.pathname.startsWith("/verify/");
 
   // Allow public pages
   if (isPublicPage) {
