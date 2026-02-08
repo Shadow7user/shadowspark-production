@@ -1,7 +1,10 @@
+
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { LearnContent } from "./learn-content";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;

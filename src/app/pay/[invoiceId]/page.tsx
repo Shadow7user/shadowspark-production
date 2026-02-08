@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ invoiceId: string }>;

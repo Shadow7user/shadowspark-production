@@ -1,15 +1,15 @@
-import { Suspense } from "react";
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Metadata } from "next";
-import { Clock, Users, Star, CheckCircle, PlayCircle } from "lucide-react";
+
 import { CourseProgress } from "@/components/course-progress";
-import {
-  RecommendedSection,
-  RecommendedSectionSkeleton,
-} from "@/components/course/recommended-section";
+import { RecommendedSection, RecommendedSectionSkeleton } from "@/components/course/recommended-section";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { CheckCircle, Clock, PlayCircle, Star, Users } from "lucide-react";
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 const testimonials = [
   {

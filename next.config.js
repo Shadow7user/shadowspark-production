@@ -1,17 +1,10 @@
-const nextConfig = {
-  experimental: {
-    serverActions: {},
-  },
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "example.com",
-      },
-    ],
-  },
-};
 
-export default nextConfig;
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [],
+  },
+}
+
+export default nextConfig

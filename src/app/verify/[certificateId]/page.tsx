@@ -1,9 +1,9 @@
-import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+export const dynamic = "force-dynamic";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
+import Link from "next/link";
 
 interface Props {
   params: Promise<{ certificateId: string }>;

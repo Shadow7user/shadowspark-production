@@ -1,7 +1,10 @@
+
 import { prisma } from "@/lib/prisma";
 import { Clock, Star, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "AI Academy | Learn AI Automation | ShadowSpark Technologies",

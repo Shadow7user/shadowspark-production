@@ -1,8 +1,9 @@
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function AdminProjectsPage() {
   const session = await auth();
@@ -42,7 +43,7 @@ export default async function AdminProjectsPage() {
       acc[p.status] = (acc[p.status] || 0) + 1;
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 
   const totalBudget = projects.reduce((acc, p) => acc + Number(p.budget), 0);
@@ -74,7 +75,9 @@ export default async function AdminProjectsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statusCounts.IN_PROGRESS || 0}</p>
+              <p className="text-3xl font-bold">
+                {statusCounts.IN_PROGRESS || 0}
+              </p>
             </CardContent>
           </Card>
           <Card>
@@ -84,7 +87,9 @@ export default async function AdminProjectsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statusCounts.COMPLETED || 0}</p>
+              <p className="text-3xl font-bold">
+                {statusCounts.COMPLETED || 0}
+              </p>
             </CardContent>
           </Card>
           <Card>
@@ -104,7 +109,9 @@ export default async function AdminProjectsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">₦{totalBudget.toLocaleString()}</p>
+              <p className="text-2xl font-bold">
+                ₦{totalBudget.toLocaleString()}
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -125,7 +132,10 @@ export default async function AdminProjectsPage() {
             </Card>
           ) : (
             projects.map((project) => (
-              <Card key={project.id} className="hover:border-primary/50 transition">
+              <Card
+                key={project.id}
+                className="hover:border-primary/50 transition"
+              >
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <div>
@@ -135,10 +145,14 @@ export default async function AdminProjectsPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 text-xs rounded ${statusColors[project.status]}`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded ${statusColors[project.status]}`}
+                      >
                         {project.status.replace("_", " ")}
                       </span>
-                      <span className={`text-xs font-medium ${priorityColors[project.priority]}`}>
+                      <span
+                        className={`text-xs font-medium ${priorityColors[project.priority]}`}
+                      >
                         {project.priority}
                       </span>
                     </div>
@@ -150,7 +164,9 @@ export default async function AdminProjectsPage() {
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="flex gap-6 text-sm text-muted-foreground">
-                      <span>Manager: {project.manager.name || project.manager.email}</span>
+                      <span>
+                        Manager: {project.manager.name || project.manager.email}
+                      </span>
                       <span>{project._count.milestones} milestones</span>
                       <span>₦{Number(project.budget).toLocaleString()}</span>
                     </div>
@@ -170,7 +186,10 @@ export default async function AdminProjectsPage() {
         </div>
 
         <div className="mt-6">
-          <Link href="/admin" className="text-muted-foreground hover:underline text-sm">
+          <Link
+            href="/admin"
+            className="text-muted-foreground hover:underline text-sm"
+          >
             ← Back to Admin Dashboard
           </Link>
         </div>

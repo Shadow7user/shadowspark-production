@@ -1,10 +1,13 @@
-import { LessonVideoPlayer } from "@/components/course/lesson-video-player";
-import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/auth";
+
 import { prisma } from "@/lib/prisma";
-import { ChevronLeft } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { redirect, notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import { LessonVideoPlayer } from "@/components/course/lesson-video-player";
+
+export const dynamic = "force-dynamic";
 
 interface LessonPageProps {
   params: Promise<{

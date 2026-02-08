@@ -1,8 +1,11 @@
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
