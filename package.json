@@ -4,7 +4,7 @@
   "description": "Enterprise-Grade AI-Powered Digital Agency Platform - Next.js 15, TypeScript, Prisma, PostgreSQL, NextAuth.js, Paystack",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
