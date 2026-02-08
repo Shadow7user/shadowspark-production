@@ -1,3 +1,4 @@
+import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 import { TrustBadges } from "@/components/trust-badges";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -7,7 +8,7 @@ import Script from "next/script";
 export default function MarketingLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   return (
     <div className="min-h-screen bg-background">
@@ -63,6 +64,7 @@ export default function MarketingLayout({
             >
               Investors
             </Link>
+            {/* Academy removed from header nav */}
           </nav>
           <Button asChild>
             <Link href="/login">Login</Link>
@@ -105,17 +107,23 @@ export default function MarketingLayout({
               Pricing
             </Link>
             <Link
-              href="/courses"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Academy
-            </Link>
-            <Link
               href="/investors"
               className="text-sm text-muted-foreground hover:text-foreground md:hidden"
             >
               Investors
             </Link>
+            {/* Academy removed from footer nav, added to Resources below */}
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-6">
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold">Resources:</span>
+              <Link
+                href="/academy"
+                className="ml-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                AI Academy
+              </Link>
+            </div>
           </div>
           <div className="text-center text-sm text-muted-foreground">
             <p className="flex items-center justify-center gap-2">
@@ -134,6 +142,7 @@ export default function MarketingLayout({
             </p>
           </div>
         </div>
+        <WhatsAppButton />
       </footer>
     </div>
   );

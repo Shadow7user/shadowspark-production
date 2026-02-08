@@ -1,11 +1,10 @@
 "use client";
 
-
 // ...existing code...
+import FreeAIAuditSection from "@/components/marketing/FreeAIAuditSection";
 import { motion, useReducedMotion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
-import FreeAIAuditSection from "@/components/marketing/FreeAIAuditSection";
 
 export default function HomePage() {
   return (
@@ -31,7 +30,7 @@ function HeroSection() {
     >
       {/* Subtle animated grid background */}
       <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
-      
+
       {/* Pulsing orb for depth */}
       {!shouldReduceMotion && (
         <motion.div
@@ -54,7 +53,10 @@ function HeroSection() {
           </span>
         </motion.div>
 
-        <h1 id="hero-heading" className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-none">
+        <h1
+          id="hero-heading"
+          className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-none"
+        >
           Unlock Infinite Scale with
           <br className="hidden md:block" />
           <span className="bg-linear-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
@@ -63,7 +65,11 @@ function HeroSection() {
         </h1>
 
         <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-          Deploy intelligent agents that plan, reason, and execute autonomously — handling customer interactions, operations, and platforms 24/7. Achieve up to 95% automation with seamless integration and governance-first design. Built on proven, scalable stacks trusted by global innovators.
+          Deploy intelligent agents that plan, reason, and execute autonomously
+          — handling customer interactions, operations, and platforms 24/7.
+          Achieve up to 95% automation with seamless integration and
+          governance-first design. Built on proven, scalable stacks trusted by
+          global innovators.
         </p>
 
         {/* CTA + urgency block remains the same – strong multi-path funnel */}
