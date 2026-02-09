@@ -39,25 +39,24 @@ export default function HomePage() {
 
           {/* Headline */}
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
-            Losing Sales on{" "}
+            Stop Losing Customers on{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
-              WhatsApp?
+              WhatsApp
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Let AI handle your customer conversations 24/7.{" "}
+            We Build AI Chatbots That Answer Questions, Book Appointments & Boost Your Sales{" "}
             <br className="hidden md:block" />
             <span className="text-white">
-              Enterprise chatbots, websites & automation in 2-4 weeks.
+              – In Weeks.
             </span>
           </p>
 
           <div className="flex items-center justify-center gap-2 text-sm text-gray-400 pt-2">
-            <CheckCircle2 className="w-4 h-4 text-cyan-500" /> 60% cheaper than
-            Lagos agencies
+            <CheckCircle2 className="w-4 h-4 text-cyan-500" /> Enterprise quality, technical founder speed
             <span className="mx-2">•</span>
-            <CheckCircle2 className="w-4 h-4 text-cyan-500" /> 24/7 Support
+            <CheckCircle2 className="w-4 h-4 text-cyan-500" /> Delivered in 2-4 weeks
           </div>
 
           {/* CTAs */}

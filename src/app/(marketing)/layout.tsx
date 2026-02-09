@@ -43,7 +43,7 @@ export default function MarketingLayout({
               href="/case-studies"
               className="text-muted-foreground hover:text-foreground"
             >
-              Case Studies
+              Results
             </Link>
             <Link
               href="/free-audit"
@@ -56,12 +56,6 @@ export default function MarketingLayout({
               className="text-muted-foreground hover:text-foreground"
             >
               Contact
-            </Link>
-            <Link
-              href="/investors"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Investors
             </Link>
           </nav>
           <Button asChild>
@@ -105,10 +99,10 @@ export default function MarketingLayout({
               Pricing
             </Link>
             <Link
-              href="/courses"
+              href="/case-studies"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
-              Academy
+              Results
             </Link>
             <Link
               href="/investors"

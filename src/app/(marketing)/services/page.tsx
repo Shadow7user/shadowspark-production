@@ -12,7 +12,6 @@ import {
   Clock,
   Globe,
   MessageSquare,
-  Smartphone,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -32,16 +31,18 @@ export default function ServicesPage() {
       </section>
 
       {/* Service Cards */}
-      <section className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 lg:grid-cols-4 gap-8 mb-24">
+      <section className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8 mb-24">
         {/* Chatbots */}
         <Card className="bg-[#0A0A0F] border-gray-800 flex flex-col hover:border-green-500/50 transition-all duration-300">
           <CardHeader>
             <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4">
               <MessageSquare className="w-6 h-6 text-green-500" />
             </div>
-            <CardTitle className="text-2xl text-white">AI Chatbots</CardTitle>
+            <CardTitle className="text-2xl text-white">
+              AI-Powered WhatsApp Business Suite
+            </CardTitle>
             <p className="text-gray-400">
-              24/7 WhatsApp customer support agent.
+              24/7 WhatsApp customer support that never sleeps.
             </p>
           </CardHeader>
           <CardContent className="flex-1 space-y-6">
@@ -50,6 +51,9 @@ export default function ServicesPage() {
               <span className="text-sm font-normal text-gray-500 block">
                 One-time setup fee
               </span>
+            </div>
+            <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-3 text-sm text-cyan-400">
+              <strong>Outcome:</strong> Generate 30% more leads with instant responses
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -88,16 +92,19 @@ export default function ServicesPage() {
               <Globe className="w-6 h-6 text-purple-500" />
             </div>
             <CardTitle className="text-2xl text-white">
-              Next.js Websites
+              Next.js Business Platform
             </CardTitle>
-            <p className="text-gray-400">High-performance custom platforms.</p>
+            <p className="text-gray-400">High-performance enterprise-grade websites.</p>
           </CardHeader>
           <CardContent className="flex-1 space-y-6">
             <div className="text-3xl font-bold text-white">
-              ₦450k+
+              ₦450k - ₦1.2M
               <span className="text-sm font-normal text-gray-500 block">
-                Starting base price
+                Based on features
               </span>
+            </div>
+            <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 text-sm text-purple-400">
+              <strong>Outcome:</strong> Convert 40% more visitors into customers
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -133,7 +140,7 @@ export default function ServicesPage() {
               <Zap className="w-6 h-6 text-blue-500" />
             </div>
             <CardTitle className="text-2xl text-white">
-              Process Automation
+              Process Automation & Dashboard
             </CardTitle>
             <p className="text-gray-400">
               Eliminate manual data entry forever.
@@ -141,10 +148,13 @@ export default function ServicesPage() {
           </CardHeader>
           <CardContent className="flex-1 space-y-6">
             <div className="text-3xl font-bold text-white">
-              Custom Quote
+              ₦200k - ₦800k
               <span className="text-sm font-normal text-gray-500 block">
                 Based on complexity
               </span>
+            </div>
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm text-blue-400">
+              <strong>Outcome:</strong> Save 15+ hours per week on manual tasks
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -171,53 +181,6 @@ export default function ServicesPage() {
             </Link>
           </CardFooter>
         </Card>
-
-        {/* Mobile & System Apps */}
-        <Card className="bg-[#0A0A0F] border-gray-800 flex flex-col hover:border-orange-500/50 transition-all duration-300">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-4">
-              <Smartphone className="w-6 h-6 text-orange-500" />
-            </div>
-            <CardTitle className="text-2xl text-white">
-              Mobile & System Apps
-            </CardTitle>
-            <p className="text-gray-400">
-              Native iOS, Android, Windows, and macOS applications
-            </p>
-          </CardHeader>
-          <CardContent className="flex-1 space-y-6">
-            <div className="text-3xl font-bold text-white">
-              ₦800k - ₦5M
-              <span className="text-sm font-normal text-gray-500 block">
-                Based on complexity
-              </span>
-            </div>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-gray-300">
-                <CheckCircle2 className="w-5 h-5 text-orange-500" /> React
-                Native/Flutter
-              </li>
-              <li className="flex items-center gap-3 text-gray-300">
-                <CheckCircle2 className="w-5 h-5 text-orange-500" /> Native
-                Swift/Kotlin
-              </li>
-              <li className="flex items-center gap-3 text-gray-300">
-                <CheckCircle2 className="w-5 h-5 text-orange-500" /> Electron
-                desktop apps
-              </li>
-              <li className="flex items-center gap-3 text-gray-300">
-                <Clock className="w-5 h-5 text-gray-500" /> Delivery: 3-6 weeks
-              </li>
-            </ul>
-          </CardContent>
-          <CardFooter>
-            <Link href="/services/apps" className="w-full">
-              <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                Learn More
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
       </section>
 
       {/* Comparison Table */}
@@ -230,18 +193,14 @@ export default function ServicesPage() {
             <thead>
               <tr className="border-b border-gray-800">
                 <th className="p-6 text-gray-400 font-medium">Feature</th>
-                <th className="p-6 text-white font-bold">Chatbots</th>
-                <th className="p-6 text-white font-bold">Websites</th>
+                <th className="p-6 text-white font-bold">WhatsApp Suite</th>
+                <th className="p-6 text-white font-bold">Business Platform</th>
                 <th className="p-6 text-white font-bold">Automation</th>
-                <th className="p-6 text-white font-bold">Apps</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
               <tr>
                 <td className="p-6 text-gray-300">AI Integration</td>
-                <td className="p-6">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
-                </td>
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
@@ -261,9 +220,6 @@ export default function ServicesPage() {
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
                 <td className="p-6 text-gray-600">—</td>
-                <td className="p-6">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
-                </td>
               </tr>
               <tr>
                 <td className="p-6 text-gray-300">Paystack Payments</td>
@@ -274,9 +230,6 @@ export default function ServicesPage() {
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
                 <td className="p-6 text-gray-600">—</td>
-                <td className="p-6">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
-                </td>
               </tr>
               <tr>
                 <td className="p-6 text-gray-300">Admin Dashboard</td>
@@ -285,16 +238,12 @@ export default function ServicesPage() {
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
-                <td className="p-6">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-500" />
-                </td>
               </tr>
               <tr>
-                <td className="p-6 text-gray-300">Human Handover</td>
+                <td className="p-6 text-gray-300">24/7 Customer Support</td>
                 <td className="p-6">
                   <CheckCircle2 className="w-5 h-5 text-cyan-500" />
                 </td>
-                <td className="p-6 text-gray-600">—</td>
                 <td className="p-6 text-gray-600">—</td>
                 <td className="p-6 text-gray-600">—</td>
               </tr>
