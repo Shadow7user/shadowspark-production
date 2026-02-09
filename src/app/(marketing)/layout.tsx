@@ -1,5 +1,6 @@
 import { TrustBadges } from "@/components/trust-badges";
 import { Button } from "@/components/ui/button";
+import { ClawBotWidget } from "@/components/clawbot-widget";
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
@@ -65,6 +66,7 @@ export default function MarketingLayout({
         </div>
       </header>
       <main>{children}</main>
+      <ClawBotWidget />
       <footer className="border-t py-12 mt-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <TrustBadges />
