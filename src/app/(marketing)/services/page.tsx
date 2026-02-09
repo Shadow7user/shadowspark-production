@@ -53,7 +53,7 @@ export default function ServicesPage() {
               </span>
             </div>
             <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-3 text-sm text-cyan-400">
-              <strong>Outcome:</strong> Generate 30% more leads with instant responses
+              <strong>Outcome:</strong> Generate up to 30% more leads with instant responses*
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -104,7 +104,7 @@ export default function ServicesPage() {
               </span>
             </div>
             <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 text-sm text-purple-400">
-              <strong>Outcome:</strong> Convert 40% more visitors into customers
+              <strong>Outcome:</strong> Convert up to 40% more visitors into customers*
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -154,7 +154,7 @@ export default function ServicesPage() {
               </span>
             </div>
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 text-sm text-blue-400">
-              <strong>Outcome:</strong> Save 15+ hours per week on manual tasks
+              <strong>Outcome:</strong> Save 15+ hours per week on manual tasks*
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-gray-300">
@@ -260,6 +260,9 @@ export default function ServicesPage() {
             Talk to a human <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </Link>
+        <p className="text-xs text-gray-500 mt-12">
+          * Results based on actual client outcomes. Individual results may vary.
+        </p>
       </section>
     </main>
   );

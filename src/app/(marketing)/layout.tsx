@@ -39,6 +39,7 @@ export default function MarketingLayout({
             >
               Pricing
             </Link>
+            {/* Labeled "Results" for B2B positioning, URL remains /case-studies for backwards compatibility */}
             <Link
               href="/case-studies"
               className="text-muted-foreground hover:text-foreground"
