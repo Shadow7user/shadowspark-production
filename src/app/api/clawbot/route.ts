@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
 
+// Configuration constants
+const MAX_RESPONSE_TOKENS = 300; // Limit responses for cost optimization and brevity
+const CLAUDE_MODEL = "claude-3-haiku-20240307"; // Fast, cost-effective model
+const API_VERSION = "2023-06-01";
+
 const SYSTEM_PROMPT = `You are ClawBot, ShadowSpark Technologies' AI assistant. You help Nigerian businesses understand our AI services.
 
 Our Services:
@@ -45,11 +50,11 @@ export async function POST(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "anthropic-version": API_VERSION,
       },
       body: JSON.stringify({
-        model: "claude-3-haiku-20240307",
-        max_tokens: 300,
+        model: CLAUDE_MODEL,
+        max_tokens: MAX_RESPONSE_TOKENS,
         messages: [
           {
             role: "user",

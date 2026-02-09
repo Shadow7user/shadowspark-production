@@ -75,7 +75,7 @@ if (-not (Test-Path ".env")) {
 
 # Check for Anthropic API key
 $envContent = Get-Content ".env" -Raw
-if ($envContent -notmatch "ANTHROPIC_API_KEY=sk-") {
+if ($envContent -notmatch "ANTHROPIC_API_KEY=sk-\S+") {
     Write-Host "`n⚠️  ANTHROPIC_API_KEY not configured in .env" -ForegroundColor Yellow
     Write-Host "ClawBot will use fallback responses until you add:" -ForegroundColor Yellow
     Write-Host "ANTHROPIC_API_KEY=sk-ant-xxxxx" -ForegroundColor Cyan

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface Message {
+  id: string;
   role: "user" | "assistant";
   content: string;
 }
@@ -15,6 +16,7 @@ export function ClawBotWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
+      id: "welcome-" + Date.now(),
       role: "assistant",
       content:
         "👋 Hi! I'm ClawBot, ShadowSpark's AI assistant. How can I help you with AI chatbots, websites, or automation today?",
@@ -38,7 +40,10 @@ export function ClawBotWidget() {
 
     const userMessage = input.trim();
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+    setMessages((prev) => [
+      ...prev,
+      { id: "user-" + Date.now(), role: "user", content: userMessage },
+    ]);
     setIsLoading(true);
 
     try {
@@ -48,20 +53,32 @@ export function ClawBotWidget() {
         body: JSON.stringify({ message: userMessage }),
       });
 
-      if (!response.ok) throw new Error("Failed to get response");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to get response");
+      }
 
       const data = await response.json();
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.message },
+        {
+          id: "assistant-" + Date.now(),
+          role: "assistant",
+          content: data.message,
+        },
       ]);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error && error.message.includes("Failed to fetch")
+          ? "I can't connect right now. Please check your internet connection and try again."
+          : "Sorry, I'm having trouble connecting. Please try again or contact us directly at hello@shadowspark.tech";
+
       setMessages((prev) => [
         ...prev,
         {
+          id: "error-" + Date.now(),
           role: "assistant",
-          content:
-            "Sorry, I'm having trouble connecting right now. Please try again or contact us directly at hello@shadowspark.tech",
+          content: errorMessage,
         },
       ]);
     } finally {
@@ -116,9 +133,9 @@ export function ClawBotWidget() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message, index) => (
+          {messages.map((message) => (
             <div
-              key={index}
+              key={message.id}
               className={cn(
                 "flex gap-2",
                 message.role === "user" ? "justify-end" : "justify-start"
