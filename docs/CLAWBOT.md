@@ -13,11 +13,13 @@ ClawBot is ShadowSpark's AI-powered customer assistant that helps Nigerian busin
 ## Quick Deploy
 
 Run the deployment script:
+
 ```powershell
 .\scripts\deploy-clawbot.ps1
 ```
 
 Or configure manually:
+
 1. Add `ANTHROPIC_API_KEY=sk-ant-xxxxx` to `.env`
 2. Test locally with `npm run dev`
 3. Deploy with `vercel --prod`

@@ -1,7 +1,7 @@
 # ═══════════════════════════════════════════════════════════
 # SHADOWSPARK CLAWBOT - COMPLETE DEPLOYMENT
 # Adds chatbot to website + WhatsApp + Telegram in 5 minutes
-# ═══════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════
 
 Write-Host "🤖 CLAWBOT DEPLOYMENT STARTED" -ForegroundColor Cyan
 Write-Host "════════════════════════════════" -ForegroundColor Cyan

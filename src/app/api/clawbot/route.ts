@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (!message || typeof message !== "string") {
       return NextResponse.json(
         { error: "Message is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
         message:
           "I'm experiencing technical difficulties. Please email us at hello@shadowspark.tech or book a free audit.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
