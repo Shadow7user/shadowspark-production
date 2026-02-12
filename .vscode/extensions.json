@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "Prisma.prisma",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "usernamehw.errorlens",
+    "dsznajder.es7-react-js-snippets"
+  ]
+}

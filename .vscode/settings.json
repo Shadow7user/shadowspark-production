@@ -1,0 +1,59 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "editor.linkedEditing": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": false,
+    "markdown": true
+  },
+  
+  "workbench.colorTheme": "GitHub Dark",
+  "workbench.iconTheme": "material-icon-theme",
+  
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  
+  "errorLens.enabled": true,
+  "errorLens.fontSize": "12px",
+  
+  "emmet.includeLanguages": {
+    "typescript": "typescriptreact",
+    "javascript": "javascriptreact"
+  }
+}
