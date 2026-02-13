@@ -23,6 +23,23 @@ Expected: "Connection succeeded"
 nc -zv ep-calm-glade-aglkkal-pooler.c-2.eu-central-1.aws.neon.tech 5432 -w 5
 ```
 
+### Test Database Authentication with psql
+
+If DNS and TCP tests pass but Prisma fails, the issue is likely authentication:
+
+```bash
+# Install PostgreSQL client
+sudo apt install postgresql-client -y
+
+# Test actual database connection (replace with your credentials)
+psql "postgresql://neondb_owner:YOUR_PASSWORD@ep-calm-glade-aglkkal.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+```
+
+**Possible outcomes:**
+- ✅ Connects successfully → Prisma config issue, check `.env` format
+- ❌ `password authentication failed` → Get fresh password from Neon dashboard
+- ❌ `database "neondb" does not exist` → Check database name in Neon console
+
 ### Test Database Connection via Prisma
 ```bash
 # Set up environment first
@@ -70,6 +87,26 @@ which gh
 gh --version
 ```
 
+### Install GitHub CLI
+
+#### Option 1: From apt
+```bash
+sudo apt update
+sudo apt install gh -y
+```
+
+#### Option 2: Official installation (if apt fails)
+```bash
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+  && sudo mkdir -p -m 755 /etc/apt/keyrings \
+  && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+  && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+  && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo apt update \
+  && sudo apt install gh -y
+```
+
 ### Check Authentication Status
 ```bash
 gh auth status
@@ -78,7 +115,7 @@ gh auth status
 ### Login to GitHub
 ```bash
 gh auth login
-# Select: GitHub.com → SSH (or HTTPS) → Yes
+# Select: GitHub.com → SSH → Yes → Login with browser
 ```
 
 ### Check User Plan

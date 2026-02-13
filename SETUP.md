@@ -122,6 +122,30 @@ Visit [http://localhost:3000](http://localhost:3000) to see your application.
    ep-calm-glade-aglkkal-pooler.c-2.eu-central-1.aws.neon.tech
    ```
 
+**Problem**: Prisma connection fails even when DNS/TCP tests pass
+
+This usually indicates an **authentication issue** (wrong password or database doesn't exist), not a network problem.
+
+**Solution**: Test the actual database connection with `psql`:
+
+```bash
+# Install PostgreSQL client if not already installed
+sudo apt install postgresql-client -y
+
+# Test direct connection (replace with your actual credentials)
+psql "postgresql://neondb_owner:YOUR_PASSWORD@ep-calm-glade-aglkkal.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+```
+
+**Possible outcomes**:
+- ✅ **If it connects**: Prisma config issue, not credentials. Check your `.env` file format.
+- ❌ **If `password authentication failed`**: Password may have changed. Get fresh credentials from Neon dashboard.
+- ❌ **If `database "neondb" does not exist`**: Database was renamed or deleted. Check database name in Neon console.
+
+Once `psql` connects successfully, try Prisma again:
+```bash
+npx prisma db push
+```
+
 ### GitHub SSH Access
 
 **Problem**: Permission denied (publickey)
@@ -148,14 +172,34 @@ ssh -T git@github.com
 **Problem**: `gh` commands fail with authentication error
 
 **Solution**:
+
+#### Option 1: Install from apt (if available)
 ```bash
-# Install gh CLI (if not installed)
 sudo apt update
 sudo apt install gh -y
+```
 
-# Authenticate
+#### Option 2: Install from official source (if apt fails)
+```bash
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+  && sudo mkdir -p -m 755 /etc/apt/keyrings \
+  && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+  && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+  && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo apt update \
+  && sudo apt install gh -y
+```
+
+#### Authenticate
+```bash
 gh auth login
-# Select: GitHub.com → SSH → Yes (if SSH is set up) or HTTPS
+# Select: GitHub.com → SSH → Yes → Login with browser
+```
+
+#### Verify
+```bash
+gh auth status
 ```
 
 ## GitHub Enterprise Features
@@ -175,6 +219,27 @@ gh api /user | grep -i plan
 ```
 
 ## Development Workflow
+
+### Setting Up Multiple Clones (Optional)
+
+If you want to clone the repository to a different location for local development:
+
+```bash
+# Create project directory
+mkdir -p ~/shadowspark/projects
+cd ~/shadowspark/projects
+
+# Clone the production repo
+git clone git@github.com:Shadow7user/shadowspark-production.git shadowspark-platform
+
+# Verify
+cd shadowspark-platform
+ls -la
+git log --oneline -5
+git status
+```
+
+### Standard Development Workflow
 
 1. Create a feature branch:
    ```bash
