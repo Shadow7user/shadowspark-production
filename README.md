@@ -48,6 +48,8 @@ Visit [http://localhost:3000](http://localhost:3000) to see your application.
 ## 📚 Documentation
 
 - **[SETUP.md](./SETUP.md)** - Comprehensive setup guide with troubleshooting
+- **[DIAGNOSTICS.md](./DIAGNOSTICS.md)** - Diagnostic commands quick reference
+- **[GITHUB_ENTERPRISE.md](./GITHUB_ENTERPRISE.md)** - GitHub Enterprise features guide
 - **[Next.js Documentation](https://nextjs.org/docs)** - Framework documentation
 - **[Prisma Documentation](https://www.prisma.io/docs)** - Database ORM
 - **[NextAuth.js Documentation](https://next-auth.js.org)** - Authentication
@@ -88,7 +90,7 @@ If you encounter Neon database connection errors:
 
 3. **Check hostname for typos**: Common issue with `aglkkal` vs `aglkkkal`
 
-See [SETUP.md](./SETUP.md) for more troubleshooting tips.
+See [DIAGNOSTICS.md](./DIAGNOSTICS.md) or [SETUP.md](./SETUP.md) for more troubleshooting tips.
 
 ## 🤝 Contributing
 
