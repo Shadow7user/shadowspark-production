@@ -87,9 +87,11 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
-          # Use mock environment variables for build
-          DATABASE_URL: "postgresql://user:pass@localhost:5432/test"
-          NEXTAUTH_SECRET: "test-secret-for-ci-build-only"
+          # IMPORTANT: These are mock/test values for CI builds only
+          # They are NOT real credentials and are safe to be in version control
+          # Real production credentials are stored in GitHub Secrets
+          DATABASE_URL: "postgresql://ci-user:ci-pass@localhost:5432/ci-test-db"
+          NEXTAUTH_SECRET: "ci-test-secret-not-for-production-use-only"
           NEXTAUTH_URL: "http://localhost:3000"
 
   type-check:

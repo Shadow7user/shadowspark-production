@@ -74,11 +74,16 @@ echo ""
 echo "Step 3: Testing database connectivity..."
 echo "----------------------------------------"
 
+# Placeholder values to check against
+PLACEHOLDER_USER="username:password"
+PLACEHOLDER_SECRET="your-super-secret"
+
 # Extract hostname from DATABASE_URL in .env
 if [ -f ".env" ]; then
-    DB_HOST=$(grep DATABASE_URL .env | cut -d'@' -f2 | cut -d'/' -f1 | cut -d':' -f1)
+    # More robust parsing: extract host after @ and before the next / or :
+    DB_HOST=$(grep "^DATABASE_URL=" .env | head -1 | sed -E 's/.*@([^:\/]+).*/\1/')
     
-    if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "username" ]; then
+    if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "username" ] && [ "$DB_HOST" != "$PLACEHOLDER_USER" ]; then
         echo "Testing connection to: $DB_HOST"
         
         # Test DNS resolution
@@ -154,8 +159,9 @@ echo "======================================"
 echo ""
 
 if [ -f ".env" ]; then
-    DB_CONFIGURED=$(grep -v "^#" .env | grep DATABASE_URL | grep -v "username:password" | wc -l)
-    AUTH_CONFIGURED=$(grep -v "^#" .env | grep NEXTAUTH_SECRET | grep -v "your-super-secret" | wc -l)
+    # Check if placeholders have been replaced with real values
+    DB_CONFIGURED=$(grep -v "^#" .env | grep "^DATABASE_URL=" | grep -v "$PLACEHOLDER_USER" | wc -l)
+    AUTH_CONFIGURED=$(grep -v "^#" .env | grep "^NEXTAUTH_SECRET=" | grep -v "$PLACEHOLDER_SECRET" | wc -l)
     
     if [ "$DB_CONFIGURED" -eq "0" ]; then
         echo -e "${YELLOW}⚠ ACTION REQUIRED:${NC} Configure DATABASE_URL in .env"
