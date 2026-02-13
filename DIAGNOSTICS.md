@@ -37,8 +37,20 @@ psql "postgresql://neondb_owner:YOUR_PASSWORD@ep-calm-glade-aglkkal.c-2.eu-centr
 
 **Possible outcomes:**
 - ✅ Connects successfully → Prisma config issue, check `.env` format
-- ❌ `password authentication failed` → Get fresh password from Neon dashboard
+- ❌ `password authentication failed` → Password rotated, get fresh credentials:
+  1. Visit https://console.neon.tech
+  2. Select your project
+  3. Go to "Connection Details" or "Dashboard"
+  4. Click eye icon (👁️) to reveal password
+  5. Copy both pooled and direct connection strings
+  6. Update `.env` with new credentials
 - ❌ `database "neondb" does not exist` → Check database name in Neon console
+
+### Quick Test After Password Update
+```bash
+# Test the new connection immediately
+psql "YOUR_FRESH_URL_HERE" -c "SELECT 1 AS connected;"
+```
 
 ### Test Database Connection via Prisma
 ```bash

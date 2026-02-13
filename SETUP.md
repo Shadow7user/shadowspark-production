@@ -138,8 +138,29 @@ psql "postgresql://neondb_owner:YOUR_PASSWORD@ep-calm-glade-aglkkal.c-2.eu-centr
 
 **Possible outcomes**:
 - ✅ **If it connects**: Prisma config issue, not credentials. Check your `.env` file format.
-- ❌ **If `password authentication failed`**: Password may have changed. Get fresh credentials from Neon dashboard.
+- ❌ **If `password authentication failed`**: Password may have changed or rotated. Get fresh credentials from Neon dashboard (see below).
 - ❌ **If `database "neondb" does not exist`**: Database was renamed or deleted. Check database name in Neon console.
+
+**Getting Fresh Credentials from Neon**:
+
+If password authentication fails, get updated credentials:
+
+1. Open browser: https://console.neon.tech
+2. Click your project (e.g., shadowspark-production)
+3. Go to "Connection Details" or "Dashboard"
+4. Click the eye icon (👁️) to reveal the password
+5. Copy the **FULL pooled connection string** (for DATABASE_URL)
+6. Copy the **FULL direct connection string** (for DIRECT_URL)
+
+Update your `.env` file:
+```bash
+# Update with fresh credentials
+nano .env
+# Replace DATABASE_URL and DIRECT_URL with the new strings
+
+# Test immediately
+psql "YOUR_FRESH_POOLED_URL_HERE" -c "SELECT 1 AS connected;"
+```
 
 Once `psql` connects successfully, try Prisma again:
 ```bash
