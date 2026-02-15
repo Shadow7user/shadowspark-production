@@ -1,24 +1,22 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const leadsCount = await prisma.lead.count();
-    const businessesCount = await prisma.business.count();
+    const [msgResult, convResult] = await Promise.all([
+      prisma.$queryRaw<[{ count: bigint }]>`SELECT count(*) FROM messages`,
+      prisma.$queryRaw<[{ count: bigint }]>`SELECT count(*) FROM conversations`,
+    ]);
 
-    const stats = {
-      messagesProcessed: 847 + Math.floor(Math.random() * 10),
-      activeChatbots: Math.max(businessesCount, 24),
-      avgResponseTime: 1.2 + Math.random() * 0.3,
+    return NextResponse.json({
+      messagesProcessed: Number(msgResult[0].count),
+      activeChatbots: Number(convResult[0].count),
+      avgResponseTime: 1.2,
       platformUptime: 99.9,
-      leadsGenerated: leadsCount,
-    };
-
-    return NextResponse.json(stats);
+      leadsGenerated: 0,
+    });
   } catch (error) {
-    console.error("Error fetching stats:", error);
+    console.error("Stats API error:", error);
     return NextResponse.json(
       {
         messagesProcessed: 847,
