@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(nextConfig, {
   org: "shadowspark-technologies",
-  project: "shadowspark-platform",
+  project: "javascript-nextjs",
   silent: !process.env.CI,
   widenClientFileUpload: true,
   webpack: {
