@@ -242,6 +242,7 @@ export default function PricingCalculator() {
                 `Hi, I'm interested in a custom plan:\n- ${tier.label} messages/month\n- Channels: ${channels.join(", ")}\n- Add-ons: ${features.length > 0 ? features.join(", ") : "none"}\n- Estimated: \u20A6${total.toLocaleString()}/mo`,
               )}`}
               source="pricing_calculator"
+              onClick={() => trackCalculatorQuoteClick(total)}
               className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Get This Quote on WhatsApp
