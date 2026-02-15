@@ -1,0 +1,194 @@
+{
+  "version": "1.0",
+  "industry": "e-commerce",
+  "locale": "en-NG",
+  "pairs": [
+    {
+      "id": 1,
+      "category": "order_tracking",
+      "question": "Where is my order?",
+      "answer": "Hello! 👋 I can help you track your order. Please share your order number (e.g., ORD-12345) and I'll give you a real-time update right away!"
+    },
+    {
+      "id": 2,
+      "category": "order_tracking",
+      "question": "I ordered since yesterday, I haven't received anything",
+      "answer": "So sorry for the wait! 😔 Standard delivery in Lagos takes 1–2 business days, and 2–4 days for other states. Please drop your order ID and I'll check the exact status for you now."
+    },
+    {
+      "id": 3,
+      "category": "order_tracking",
+      "question": "My tracking number is not working",
+      "answer": "Tracking numbers take up to 24 hours to activate after dispatch. If it's been longer than that, please share the number here and I'll escalate to our logistics team immediately. 🚚"
+    },
+    {
+      "id": 4,
+      "category": "returns",
+      "question": "I want to return this product",
+      "answer": "No wahala! 🙌 We accept returns within 7 days of delivery. To start: (1) Tell me your order number, (2) Describe the issue, (3) Share a photo if the item is damaged. I'll process your return request right away."
+    },
+    {
+      "id": 5,
+      "category": "returns",
+      "question": "The item I received is not what I ordered",
+      "answer": "Ah, that's not good at all — we're very sorry! 😤 Please share your order ID + a photo of what you received. We'll send the correct item or issue a full refund within 24 hours. This is our fault, not yours."
+    },
+    {
+      "id": 6,
+      "category": "returns",
+      "question": "The product is damaged",
+      "answer": "So sorry about that! 😟 Please take 2–3 clear photos of the damage and send them here with your order number. We'll arrange a free replacement or instant refund — your choice. No stress!"
+    },
+    {
+      "id": 7,
+      "category": "returns",
+      "question": "How long does refund take?",
+      "answer": "Refunds are processed within 3–5 business days after we confirm the return. For bank transfers, allow 1–2 extra days for your bank to reflect it. We'll send you a confirmation message once it's done! ✅"
+    },
+    {
+      "id": 8,
+      "category": "payment",
+      "question": "I paid but my order is not confirmed",
+      "answer": "Please don't worry! Sometimes confirmation takes up to 30 minutes due to bank processing. Please share your payment receipt or transaction reference and I'll manually verify and confirm your order right now. 💳"
+    },
+    {
+      "id": 9,
+      "category": "payment",
+      "question": "Can I pay on delivery?",
+      "answer": "Yes! We offer Pay on Delivery (POD) for orders within Lagos, Abuja, and Port Harcourt. For other locations, we require at least 50% upfront. Want to place an order with POD? Tell me what you need! 😊"
+    },
+    {
+      "id": 10,
+      "category": "payment",
+      "question": "Do you accept transfer?",
+      "answer": "Yes, we accept: ✅ Bank Transfer, ✅ Card Payment (online), ✅ Pay on Delivery (select cities), ✅ Opay / Palmpay. Our account details will be shared at checkout. Which do you prefer?"
+    },
+    {
+      "id": 11,
+      "category": "payment",
+      "question": "I was charged twice",
+      "answer": "That's serious and we'll fix it immediately! 🚨 Please share: (1) Your order number, (2) Bank name, (3) Both transaction references. We'll confirm with our payment provider and refund the duplicate charge within 24 hours."
+    },
+    {
+      "id": 12,
+      "category": "product",
+      "question": "Is this product original?",
+      "answer": "100% original and authentic! ✅ All our products come directly from verified suppliers with certificates of authenticity. We also offer a 30-day quality guarantee — if it's not genuine, full refund. No questions asked."
+    },
+    {
+      "id": 13,
+      "category": "product",
+      "question": "Do you have this in a different colour?",
+      "answer": "Let me check our current inventory! Which product are you asking about? Once you confirm, I'll tell you all available colours, sizes, and quantities in stock right now. 🎨"
+    },
+    {
+      "id": 14,
+      "category": "product",
+      "question": "Is this item available?",
+      "answer": "Great choice! 😊 Yes, this item is currently in stock. How many units do you need? I can place the order for you right here on WhatsApp — quick and easy!"
+    },
+    {
+      "id": 15,
+      "category": "product",
+      "question": "What is the warranty on this product?",
+      "answer": "This product comes with a 12-month manufacturer warranty covering factory defects. Our store also offers an additional 30-day return policy for any issues. Would you like to know more about coverage details? 🛡️"
+    },
+    {
+      "id": 16,
+      "category": "delivery",
+      "question": "Do you deliver to my state?",
+      "answer": "We deliver nationwide across all 36 states + FCT! 🇳🇬 Delivery timelines: Lagos (1–2 days), Abuja/PH (2–3 days), other states (3–5 days). What's your location? I'll confirm the exact delivery fee and timeline."
+    },
+    {
+      "id": 17,
+      "category": "delivery",
+      "question": "How much is delivery to Abuja?",
+      "answer": "Delivery to Abuja is ₦1,500 for standard (3–4 days) or ₦3,000 for express (next day). Orders above ₦50,000 get free delivery! Would you like to proceed with an order? 🚀"
+    },
+    {
+      "id": 18,
+      "category": "delivery",
+      "question": "Can I pick up myself?",
+      "answer": "Yes! We have pickup locations in Lagos Island, Ikeja, and Victoria Island. Pickup is free and available Monday–Saturday, 9am–6pm. Once your order is ready, we'll send you a pickup code. Which location works for you?"
+    },
+    {
+      "id": 19,
+      "category": "delivery",
+      "question": "My delivery is late",
+      "answer": "So sorry about this! 😔 Traffic and logistics delays happen sometimes, especially in Lagos. Please share your order number and I'll contact our dispatch rider directly and give you an exact ETA within the next 30 minutes."
+    },
+    {
+      "id": 20,
+      "category": "pricing",
+      "question": "Can you reduce the price?",
+      "answer": "I understand — value matters! 😊 Our prices are competitive and reflect the quality + warranty we provide. However, if you're buying 3+ units, I can offer a 10% bulk discount. Interested? Let me know what you need!"
+    },
+    {
+      "id": 21,
+      "category": "pricing",
+      "question": "Do you have a promo or discount?",
+      "answer": "Yes! 🎉 Current offers: (1) New customer: 5% off first order with code WELCOME5, (2) Bulk orders (5+ items): 15% off, (3) Weekend flash sales every Friday–Sunday. Want me to apply a discount to your order now?"
+    },
+    {
+      "id": 22,
+      "category": "pricing",
+      "question": "What is the price of this item?",
+      "answer": "The current price is displayed on our website. But if you tell me the exact product name or send me the link, I'll confirm the exact price + any ongoing discounts for you right now! 💰"
+    },
+    {
+      "id": 23,
+      "category": "account",
+      "question": "I forgot my password",
+      "answer": "No problem! 😊 Click 'Forgot Password' on the login page and enter your email address. You'll get a reset link within 2 minutes. If you don't see it, check your spam folder. Still having trouble? I'll escalate to our tech team."
+    },
+    {
+      "id": 24,
+      "category": "account",
+      "question": "How do I create an account?",
+      "answer": "Super easy! Visit our website, click 'Sign Up', enter your name, email, and phone number, then verify with the OTP sent to your phone. Takes less than 2 minutes! Or I can help you place an order right here on WhatsApp without an account. 😊"
+    },
+    {
+      "id": 25,
+      "category": "general",
+      "question": "What are your working hours?",
+      "answer": "Our customer support team is available: Monday–Friday: 8am–8pm, Saturday: 9am–6pm, Sunday: 10am–4pm (WhatsApp only). This AI assistant is available 24/7 for instant help! 🕐 What do you need right now?"
+    },
+    {
+      "id": 26,
+      "category": "general",
+      "question": "Is this business real or scam?",
+      "answer": "100% legitimate! 🙏 We've been operating since 2023 with 2,000+ happy customers. Check our Google reviews, our Instagram page, and our CAC registration number [REG-123456]. Still unsure? Call us directly: 0800-SHADOWSPARK. We have nothing to hide!"
+    },
+    {
+      "id": 27,
+      "category": "general",
+      "question": "How do I place an order?",
+      "answer": "Placing an order is simple! Here's how: 1️⃣ Browse our website and pick your items, 2️⃣ Add to cart, 3️⃣ Enter your delivery address, 4️⃣ Pay online or choose Pay on Delivery. OR just tell me what you want right here and I'll process it for you! 🛒"
+    },
+    {
+      "id": 28,
+      "category": "general",
+      "question": "I have a complaint",
+      "answer": "I'm really sorry to hear that! Your experience matters to us deeply. Please tell me exactly what happened and I will personally ensure it's resolved today — not tomorrow. We value every customer and will make this right. 🙏"
+    },
+    {
+      "id": 29,
+      "category": "general",
+      "question": "Do you sell wholesale?",
+      "answer": "Yes! We offer wholesale pricing for orders of 20+ units. Benefits include: ✅ Up to 30% discount, ✅ Priority delivery, ✅ Dedicated account manager, ✅ Net-30 payment terms for verified businesses. Interested? Let me connect you with our wholesale team!"
+    },
+    {
+      "id": 30,
+      "category": "general",
+      "question": "Thank you, you've been helpful",
+      "answer": "So glad I could help! 😊🙏 If you need anything else — tracking, orders, returns — just message anytime. We're always here! Don't forget to share us with your friends and family. Have a blessed day! ✨"
+    }
+  ],
+  "meta": {
+    "total": 30,
+    "categories": ["order_tracking", "returns", "payment", "product", "delivery", "pricing", "account", "general"],
+    "language": "Nigerian English",
+    "tone": "Friendly, empathetic, action-oriented",
+    "generated": "2026-02-15"
+  }
+}
