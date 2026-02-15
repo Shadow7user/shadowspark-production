@@ -7,10 +7,11 @@ import StatsSection from "@/components/StatsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function Home() {
   return (
-    <>
+    <ErrorBoundary>
       <Navbar />
       <HeroSection />
       <FeaturesSection />
@@ -20,6 +21,6 @@ export default function Home() {
       <CTASection />
       <Footer />
       <ChatWidget />
-    </>
+    </ErrorBoundary>
   );
 }
