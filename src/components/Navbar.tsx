@@ -4,10 +4,11 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { href: "#features", label: "Features" },
-  { href: "#solutions", label: "Solutions" },
-  { href: "#tech", label: "Tech Stack" },
-  { href: "#stats", label: "Results" },
+  { href: "/#features", label: "Features" },
+  { href: "/#solutions", label: "Solutions" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Navbar() {
@@ -22,11 +23,17 @@ export default function Navbar() {
 
         {/* Desktop */}
         <div className="hidden items-center gap-8 md:flex">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm text-slate-400 transition-colors hover:text-cyan-400">
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.href.startsWith("/#") ? (
+              <a key={l.href} href={l.href} className="text-sm text-slate-400 transition-colors hover:text-cyan-400">
+                {l.label}
+              </a>
+            ) : (
+              <Link key={l.href} href={l.href} className="text-sm text-slate-400 transition-colors hover:text-cyan-400">
+                {l.label}
+              </Link>
+            )
+          )}
           <Link href="/login" className="text-sm text-slate-300 hover:text-white transition-colors">
             Sign In
           </Link>
@@ -48,11 +55,17 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-slate-800 bg-slate-900/95 backdrop-blur-md md:hidden">
           <div className="flex flex-col gap-4 p-4">
-            {links.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-slate-400 hover:text-cyan-400">
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) =>
+              l.href.startsWith("/#") ? (
+                <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-slate-400 hover:text-cyan-400">
+                  {l.label}
+                </a>
+              ) : (
+                <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-slate-400 hover:text-cyan-400">
+                  {l.label}
+                </Link>
+              )
+            )}
             <Link href="/login" className="text-slate-300 hover:text-white">Sign In</Link>
             <Link href="/register" className="rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-2 text-center font-semibold text-white">
               Get Started

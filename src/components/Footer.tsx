@@ -9,11 +9,12 @@ export default function Footer() {
             <Link href="/" className="text-xl font-bold gradient-text">ShadowSpark</Link>
             <p className="mt-1 text-sm text-slate-500">AI-powered solutions for Nigerian businesses</p>
           </div>
-          <div className="flex gap-6 text-sm text-slate-500">
-            <a href="#features" className="hover:text-cyan-400 transition-colors">Features</a>
-            <a href="#solutions" className="hover:text-cyan-400 transition-colors">Solutions</a>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+            <a href="/#features" className="hover:text-cyan-400 transition-colors">Features</a>
+            <Link href="/pricing" className="hover:text-cyan-400 transition-colors">Pricing</Link>
+            <Link href="/about" className="hover:text-cyan-400 transition-colors">About</Link>
+            <Link href="/blog" className="hover:text-cyan-400 transition-colors">Blog</Link>
             <Link href="/login" className="hover:text-cyan-400 transition-colors">Sign In</Link>
-            <Link href="/register" className="hover:text-cyan-400 transition-colors">Register</Link>
           </div>
         </div>
         <div className="mt-8 border-t border-slate-800 pt-6 text-center text-xs text-slate-600">
