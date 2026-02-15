@@ -12,6 +12,7 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
             <a href="/#features" className="hover:text-cyan-400 transition-colors">Features</a>
             <Link href="/pricing" className="hover:text-cyan-400 transition-colors">Pricing</Link>
+            <Link href="/portfolio" className="hover:text-cyan-400 transition-colors">Portfolio</Link>
             <Link href="/about" className="hover:text-cyan-400 transition-colors">About</Link>
             <Link href="/blog" className="hover:text-cyan-400 transition-colors">Blog</Link>
             <Link href="/login" className="hover:text-cyan-400 transition-colors">Sign In</Link>

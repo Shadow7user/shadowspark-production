@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import LiveTicker from "@/components/LiveTicker";
 import FeaturesSection from "@/components/FeaturesSection";
 import SolutionsSection from "@/components/SolutionsSection";
 import TechLogos from "@/components/TechLogos";
@@ -14,6 +15,7 @@ export default function Home() {
     <ErrorBoundary>
       <Navbar />
       <HeroSection />
+      <LiveTicker />
       <FeaturesSection />
       <SolutionsSection />
       <TechLogos />

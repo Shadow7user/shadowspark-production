@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PricingCalculator from "@/components/PricingCalculator";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -172,6 +173,9 @@ export default function PricingPage() {
             ))}
           </div>
         </section>
+
+        {/* Calculator */}
+        <PricingCalculator />
 
         {/* FAQ */}
         <section className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 lg:px-8">
