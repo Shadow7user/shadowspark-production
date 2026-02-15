@@ -2,9 +2,6 @@
 import { useEffect, useState } from "react";
 import { Activity, MessageSquare, Bot, Clock, Shield } from "lucide-react";
 import { io, Socket } from "socket.io-client";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 interface Stats {
   messagesProcessed: number;
@@ -102,7 +99,7 @@ export default function LiveTicker() {
   const [isVisible, setIsVisible] = useState(false);
   const [stats, setStats] = useState<Stats>(defaultStats);
   const [socketConnected, setSocketConnected] = useState(false);
-  const [leads, setLeads] = useState(900); // Initial value from Prisma
+  const [leads, setLeads] = useState(0);
 
   // 3G optimization: Delay rendering for slow connections
   // Shows skeleton first, then loads real-time data
@@ -179,6 +176,7 @@ export default function LiveTicker() {
         if (response.ok) {
           const data = await response.json();
           setStats(data);
+          if (data.leadsGenerated != null) setLeads(data.leadsGenerated);
         }
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -193,21 +191,6 @@ export default function LiveTicker() {
     return () => clearInterval(interval);
   }, [socketConnected]);
 
-  useEffect(() => {
-    async function fetchLeads() {
-      try {
-        const result = await prisma.lead.count();
-        setLeads(result);
-      } catch (error) {
-        console.error("Failed to fetch leads:", error);
-      }
-    }
-
-    fetchLeads();
-
-    const interval = setInterval(fetchLeads, 60000); // Refresh every minute
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="border-y border-white/5 bg-[#0f1521]/50 backdrop-blur-sm">
