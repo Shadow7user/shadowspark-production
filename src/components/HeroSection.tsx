@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { ArrowRight, Bot, Zap } from "lucide-react";
 import { trackCTAClick } from "@/lib/analytics";
