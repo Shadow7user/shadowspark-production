@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Bot, Zap } from "lucide-react";
+import { trackCTAClick } from "@/lib/analytics";
 
 export default function HeroSection() {
   return (
@@ -23,12 +24,14 @@ export default function HeroSection() {
               <span className="gradient-text">Grow Faster.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg text-slate-400">
-              We help Nigerian businesses automate customer support, generate leads,
-              and make data-driven decisions with AI chatbots, BI dashboards, and RPA workflows.
+              We help Nigerian businesses automate customer support, generate
+              leads, and make data-driven decisions with AI chatbots, BI
+              dashboards, and RPA workflows.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/register"
+                onClick={() => trackCTAClick("start_free_trial", "hero")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg shadow-[#d4a843]/15 transition-all hover:shadow-[#d4a843]/25 hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
                 Start Free Trial <ArrowRight size={20} />
@@ -70,13 +73,17 @@ export default function HeroSection() {
                     <Bot size={16} />
                   </div>
                   <div className="rounded-lg rounded-tl-none bg-white/5 px-4 py-2 text-sm text-slate-300">
-                    Great choice! Our AI chatbot handles orders, FAQs, and customer support 24/7. Pricing starts at &#8358;50,000/mo. Want a demo?
+                    Great choice! Our AI chatbot handles orders, FAQs, and
+                    customer support 24/7. Pricing starts at &#8358;50,000/mo.
+                    Want a demo?
                   </div>
                 </div>
               </div>
               <div className="mt-4 flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.03] px-3 py-2 text-sm text-slate-500">
                 Type a message...
-                <span className="ml-auto rounded bg-[#d4a843]/10 px-2 py-0.5 text-xs text-[#d4a843]">AI</span>
+                <span className="ml-auto rounded bg-[#d4a843]/10 px-2 py-0.5 text-xs text-[#d4a843]">
+                  AI
+                </span>
               </div>
             </div>
           </div>

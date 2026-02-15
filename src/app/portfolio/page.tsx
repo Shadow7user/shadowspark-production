@@ -1,3 +1,4 @@
+import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -150,9 +151,7 @@ export default function PortfolioPage() {
                 key={cs.title}
                 className={`glass-card overflow-hidden rounded-2xl ${cs.border}`}
               >
-                <div
-                  className={`bg-gradient-to-r ${cs.gradient} p-8 md:p-12`}
-                >
+                <div className={`bg-gradient-to-r ${cs.gradient} p-8 md:p-12`}>
                   {/* Header */}
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs font-medium text-slate-300">
@@ -197,9 +196,7 @@ export default function PortfolioPage() {
                         <p className="text-2xl font-bold text-white">
                           {r.value}
                         </p>
-                        <p className="mt-1 text-xs text-slate-400">
-                          {r.label}
-                        </p>
+                        <p className="mt-1 text-xs text-slate-400">{r.label}</p>
                         <p className="text-xs text-slate-600">{r.sub}</p>
                       </div>
                     ))}
@@ -245,14 +242,13 @@ export default function PortfolioPage() {
               >
                 Start Free Trial <ArrowRight size={16} />
               </Link>
-              <a
+              <WhatsAppLink
                 href="https://wa.me/2349037621612?text=Hi%2C%20I%20saw%20your%20portfolio%20and%20I%27m%20interested"
-                target="_blank"
-                rel="noopener noreferrer"
+                source="portfolio_page"
                 className="rounded-lg border border-emerald-500/20 px-6 py-3 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
                 Discuss on WhatsApp
-              </a>
+              </WhatsAppLink>
             </div>
           </div>
         </section>

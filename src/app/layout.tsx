@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import ConsentBanner from "@/components/ConsentBanner";
+import "./globals.css"; // Ensure CSS module declaration is recognized
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -88,8 +89,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "ShadowSpark Technologies",
               url: "https://shadowspark-tech.org",
-              description:
-                "AI-powered business solutions for Nigerian SMEs",
+              description: "AI-powered business solutions for Nigerian SMEs",
               areaServed: "NG",
               sameAs: [],
             }),
@@ -97,12 +97,23 @@ export default function RootLayout({
         />
         {GA_ID && (
           <>
+            {/* Consent mode default — must fire before gtag */}
+            <Script id="consent-default" strategy="beforeInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});`}
+            </Script>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
             />
             <Script id="ga4-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}', {
+                'anonymize_ip': true,
+                'allow_google_signals': false,
+                'allow_ad_personalization_signals': false,
+                'user_properties': {
+                  'region': Intl.DateTimeFormat().resolvedOptions().timeZone
+                }
+              });`}
             </Script>
           </>
         )}
@@ -111,6 +122,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0a0f1a] text-slate-200`}
       >
         {children}
+        <ConsentBanner />
       </body>
     </html>
   );

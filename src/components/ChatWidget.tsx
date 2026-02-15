@@ -1,6 +1,14 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
+import WhatsAppLink from "@/components/WhatsAppLink";
+import {
+  trackChatbotOpen,
+  trackChatbotMessage,
+  trackChatbotQuickAction,
+  trackChatbotNudgeShown,
+  trackChatbotNudgeClicked,
+} from "@/lib/analytics";
 
 type Message = { role: "bot" | "user"; text: string };
 
@@ -77,6 +85,7 @@ export default function ChatWidget() {
     proactiveTimerRef.current = setTimeout(() => {
       if (!hasInteracted) {
         setShowProactive(true);
+        trackChatbotNudgeShown();
       }
     }, 10000);
     return () => {
@@ -93,6 +102,7 @@ export default function ChatWidget() {
     setOpen(true);
     setShowProactive(false);
     setHasInteracted(true);
+    trackChatbotOpen();
   }
 
   function handleClose() {
@@ -112,6 +122,7 @@ export default function ChatWidget() {
     setHasInteracted(true);
     setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
     setLoading(true);
+    trackChatbotMessage(trimmed);
 
     const reply = findReply(trimmed);
 
@@ -140,7 +151,10 @@ export default function ChatWidget() {
               Need help choosing the right AI solution for your business?
             </p>
             <button
-              onClick={handleOpen}
+              onClick={() => {
+                trackChatbotNudgeClicked();
+                handleOpen();
+              }}
               className="mt-2 text-xs font-semibold text-[#d4a843] hover:text-[#e8c56d]"
             >
               Chat with us &rarr;
@@ -178,9 +192,7 @@ export default function ChatWidget() {
               <Bot size={18} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">
-                ShadowSpark AI
-              </p>
+              <p className="text-sm font-semibold text-white">ShadowSpark AI</p>
               <p className="text-xs text-white/70">Online</p>
             </div>
           </div>
@@ -190,7 +202,10 @@ export default function ChatWidget() {
             {["Pricing", "Demo", "Chatbot", "Dashboard"].map((topic) => (
               <button
                 key={topic}
-                onClick={() => sendMessage(topic)}
+                onClick={() => {
+                  trackChatbotQuickAction(topic);
+                  sendMessage(topic);
+                }}
                 className="shrink-0 rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400 transition-colors hover:border-[#d4a843] hover:text-[#d4a843]"
               >
                 {topic}
@@ -229,14 +244,13 @@ export default function ChatWidget() {
           </div>
 
           {/* WhatsApp CTA */}
-          <a
+          <WhatsAppLink
             href="https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20ShadowSpark"
-            target="_blank"
-            rel="noopener noreferrer"
+            source="chatwidget"
             className="mx-4 mb-2 flex items-center justify-center gap-2 rounded-lg bg-green-600/20 px-3 py-1.5 text-xs text-green-400 transition-colors hover:bg-green-600/30"
           >
             Continue on WhatsApp for full AI support
-          </a>
+          </WhatsAppLink>
 
           {/* Input */}
           <div className="flex items-center gap-2 border-t border-white/5 p-3">

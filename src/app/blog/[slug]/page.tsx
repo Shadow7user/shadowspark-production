@@ -1,3 +1,4 @@
+import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
@@ -6,7 +7,13 @@ import Footer from "@/components/Footer";
 
 const posts: Record<
   string,
-  { title: string; date: string; readTime: string; category: string; content: string }
+  {
+    title: string;
+    date: string;
+    readTime: string;
+    category: string;
+    content: string;
+  }
 > = {
   "why-nigerian-smes-need-whatsapp-chatbots": {
     title: "Why Nigerian SMEs Need WhatsApp Chatbots in 2026",
@@ -204,7 +211,9 @@ export async function generateStaticParams() {
   return Object.keys(posts).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
   const { slug } = await params;
   const post = posts[slug];
   if (!post) {
@@ -308,7 +317,7 @@ export default async function BlogPostPage({ params }: PageParams) {
                               .replace(/^- /, "")
                               .replace(
                                 /\*\*(.*?)\*\*/g,
-                                '<strong class="text-white">$1</strong>'
+                                '<strong class="text-white">$1</strong>',
                               ),
                           }}
                         />
@@ -335,7 +344,7 @@ export default async function BlogPostPage({ params }: PageParams) {
                   dangerouslySetInnerHTML={{
                     __html: block.replace(
                       /\*\*(.*?)\*\*/g,
-                      '<strong class="text-white">$1</strong>'
+                      '<strong class="text-white">$1</strong>',
                     ),
                   }}
                 />
@@ -358,14 +367,13 @@ export default async function BlogPostPage({ params }: PageParams) {
               >
                 Start Free Trial
               </Link>
-              <a
+              <WhatsAppLink
                 href="https://wa.me/2349037621612"
-                target="_blank"
-                rel="noopener noreferrer"
+                source="blog_post"
                 className="rounded-lg border border-emerald-500/20 px-6 py-2.5 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
                 Chat on WhatsApp
-              </a>
+              </WhatsAppLink>
             </div>
           </div>
         </article>

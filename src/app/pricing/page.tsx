@@ -1,3 +1,4 @@
+import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
@@ -97,8 +98,7 @@ export default function PricingPage() {
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Simple, transparent{" "}
-            <span className="gradient-text">pricing</span>
+            Simple, transparent <span className="gradient-text">pricing</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
             No hidden fees. No long-term contracts. Start with a free trial and
@@ -159,14 +159,17 @@ export default function PricingPage() {
                       {plan.cta}
                     </Link>
                   ) : (
-                    <a
+                    <WhatsAppLink
                       href={plan.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block rounded-lg border border-slate-700 px-4 py-3 text-center text-sm font-semibold text-slate-300 transition-all hover:border-[#d4a843] hover:text-[#d4a843]"
+                      source="pricing_page"
+                      className={`block rounded-lg px-4 py-3 text-center text-sm font-semibold transition-all ${
+                        plan.popular
+                          ? "bg-gradient-to-r from-[#d4a843] to-[#c0935a] text-white hover:from-[#e8c56d] hover:to-[#d4a843]"
+                          : "border border-slate-700 text-slate-300 hover:border-[#d4a843] hover:text-[#d4a843]"
+                      }`}
                     >
                       {plan.cta}
-                    </a>
+                    </WhatsAppLink>
                   )}
                 </div>
               </div>
@@ -202,14 +205,13 @@ export default function PricingPage() {
               Chat with us on WhatsApp and we&apos;ll recommend the best fit for
               your business.
             </p>
-            <a
+            <WhatsAppLink
               href="https://wa.me/2349037621612?text=Hi%2C%20I%20need%20help%20choosing%20a%20plan"
-              target="_blank"
-              rel="noopener noreferrer"
+              source="pricing_page"
               className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
             >
               Chat on WhatsApp
-            </a>
+            </WhatsAppLink>
           </div>
         </section>
       </main>

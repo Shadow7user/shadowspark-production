@@ -1,3 +1,4 @@
+import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, ArrowRight, Clock } from "lucide-react";
@@ -10,8 +11,7 @@ export const metadata: Metadata = {
     "AI tips, automation strategies, and business insights for Nigerian SMEs. Learn how to leverage chatbots, dashboards, and RPA.",
   openGraph: {
     title: "ShadowSpark Blog",
-    description:
-      "AI tips and automation strategies for Nigerian businesses.",
+    description: "AI tips and automation strategies for Nigerian businesses.",
   },
 };
 
@@ -108,9 +108,7 @@ export default function BlogPage() {
             <h2 className="mt-4 text-2xl font-bold text-white group-hover:text-[#d4a843] sm:text-3xl">
               {posts[0].title}
             </h2>
-            <p className="mt-3 max-w-3xl text-slate-400">
-              {posts[0].excerpt}
-            </p>
+            <p className="mt-3 max-w-3xl text-slate-400">{posts[0].excerpt}</p>
             <div className="mt-4 flex items-center gap-4 text-sm text-slate-500">
               <span className="flex items-center gap-1">
                 <Calendar size={14} />
@@ -159,21 +157,18 @@ export default function BlogPage() {
         {/* Newsletter CTA */}
         <section className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 lg:px-8">
           <div className="rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center md:p-12">
-            <h2 className="text-2xl font-bold text-white">
-              Stay in the loop
-            </h2>
+            <h2 className="text-2xl font-bold text-white">Stay in the loop</h2>
             <p className="mt-2 text-slate-400">
               Get weekly AI tips and business automation insights delivered to
               your WhatsApp.
             </p>
-            <a
+            <WhatsAppLink
               href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20your%20weekly%20AI%20tips"
-              target="_blank"
-              rel="noopener noreferrer"
+              source="blog_page"
               className="mt-6 inline-block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Subscribe via WhatsApp
-            </a>
+            </WhatsAppLink>
           </div>
         </section>
       </main>

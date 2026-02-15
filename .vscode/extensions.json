@@ -8,6 +8,7 @@
     "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
     "usernamehw.errorlens",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "phatarrow.vscode-codestorm"
   ]
 }

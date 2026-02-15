@@ -1,6 +1,13 @@
 "use client";
 import { useState } from "react";
 import { Calculator, MessageSquare, Layers, Wrench } from "lucide-react";
+import WhatsAppLink from "@/components/WhatsAppLink";
+import {
+  trackCalculatorInteract,
+  trackCalculatorChannelToggle,
+  trackCalculatorAddonToggle,
+  trackCalculatorQuoteClick,
+} from "@/lib/analytics";
 
 const channelOptions = [
   { id: "whatsapp", label: "WhatsApp", price: 30000 },
@@ -38,15 +45,19 @@ export default function PricingCalculator() {
   const total = tier.base + channelCost + featureCost;
 
   function toggleChannel(id: string) {
+    const willEnable = !channels.includes(id);
     setChannels((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
+    trackCalculatorChannelToggle(id, willEnable);
   }
 
   function toggleFeature(id: string) {
+    const willEnable = !features.includes(id);
     setFeatures((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
     );
+    trackCalculatorAddonToggle(id, willEnable);
   }
 
   return (
@@ -79,7 +90,14 @@ export default function PricingCalculator() {
               min={0}
               max={messageTiers.length - 1}
               value={messageVolume}
-              onChange={(e) => setMessageVolume(Number(e.target.value))}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setMessageVolume(v);
+                trackCalculatorInteract(
+                  "message_volume",
+                  messageTiers[v].label,
+                );
+              }}
               className="w-full cursor-pointer accent-[#d4a843]"
             />
             <div className="mt-1 flex justify-between text-xs text-slate-500">
@@ -90,7 +108,9 @@ export default function PricingCalculator() {
               <span>&infin;</span>
             </div>
             <p className="mt-2 text-sm text-slate-400">
-              Selected: <span className="text-white font-medium">{tier.label}</span> messages/month
+              Selected:{" "}
+              <span className="text-white font-medium">{tier.label}</span>{" "}
+              messages/month
             </p>
           </div>
 
@@ -113,7 +133,8 @@ export default function PricingCalculator() {
                 >
                   {c.label}
                   <span className="ml-2 text-xs text-slate-500">
-                    +{"\u20A6"}{(c.price / 1000).toFixed(0)}k
+                    +{"\u20A6"}
+                    {(c.price / 1000).toFixed(0)}k
                   </span>
                 </button>
               ))}
@@ -150,7 +171,8 @@ export default function PricingCalculator() {
                     </span>
                   </div>
                   <span className="text-xs text-slate-500">
-                    +{"\u20A6"}{(f.price / 1000).toFixed(0)}k/mo
+                    +{"\u20A6"}
+                    {(f.price / 1000).toFixed(0)}k/mo
                   </span>
                 </label>
               ))}
@@ -169,7 +191,8 @@ export default function PricingCalculator() {
               <div className="flex justify-between text-slate-400">
                 <span>Base ({tier.label} messages)</span>
                 <span className="text-white">
-                  {"\u20A6"}{tier.base.toLocaleString()}
+                  {"\u20A6"}
+                  {tier.base.toLocaleString()}
                 </span>
               </div>
               {channelOptions
@@ -181,7 +204,8 @@ export default function PricingCalculator() {
                   >
                     <span>{c.label} channel</span>
                     <span className="text-white">
-                      {"\u20A6"}{c.price.toLocaleString()}
+                      {"\u20A6"}
+                      {c.price.toLocaleString()}
                     </span>
                   </div>
                 ))}
@@ -194,7 +218,8 @@ export default function PricingCalculator() {
                   >
                     <span>{f.label}</span>
                     <span className="text-white">
-                      {"\u20A6"}{f.price.toLocaleString()}
+                      {"\u20A6"}
+                      {f.price.toLocaleString()}
                     </span>
                   </div>
                 ))}
@@ -202,7 +227,8 @@ export default function PricingCalculator() {
                 <div className="flex items-end justify-between">
                   <span className="text-slate-400">Total</span>
                   <span className="text-3xl font-bold text-white">
-                    {"\u20A6"}{total.toLocaleString()}
+                    {"\u20A6"}
+                    {total.toLocaleString()}
                     <span className="text-sm font-normal text-slate-500">
                       /mo
                     </span>
@@ -211,16 +237,15 @@ export default function PricingCalculator() {
               </div>
             </div>
 
-            <a
+            <WhatsAppLink
               href={`https://wa.me/2349037621612?text=${encodeURIComponent(
-                `Hi, I'm interested in a custom plan:\n- ${tier.label} messages/month\n- Channels: ${channels.join(", ")}\n- Add-ons: ${features.length > 0 ? features.join(", ") : "none"}\n- Estimated: \u20A6${total.toLocaleString()}/mo`
+                `Hi, I'm interested in a custom plan:\n- ${tier.label} messages/month\n- Channels: ${channels.join(", ")}\n- Add-ons: ${features.length > 0 ? features.join(", ") : "none"}\n- Estimated: \u20A6${total.toLocaleString()}/mo`,
               )}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              source="pricing_calculator"
               className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Get This Quote on WhatsApp
-            </a>
+            </WhatsAppLink>
             <p className="mt-3 text-center text-xs text-slate-500">
               Prices are estimates. Final pricing confirmed after consultation.
             </p>
