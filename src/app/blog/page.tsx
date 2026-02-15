@@ -84,7 +84,7 @@ export default function BlogPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-950 pt-24">
+      <main className="min-h-screen bg-[#0a0f1a] pt-24">
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
@@ -100,12 +100,12 @@ export default function BlogPage() {
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Link
             href={`/blog/${posts[0].slug}`}
-            className="group block rounded-2xl border border-purple-500/20 bg-gradient-to-r from-cyan-600/10 to-purple-600/10 p-8 transition-all hover:border-cyan-500/40 md:p-12"
+            className="group block rounded-2xl border border-[#d4a843]/10 bg-gradient-to-r from-[#d4a843]/5 to-[#c0935a]/5 p-8 transition-all hover:border-[#d4a843]/20 md:p-12"
           >
-            <span className="inline-block rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-400">
+            <span className="inline-block rounded-full bg-[#d4a843]/10 px-3 py-1 text-xs font-medium text-[#d4a843]">
               {posts[0].category}
             </span>
-            <h2 className="mt-4 text-2xl font-bold text-white group-hover:text-cyan-400 sm:text-3xl">
+            <h2 className="mt-4 text-2xl font-bold text-white group-hover:text-[#d4a843] sm:text-3xl">
               {posts[0].title}
             </h2>
             <p className="mt-3 max-w-3xl text-slate-400">
@@ -131,12 +131,12 @@ export default function BlogPage() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group glass-card rounded-xl p-6 transition-all hover:-translate-y-1 hover:border-cyan-500/40"
+                className="group glass-card rounded-xl p-6 transition-all hover:-translate-y-1 hover:border-[#d4a843]/20"
               >
-                <span className="inline-block rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
+                <span className="inline-block rounded-full bg-[#c0935a]/10 px-3 py-1 text-xs font-medium text-[#c0935a]">
                   {post.category}
                 </span>
-                <h3 className="mt-3 text-lg font-semibold text-white group-hover:text-cyan-400">
+                <h3 className="mt-3 text-lg font-semibold text-white group-hover:text-[#d4a843]">
                   {post.title}
                 </h3>
                 <p className="mt-2 text-sm text-slate-400 line-clamp-3">
@@ -147,7 +147,7 @@ export default function BlogPage() {
                     <Calendar size={12} />
                     {formatDate(post.date)}
                   </span>
-                  <span className="flex items-center gap-1 text-cyan-400 group-hover:gap-2 transition-all">
+                  <span className="flex items-center gap-1 text-[#d4a843] group-hover:gap-2 transition-all">
                     Read more <ArrowRight size={12} />
                   </span>
                 </div>
@@ -158,7 +158,7 @@ export default function BlogPage() {
 
         {/* Newsletter CTA */}
         <section className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-gradient-to-r from-cyan-600/20 to-purple-600/20 p-8 text-center md:p-12">
+          <div className="rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center md:p-12">
             <h2 className="text-2xl font-bold text-white">
               Stay in the loop
             </h2>
@@ -170,7 +170,7 @@ export default function BlogPage() {
               href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20your%20weekly%20AI%20tips"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-cyan-600 hover:to-purple-700"
+              className="mt-6 inline-block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Subscribe via WhatsApp
             </a>

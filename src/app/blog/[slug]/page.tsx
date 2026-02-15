@@ -233,12 +233,12 @@ export default async function BlogPostPage({ params }: PageParams) {
     return (
       <>
         <Navbar />
-        <main className="flex min-h-screen items-center justify-center bg-slate-950 pt-24">
+        <main className="flex min-h-screen items-center justify-center bg-[#0a0f1a] pt-24">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white">Post not found</h1>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-cyan-400 hover:text-cyan-300"
+              className="mt-4 inline-block text-[#d4a843] hover:text-[#e8c56d]"
             >
               Back to blog
             </Link>
@@ -252,17 +252,17 @@ export default async function BlogPostPage({ params }: PageParams) {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-950 pt-24">
+      <main className="min-h-screen bg-[#0a0f1a] pt-24">
         <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
           <Link
             href="/blog"
-            className="mb-8 inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-cyan-400"
+            className="mb-8 inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-[#d4a843]"
           >
             <ArrowLeft size={14} />
             Back to blog
           </Link>
 
-          <span className="inline-block rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-400">
+          <span className="inline-block rounded-full bg-[#d4a843]/10 px-3 py-1 text-xs font-medium text-[#d4a843]">
             {post.category}
           </span>
 
@@ -301,7 +301,7 @@ export default async function BlogPostPage({ params }: PageParams) {
                         key={j}
                         className="flex items-start gap-2 text-slate-400"
                       >
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4a843]" />
                         <span
                           dangerouslySetInnerHTML={{
                             __html: line
@@ -344,7 +344,7 @@ export default async function BlogPostPage({ params }: PageParams) {
           </div>
 
           {/* CTA */}
-          <div className="mt-12 rounded-2xl bg-gradient-to-r from-cyan-600/20 to-purple-600/20 p-8 text-center">
+          <div className="mt-12 rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center">
             <h3 className="text-xl font-bold text-white">
               Ready to automate your business?
             </h3>
@@ -354,7 +354,7 @@ export default async function BlogPostPage({ params }: PageParams) {
             <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/register"
-                className="rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:from-cyan-600 hover:to-purple-700"
+                className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-2.5 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
                 Start Free Trial
               </Link>
@@ -362,7 +362,7 @@ export default async function BlogPostPage({ params }: PageParams) {
                 href="https://wa.me/2349037621612"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-green-500/30 px-6 py-2.5 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10"
+                className="rounded-lg border border-emerald-500/20 px-6 py-2.5 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
                 Chat on WhatsApp
               </a>

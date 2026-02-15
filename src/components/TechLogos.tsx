@@ -1,57 +1,57 @@
 export default function TechLogos() {
   return (
-    <section id="tech" className="border-y border-slate-800 bg-slate-950 py-16">
+    <section id="tech" className="border-y border-white/5 bg-[#0a0f1a] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="mb-10 text-center text-sm font-medium uppercase tracking-wider text-slate-500">
           Powered by world-class technology
         </p>
         <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
           {/* OpenAI */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v3.005l-2.607 1.5-2.602-1.5z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">OpenAI</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">OpenAI</span>
           </div>
 
           {/* Twilio */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 20.25c-4.556 0-8.25-3.694-8.25-8.25S7.444 3.75 12 3.75s8.25 3.694 8.25 8.25-3.694 8.25-8.25 8.25zm3.75-11.25a1.875 1.875 0 1 1 0 3.75 1.875 1.875 0 0 1 0-3.75zm0 4.5a1.875 1.875 0 1 1 0 3.75 1.875 1.875 0 0 1 0-3.75zm-4.5-4.5a1.875 1.875 0 1 1 0 3.75 1.875 1.875 0 0 1 0-3.75zm0 4.5a1.875 1.875 0 1 1 0 3.75 1.875 1.875 0 0 1 0-3.75z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">Twilio</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">Twilio</span>
           </div>
 
           {/* Stripe */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.918 3.757 7.076c0 4.72 2.891 6.242 6.01 7.489 2.113.84 2.924 1.476 2.924 2.442 0 .98-.753 1.556-2.158 1.556-1.864 0-4.767-.921-6.652-2.052L3 22.014C4.723 23.068 7.632 24 10.69 24c2.607 0 4.724-.678 6.219-1.93 1.622-1.345 2.434-3.248 2.434-5.595.033-4.838-2.937-6.394-5.367-7.325z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">Stripe</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">Stripe</span>
           </div>
 
           {/* Vercel */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M12 1L24 22H0L12 1z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">Vercel</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">Vercel</span>
           </div>
 
-          {/* PostgreSQL (Neon) */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          {/* Neon */}
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M17.128 0a10.134 10.134 0 0 0-2.755.403l-.063.02A10.922 10.922 0 0 0 12.6.258C11.422.238 10.253.404 9.2.82 8.79.65 7.98.47 7.11.46h-.04C5.13.47 3.58 1.19 2.86 2.68c-.96 1.97-.54 4.93.04 7.06.17.65.35 1.25.55 1.78.13.36.33.87.59 1.34.13.24.35.61.65.95.13.14.38.39.75.56l.04.01a.8.8 0 0 0 .31.06c.49 0 .84-.37.96-.63.13-.29.2-.59.24-.84l.02-.13v-.06c.18-1.09.46-1.87.85-2.63l.04-.02c.07.05.14.1.22.16a6.2 6.2 0 0 0 2.84 1.27l.14.02-.02.13c-.06.41-.2 1.62.09 2.86.24 1.03.65 2.06.65 2.06.17.42.56 1.47 1.29 2.38.69.86 1.59 1.55 2.85 1.59h.11c1.41-.09 2.33-.86 2.87-1.71.57-.87.83-1.82.99-2.53.17-.72.24-1.41.28-1.78l.01-.11v-.04a1.32 1.32 0 0 1 .26-.7c.14-.16.34-.32.65-.44.62-.24 1.1-.59 1.48-1.01.68-.74 1.04-1.71 1.16-2.67.15-1.18-.01-2.37-.08-3.02-.04-.32-.07-.55-.07-.64V6.72c-.01-.23 0-.5.03-.78.06-.65.19-1.37.18-2.18A5.59 5.59 0 0 0 21.71.96 6.06 6.06 0 0 0 17.22 0h-.09z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">Neon</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">Neon</span>
           </div>
 
           {/* Next.js */}
-          <div className="group flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-white">
+          <div className="group flex flex-col items-center gap-2 opacity-40 transition-opacity hover:opacity-80">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-slate-300">
               <path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z" fill="currentColor"/>
             </svg>
-            <span className="text-xs text-slate-500 group-hover:text-slate-300">Next.js</span>
+            <span className="text-xs text-slate-500 group-hover:text-slate-400">Next.js</span>
           </div>
         </div>
       </div>

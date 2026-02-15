@@ -52,7 +52,7 @@ export default function PricingCalculator() {
   return (
     <section className="mx-auto max-w-4xl px-4 pb-20 sm:px-6 lg:px-8">
       <div className="text-center">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-sm text-cyan-400">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d4a843]/30 bg-[#d4a843]/10 px-4 py-1.5 text-sm text-[#d4a843]">
           <Calculator size={14} /> Pricing Calculator
         </div>
         <h2 className="text-3xl font-bold text-white">
@@ -69,7 +69,7 @@ export default function PricingCalculator() {
           {/* Message volume */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <MessageSquare size={16} className="text-cyan-400" />
+              <MessageSquare size={16} className="text-[#d4a843]" />
               <h3 className="text-sm font-semibold text-white">
                 Monthly Message Volume
               </h3>
@@ -80,7 +80,7 @@ export default function PricingCalculator() {
               max={messageTiers.length - 1}
               value={messageVolume}
               onChange={(e) => setMessageVolume(Number(e.target.value))}
-              className="w-full cursor-pointer accent-cyan-500"
+              className="w-full cursor-pointer accent-[#d4a843]"
             />
             <div className="mt-1 flex justify-between text-xs text-slate-500">
               <span>1K</span>
@@ -97,7 +97,7 @@ export default function PricingCalculator() {
           {/* Channels */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <Layers size={16} className="text-cyan-400" />
+              <Layers size={16} className="text-[#d4a843]" />
               <h3 className="text-sm font-semibold text-white">Channels</h3>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -107,7 +107,7 @@ export default function PricingCalculator() {
                   onClick={() => toggleChannel(c.id)}
                   className={`rounded-lg border px-4 py-2 text-sm transition-all ${
                     channels.includes(c.id)
-                      ? "border-cyan-500 bg-cyan-500/10 text-cyan-400"
+                      ? "border-[#d4a843] bg-[#d4a843]/10 text-[#d4a843]"
                       : "border-slate-700 text-slate-400 hover:border-slate-600"
                   }`}
                 >
@@ -123,7 +123,7 @@ export default function PricingCalculator() {
           {/* Features */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <Wrench size={16} className="text-cyan-400" />
+              <Wrench size={16} className="text-[#d4a843]" />
               <h3 className="text-sm font-semibold text-white">Add-ons</h3>
             </div>
             <div className="space-y-2">
@@ -132,7 +132,7 @@ export default function PricingCalculator() {
                   key={f.id}
                   className={`flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-all ${
                     features.includes(f.id)
-                      ? "border-purple-500 bg-purple-500/10"
+                      ? "border-[#c0935a] bg-[#c0935a]/10"
                       : "border-slate-700 hover:border-slate-600"
                   }`}
                 >
@@ -141,7 +141,7 @@ export default function PricingCalculator() {
                       type="checkbox"
                       checked={features.includes(f.id)}
                       onChange={() => toggleFeature(f.id)}
-                      className="h-4 w-4 rounded border-slate-600 bg-slate-800 accent-purple-500"
+                      className="h-4 w-4 rounded border-slate-600 bg-slate-800 accent-[#c0935a]"
                     />
                     <span
                       className={`text-sm ${features.includes(f.id) ? "text-white" : "text-slate-400"}`}
@@ -217,7 +217,7 @@ export default function PricingCalculator() {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 block rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-cyan-600 hover:to-purple-700"
+              className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Get This Quote on WhatsApp
             </a>

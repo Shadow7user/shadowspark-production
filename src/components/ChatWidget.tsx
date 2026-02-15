@@ -129,10 +129,10 @@ export default function ChatWidget() {
       {/* Proactive nudge bubble */}
       {showProactive && !open && (
         <div className="fixed bottom-24 right-6 z-50 animate-slide-up">
-          <div className="relative max-w-[260px] rounded-xl border border-purple-500/20 bg-slate-900 p-4 shadow-2xl">
+          <div className="relative max-w-[260px] rounded-xl border border-[#d4a843]/10 bg-[#0f1521] p-4 shadow-2xl">
             <button
               onClick={dismissProactive}
-              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-700 text-xs text-slate-400 hover:bg-slate-600"
+              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-xs text-slate-400 hover:bg-slate-700"
             >
               <X size={12} />
             </button>
@@ -141,14 +141,14 @@ export default function ChatWidget() {
             </p>
             <button
               onClick={handleOpen}
-              className="mt-2 text-xs font-semibold text-cyan-400 hover:text-cyan-300"
+              className="mt-2 text-xs font-semibold text-[#d4a843] hover:text-[#e8c56d]"
             >
               Chat with us &rarr;
             </button>
           </div>
           {/* Arrow pointing to button */}
           <div className="mr-6 flex justify-end">
-            <div className="h-3 w-3 rotate-45 border-b border-r border-purple-500/20 bg-slate-900" />
+            <div className="h-3 w-3 rotate-45 border-b border-r border-[#d4a843]/10 bg-[#0f1521]" />
           </div>
         </div>
       )}
@@ -158,8 +158,8 @@ export default function ChatWidget() {
         onClick={open ? handleClose : handleOpen}
         className={`fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all ${
           open
-            ? "bg-slate-700 hover:bg-slate-600"
-            : "bg-gradient-to-r from-cyan-500 to-purple-600 animate-pulse-glow hover:from-cyan-600 hover:to-purple-700"
+            ? "bg-slate-800 hover:bg-slate-700"
+            : "bg-gradient-to-r from-[#d4a843] to-[#c0935a] animate-glow-pulse hover:from-[#e8c56d] hover:to-[#d4a843]"
         }`}
       >
         {open ? (
@@ -171,9 +171,9 @@ export default function ChatWidget() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 flex h-[480px] w-[360px] flex-col overflow-hidden rounded-2xl border border-purple-500/20 bg-slate-900 shadow-2xl sm:w-[360px] max-sm:left-4 max-sm:right-4 max-sm:w-auto">
+        <div className="fixed bottom-24 right-6 z-50 flex h-[480px] w-[360px] flex-col overflow-hidden rounded-2xl border border-[#d4a843]/10 bg-[#0f1521] shadow-2xl sm:w-[360px] max-sm:left-4 max-sm:right-4 max-sm:w-auto">
           {/* Header */}
-          <div className="flex items-center gap-3 bg-gradient-to-r from-cyan-600 to-purple-600 px-4 py-3">
+          <div className="flex items-center gap-3 bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
               <Bot size={18} className="text-white" />
             </div>
@@ -186,12 +186,12 @@ export default function ChatWidget() {
           </div>
 
           {/* Quick actions */}
-          <div className="flex gap-2 overflow-x-auto border-b border-slate-800 px-4 py-2">
+          <div className="flex gap-2 overflow-x-auto border-b border-white/5 px-4 py-2">
             {["Pricing", "Demo", "Chatbot", "Dashboard"].map((topic) => (
               <button
                 key={topic}
                 onClick={() => sendMessage(topic)}
-                className="shrink-0 rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400 transition-colors hover:border-cyan-500 hover:text-cyan-400"
+                className="shrink-0 rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400 transition-colors hover:border-[#d4a843] hover:text-[#d4a843]"
               >
                 {topic}
               </button>
@@ -208,7 +208,7 @@ export default function ChatWidget() {
                 <div
                   className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
                     m.role === "user"
-                      ? "bg-cyan-600/20 text-cyan-200 rounded-tr-none"
+                      ? "bg-[#d4a843]/15 text-[#e8c56d] rounded-tr-none"
                       : "bg-slate-800 text-slate-300 rounded-tl-none"
                   }`}
                 >
@@ -239,18 +239,18 @@ export default function ChatWidget() {
           </a>
 
           {/* Input */}
-          <div className="flex items-center gap-2 border-t border-slate-800 p-3">
+          <div className="flex items-center gap-2 border-t border-white/5 p-3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Type a message..."
-              className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-500"
+              className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-[#d4a843]"
             />
             <button
               onClick={handleSend}
               disabled={loading || !input.trim()}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500 text-white transition-colors hover:bg-cyan-600 disabled:opacity-50"
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#d4a843] text-white transition-colors hover:bg-[#c0935a] disabled:opacity-50"
             >
               <Send size={16} />
             </button>

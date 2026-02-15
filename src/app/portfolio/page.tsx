@@ -39,8 +39,8 @@ const caseStudies = [
       { label: "Support Cost", value: "-60%", sub: "reduction" },
       { label: "Customer Satisfaction", value: "96%", sub: "CSAT score" },
     ],
-    gradient: "from-cyan-500/20 to-cyan-600/5",
-    border: "border-cyan-500/30",
+    gradient: "from-[#d4a843]/8 to-transparent",
+    border: "border-[#d4a843]/15",
   },
   {
     icon: BarChart3,
@@ -57,8 +57,8 @@ const caseStudies = [
       { label: "Revenue Tracked", value: "\u20A62.1B+", sub: "monthly volume" },
       { label: "Data Sources", value: "5 → 1", sub: "unified view" },
     ],
-    gradient: "from-purple-500/20 to-purple-600/5",
-    border: "border-purple-500/30",
+    gradient: "from-white/[0.03] to-transparent",
+    border: "border-white/8",
   },
   {
     icon: Workflow,
@@ -75,8 +75,8 @@ const caseStudies = [
       { label: "Billing Errors", value: "0", sub: "since deployment" },
       { label: "Patient NPS", value: "+35", sub: "point increase" },
     ],
-    gradient: "from-cyan-500/20 to-purple-500/5",
-    border: "border-cyan-500/20",
+    gradient: "from-[#c0935a]/8 to-transparent",
+    border: "border-[#c0935a]/15",
   },
 ];
 
@@ -107,7 +107,7 @@ export default function PortfolioPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-950 pt-24">
+      <main className="min-h-screen bg-[#0a0f1a] pt-24">
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
@@ -127,8 +127,8 @@ export default function PortfolioPage() {
                 key={c.title}
                 className="glass-card flex items-center gap-3 rounded-xl p-4"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10">
-                  <c.icon size={20} className="text-cyan-400" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#d4a843]/10">
+                  <c.icon size={20} className="text-[#d4a843]" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{c.title}</p>
@@ -169,8 +169,8 @@ export default function PortfolioPage() {
                   <div className="mt-6 grid gap-6 md:grid-cols-2">
                     <div>
                       <div className="mb-2 flex items-center gap-2">
-                        <Clock size={14} className="text-red-400" />
-                        <h4 className="text-sm font-semibold text-red-400">
+                        <Clock size={14} className="text-rose-400" />
+                        <h4 className="text-sm font-semibold text-rose-400">
                           Challenge
                         </h4>
                       </div>
@@ -178,8 +178,8 @@ export default function PortfolioPage() {
                     </div>
                     <div>
                       <div className="mb-2 flex items-center gap-2">
-                        <TrendingUp size={14} className="text-green-400" />
-                        <h4 className="text-sm font-semibold text-green-400">
+                        <TrendingUp size={14} className="text-emerald-400" />
+                        <h4 className="text-sm font-semibold text-emerald-400">
                           Solution
                         </h4>
                       </div>
@@ -213,8 +213,8 @@ export default function PortfolioPage() {
         {/* Testimonial */}
         <section className="mx-auto max-w-3xl px-4 pb-20 sm:px-6 lg:px-8">
           <div className="glass-card rounded-2xl p-8 text-center md:p-12">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/10">
-              <Users size={24} className="text-cyan-400" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#d4a843]/10">
+              <Users size={24} className="text-[#d4a843]" />
             </div>
             <blockquote className="mt-6 text-lg italic text-slate-300">
               &ldquo;ShadowSpark&apos;s chatbot handles 80% of our customer
@@ -230,7 +230,7 @@ export default function PortfolioPage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-gradient-to-r from-cyan-600/20 to-purple-600/20 p-8 text-center md:p-12">
+          <div className="rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center md:p-12">
             <h2 className="text-2xl font-bold text-white">
               Want similar results for your business?
             </h2>
@@ -241,7 +241,7 @@ export default function PortfolioPage() {
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-cyan-600 hover:to-purple-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
                 Start Free Trial <ArrowRight size={16} />
               </Link>
@@ -249,7 +249,7 @@ export default function PortfolioPage() {
                 href="https://wa.me/2349037621612?text=Hi%2C%20I%20saw%20your%20portfolio%20and%20I%27m%20interested"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-green-500/30 px-6 py-3 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10"
+                className="rounded-lg border border-emerald-500/20 px-6 py-3 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
                 Discuss on WhatsApp
               </a>

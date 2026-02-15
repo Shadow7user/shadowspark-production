@@ -58,14 +58,14 @@ function AnimatedCounter({
 
 export default function StatsSection() {
   return (
-    <section id="stats" className="bg-slate-900 py-24">
+    <section id="stats" className="bg-[#0f1521] py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             Results that <span className="gradient-text">speak for themselves</span>
           </h2>
         </div>
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="glass-card rounded-2xl p-8 text-center">
               <AnimatedCounter target={s.target} suffix={s.suffix} decimal={s.decimal} />

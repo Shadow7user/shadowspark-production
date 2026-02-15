@@ -34,7 +34,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               <p className="mt-2 text-slate-400">Please refresh the page or try again later.</p>
               <button
                 onClick={() => this.setState({ hasError: false })}
-                className="mt-4 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2 text-sm font-semibold text-white"
+                className="mt-4 rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-2 text-sm font-semibold text-white"
               >
                 Try Again
               </button>

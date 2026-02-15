@@ -93,7 +93,7 @@ export default function PricingPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-950 pt-24">
+      <main className="min-h-screen bg-[#0a0f1a] pt-24">
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
@@ -114,12 +114,12 @@ export default function PricingPage() {
                 key={plan.name}
                 className={`relative rounded-2xl p-8 ${
                   plan.popular
-                    ? "border-2 border-cyan-500 bg-slate-900/80"
+                    ? "border-2 border-[#d4a843] bg-[#0f1521]"
                     : "glass-card"
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 px-4 py-1 text-xs font-semibold text-white">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-1 text-xs font-semibold text-white">
                     Most Popular
                   </div>
                 )}
@@ -140,7 +140,7 @@ export default function PricingPage() {
                     <li key={f} className="flex items-start gap-2 text-sm">
                       <Check
                         size={16}
-                        className="mt-0.5 shrink-0 text-cyan-400"
+                        className="mt-0.5 shrink-0 text-[#d4a843]"
                       />
                       <span className="text-slate-300">{f}</span>
                     </li>
@@ -152,8 +152,8 @@ export default function PricingPage() {
                       href={plan.href}
                       className={`block rounded-lg px-4 py-3 text-center text-sm font-semibold transition-all ${
                         plan.popular
-                          ? "bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-600 hover:to-purple-700"
-                          : "border border-slate-700 text-slate-300 hover:border-cyan-500 hover:text-cyan-400"
+                          ? "bg-gradient-to-r from-[#d4a843] to-[#c0935a] text-white hover:from-[#e8c56d] hover:to-[#d4a843]"
+                          : "border border-slate-700 text-slate-300 hover:border-[#d4a843] hover:text-[#d4a843]"
                       }`}
                     >
                       {plan.cta}
@@ -163,7 +163,7 @@ export default function PricingPage() {
                       href={plan.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block rounded-lg border border-slate-700 px-4 py-3 text-center text-sm font-semibold text-slate-300 transition-all hover:border-cyan-500 hover:text-cyan-400"
+                      className="block rounded-lg border border-slate-700 px-4 py-3 text-center text-sm font-semibold text-slate-300 transition-all hover:border-[#d4a843] hover:text-[#d4a843]"
                     >
                       {plan.cta}
                     </a>
@@ -194,7 +194,7 @@ export default function PricingPage() {
 
         {/* Bottom CTA */}
         <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-gradient-to-r from-cyan-600/20 to-purple-600/20 p-8 text-center md:p-12">
+          <div className="rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center md:p-12">
             <h2 className="text-2xl font-bold text-white">
               Not sure which plan is right?
             </h2>
@@ -206,7 +206,7 @@ export default function PricingPage() {
               href="https://wa.me/2349037621612?text=Hi%2C%20I%20need%20help%20choosing%20a%20plan"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-green-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-700"
+              className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
             >
               Chat on WhatsApp
             </a>

@@ -48,7 +48,7 @@ export default function AboutPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-slate-950 pt-24">
+      <main className="min-h-screen bg-[#0a0f1a] pt-24">
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -66,7 +66,7 @@ export default function AboutPage() {
         {/* Location */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="glass-card rounded-2xl p-8 md:p-12">
-            <div className="flex items-center gap-3 text-cyan-400">
+            <div className="flex items-center gap-3 text-[#d4a843]">
               <MapPin size={24} />
               <h2 className="text-2xl font-bold text-white">
                 Port Harcourt, Nigeria
@@ -93,8 +93,8 @@ export default function AboutPage() {
                 key={v.title}
                 className="glass-card rounded-2xl p-6 transition-transform hover:-translate-y-1"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-500/10">
-                  <v.icon size={24} className="text-cyan-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#d4a843]/10">
+                  <v.icon size={24} className="text-[#d4a843]" />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-white">
                   {v.title}
@@ -116,13 +116,13 @@ export default function AboutPage() {
                 key={member.name}
                 className="glass-card rounded-2xl p-8 text-center"
               >
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 text-3xl font-bold text-white">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#d4a843] to-[#c0935a] text-3xl font-bold text-white">
                   {member.name[0]}
                 </div>
                 <h3 className="mt-4 text-xl font-semibold text-white">
                   {member.name}
                 </h3>
-                <p className="text-sm text-cyan-400">{member.role}</p>
+                <p className="text-sm text-[#d4a843]">{member.role}</p>
                 <p className="mt-3 text-sm text-slate-400">{member.bio}</p>
               </div>
             ))}
@@ -131,7 +131,7 @@ export default function AboutPage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-gradient-to-r from-cyan-600/20 to-purple-600/20 p-8 text-center md:p-12">
+          <div className="rounded-2xl bg-gradient-to-r from-[#d4a843]/10 to-[#c0935a]/10 p-8 text-center md:p-12">
             <h2 className="text-2xl font-bold text-white">
               Ready to work with us?
             </h2>
@@ -141,7 +141,7 @@ export default function AboutPage() {
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-cyan-600 hover:to-purple-700"
+                className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
                 Start Free Trial
               </Link>
@@ -149,7 +149,7 @@ export default function AboutPage() {
                 href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-green-500/30 px-6 py-3 text-sm font-semibold text-green-400 transition-colors hover:bg-green-500/10"
+                className="rounded-lg border border-emerald-500/20 px-6 py-3 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
                 Chat on WhatsApp
               </a>
