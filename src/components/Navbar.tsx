@@ -39,6 +39,12 @@ export default function Navbar() {
             Sign In
           </Link>
           <Link
+            href="/demo"
+            className="rounded-lg border border-[#d4a843]/50 px-4 py-2 text-sm font-semibold text-[#d4a843] transition-all hover:border-[#d4a843] hover:bg-[#d4a843]/10"
+          >
+            Request a Demo
+          </Link>
+          <Link
             href="/register"
             className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-2 text-sm font-semibold text-slate-900 transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
           >
@@ -67,8 +73,15 @@ export default function Navbar() {
                 </Link>
               )
             )}
-            <Link href="/login" className="text-slate-300 hover:text-white">Sign In</Link>
-            <Link href="/register" className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-2 text-center font-semibold text-slate-900">
+            <Link href="/login" onClick={() => setOpen(false)} className="text-slate-300 hover:text-white">Sign In</Link>
+            <Link
+              href="/demo"
+              onClick={() => setOpen(false)}
+              className="rounded-lg border border-[#d4a843]/50 px-4 py-2 text-center font-semibold text-[#d4a843]"
+            >
+              Request a Demo
+            </Link>
+            <Link href="/register" onClick={() => setOpen(false)} className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-2 text-center font-semibold text-slate-900">
               Get Started
             </Link>
           </div>
