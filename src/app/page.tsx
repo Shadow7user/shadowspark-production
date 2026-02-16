@@ -4,6 +4,7 @@ import LiveTicker from "@/components/LiveTicker";
 import FeaturesSection from "@/components/FeaturesSection";
 import SolutionsSection from "@/components/SolutionsSection";
 import TechLogos from "@/components/TechLogos";
+import PlatformArchitecture from "@/components/PlatformArchitecture";
 import SecurityBadges from "@/components/SecurityBadges";
 import AIConcernsSection from "@/components/AIConcernsSection";
 import AutomationImpactSection from "@/components/AutomationImpactSection";
@@ -26,6 +27,7 @@ export default function Home() {
       <SecurityBadges />        {/* Trust anchors early — right after the hook */}
       <FeaturesSection />
       <SolutionsSection />
+      <PlatformArchitecture />  {/* How the system works — enterprise buyers */}
       <TechLogos />
       <AIConcernsSection />     {/* Neutralise objections */}
       <AutomationImpactSection /> {/* Prove ROI with numbers */}
