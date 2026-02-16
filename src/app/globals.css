@@ -23,26 +23,131 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Animations */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+/* ============================================================
+   ENTERPRISE MOTION SYSTEM
+   All transitions: ease-based, no spring/bounce, no neon.
+   Respects prefers-reduced-motion throughout.
+   ============================================================ */
+
+/* ── 1. Scroll reveal ──────────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger helpers — applied to direct children */
+.reveal-stagger > *:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger > *:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger > *:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger > *:nth-child(4) { transition-delay: 0.26s; }
+.reveal-stagger > *:nth-child(5) { transition-delay: 0.33s; }
+.reveal-stagger > *:nth-child(6) { transition-delay: 0.40s; }
+
+/* ── 2. Card hover elevation ───────────────────────────────── */
+
+.card-lift {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(212, 168, 67, 0.08);
+}
+
+/* ── 3. Section accent line ────────────────────────────────── */
+/*
+   Apply .section-accent to the gold eyebrow <p> in any section.
+   When the parent gains .visible (via Reveal), the underline grows.
+*/
+
+.section-accent {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+.section-accent::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft), transparent);
+  transition: width 0.5s ease 0.25s;
+}
+
+.reveal.visible .section-accent::after,
+.section-accent.line-visible::after {
+  width: 100%;
+}
+
+/* ── 4. Button transitions ─────────────────────────────────── */
+/*
+   Override the default instantaneous hover. Applied site-wide.
+   Tailwind's transition-all handles individual variants;
+   this ensures a consistent easing curve.
+*/
+
+button,
+a[role="button"],
+.btn {
+  transition-timing-function: ease;
+  transition-duration: 0.18s;
+}
+
+/* Subtle lift for primary action buttons */
+.btn-primary {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.22);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ── 5. Number counter entry ───────────────────────────────── */
+
+@keyframes counter-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
   }
-  50% {
-    transform: translateY(-8px);
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes glow-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 16px rgba(212, 168, 67, 0.15);
-  }
-  50% {
-    box-shadow: 0 0 32px rgba(212, 168, 67, 0.25);
-  }
+.counter-enter {
+  animation: counter-enter 0.4s ease forwards;
 }
+
+/* ── 6. Subtle slide-up (hero / above-fold) ────────────────── */
 
 @keyframes slide-up {
   from {
@@ -56,56 +161,77 @@ body {
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-@keyframes count-up {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.animate-slide-up {
+  animation: slide-up 0.65s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.75s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+.delay-500 { animation-delay: 0.50s; }
+
+/* ── 7. Floating icon (hero accent only) ──────────────────── */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-6px); }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-.animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-.animate-slide-up {
-  animation: slide-up 0.7s ease-out forwards;
-}
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out forwards;
-}
-.animate-count-up {
-  animation: count-up 0.5s ease-out forwards;
+  animation: float 5s ease-in-out infinite;
 }
 
-.delay-100 {
-  animation-delay: 0.1s;
+/* ── 8. Reduced-motion overrides ──────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reveal-stagger > * {
+    transition-delay: 0s;
+  }
+
+  .card-lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .section-accent::after {
+    transition: none;
+    width: 100%;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .animate-float,
+  .animate-slide-up,
+  .animate-fade-in,
+  .counter-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
-.delay-200 {
-  animation-delay: 0.2s;
-}
-.delay-300 {
-  animation-delay: 0.3s;
-}
-.delay-400 {
-  animation-delay: 0.4s;
-}
-.delay-500 {
-  animation-delay: 0.5s;
-}
+
+/* ============================================================
+   SHARED COMPONENT UTILITIES
+   ============================================================ */
 
 /* Gradient text — gold accent */
 .gradient-text {
@@ -123,333 +249,13 @@ body {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0f1a;
-}
-::-webkit-scrollbar-thumb {
-  background: #2d3748;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #4a5568;
-}
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0f1a; }
+::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5568; }
 
 /* Selection */
 ::selection {
-  background: rgba(212, 168, 67, 0.25);
+  background: rgba(212, 168, 67, 0.22);
   color: #fff;
-}
-
-/* ============================================
-   CYBERPUNK ANIMATIONS & EFFECTS
-   ============================================ */
-
-/* Neon glow effect */
-@keyframes neon-glow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 5px rgba(0, 255, 255, 0.5),
-      0 0 10px rgba(0, 255, 255, 0.3),
-      0 0 20px rgba(0, 255, 255, 0.1);
-  }
-  50% {
-    box-shadow:
-      0 0 10px rgba(0, 255, 255, 0.8),
-      0 0 20px rgba(0, 255, 255, 0.5),
-      0 0 40px rgba(0, 255, 255, 0.3);
-  }
-}
-
-/* Glitch effect */
-@keyframes glitch {
-  0% {
-    clip-path: inset(40% 0 61% 0);
-    transform: translate(-2px, 1px);
-  }
-  20% {
-    clip-path: inset(92% 0 1% 0);
-    transform: translate(1px, -1px);
-  }
-  40% {
-    clip-path: inset(43% 0 1% 0);
-    transform: translate(-1px, 2px);
-  }
-  60% {
-    clip-path: inset(25% 0 58% 0);
-    transform: translate(2px, 1px);
-  }
-  80% {
-    clip-path: inset(54% 0 7% 0);
-    transform: translate(-2px, -1px);
-  }
-  100% {
-    clip-path: inset(58% 0 43% 0);
-    transform: translate(1px, -2px);
-  }
-}
-
-/* RGB text split effect */
-@keyframes rgb-shift {
-  0% {
-    text-shadow:
-      -2px 0 #ff00ff,
-      2px 0 #00ffff;
-  }
-  25% {
-    text-shadow:
-      2px 0 #ff00ff,
-      -2px 0 #00ffff;
-  }
-  50% {
-    text-shadow:
-      -2px 0 #00ffff,
-      2px 0 #ff00ff;
-  }
-  75% {
-    text-shadow:
-      2px 0 #00ffff,
-      -2px 0 #ff00ff;
-  }
-  100% {
-    text-shadow:
-      -2px 0 #ff00ff,
-      2px 0 #00ffff;
-  }
-}
-
-/* Cyber scan line */
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
-}
-
-/* Holographic shimmer */
-@keyframes holographic {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Circuit pulse */
-@keyframes circuit-pulse {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-/* Cyber border animation */
-@keyframes border-glow {
-  0%,
-  100% {
-    border-color: rgba(0, 255, 255, 0.3);
-    box-shadow:
-      inset 0 0 10px rgba(0, 255, 255, 0.1),
-      0 0 10px rgba(0, 255, 255, 0.2);
-  }
-  50% {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow:
-      inset 0 0 20px rgba(0, 255, 255, 0.2),
-      0 0 20px rgba(0, 255, 255, 0.4);
-  }
-}
-
-/* Typing cursor effect */
-@keyframes cursor-blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Matrix rain background effect */
-@keyframes matrix-fall {
-  0% {
-    transform: translateY(-100%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
-}
-
-/* Cyberpunk utility classes */
-.neon-glow {
-  animation: neon-glow 2s ease-in-out infinite;
-}
-
-.neon-text {
-  text-shadow:
-    0 0 5px currentColor,
-    0 0 10px currentColor,
-    0 0 20px currentColor;
-}
-
-.glitch-text {
-  position: relative;
-  animation: glitch 3s infinite linear;
-}
-
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.glitch-text::before {
-  color: #00ffff;
-  animation: glitch 2s infinite linear alternate-reverse;
-  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-}
-
-.glitch-text::after {
-  color: #ff00ff;
-  animation: glitch 2s infinite linear alternate;
-  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-}
-
-.rgb-text {
-  animation: rgb-shift 3s infinite;
-}
-
-.holographic {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 255, 0.1) 0%,
-    rgba(255, 0, 255, 0.1) 25%,
-    rgba(0, 255, 255, 0.1) 50%,
-    rgba(255, 0, 255, 0.1) 75%,
-    rgba(0, 255, 255, 0.1) 100%
-  );
-  background-size: 400% 400%;
-  animation: holographic 4s ease infinite;
-}
-
-.cyber-border {
-  animation: border-glow 3s ease-in-out infinite;
-}
-
-.scanline::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 255, 255, 0.03) 50%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-}
-
-.circuit-pattern {
-  position: relative;
-}
-
-.circuit-pattern::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: circuit-pulse 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.cursor-blink::after {
-  content: "|";
-  animation: cursor-blink 1s infinite;
-}
-
-/* Cyber button styles */
-.cyber-button {
-  position: relative;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 255, 0.1),
-    rgba(255, 0, 255, 0.1)
-  );
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.cyber-button:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 255, 0.2),
-    rgba(255, 0, 255, 0.2)
-  );
-  border-color: rgba(0, 255, 255, 0.6);
-  box-shadow:
-    0 0 20px rgba(0, 255, 255, 0.3),
-    inset 0 0 20px rgba(0, 255, 255, 0.1);
-}
-
-/* Futuristic card */
-.futuristic-card {
-  background: linear-gradient(
-    135deg,
-    rgba(10, 15, 26, 0.9) 0%,
-    rgba(20, 30, 50, 0.9) 100%
-  );
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-.futuristic-card::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(0, 255, 255, 0.03) 60deg,
-    transparent 120deg
-  );
-  animation: rotate 10s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
 }
