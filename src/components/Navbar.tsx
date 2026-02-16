@@ -6,9 +6,9 @@ import { Menu, X, ChevronDown } from "lucide-react";
 
 /* ── Nav structure ──────────────────────────────────────── */
 const platform = [
-  { href: "/#solutions",     label: "Solutions" },
-  { href: "/#architecture",  label: "Architecture" },
-  { href: "/#case-studies",  label: "Case Studies" },
+  { href: "/#solutions",      label: "Solutions" },
+  { href: "/architecture",    label: "Architecture" },
+  { href: "/#case-studies",   label: "Case Studies" },
 ];
 
 const company = [
