@@ -95,6 +95,27 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "ShadowSpark Technologies",
+              url: "https://shadowspark-tech.org",
+              description:
+                "Enterprise AI automation platform for Nigerian businesses — WhatsApp chatbots, workflow orchestration, and BI dashboards.",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: "https://shadowspark-tech.org/blog?q={search_term_string}",
+                },
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
         {GA_ID && (
           <>
             {/* Consent mode default — must fire before gtag */}

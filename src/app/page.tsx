@@ -19,11 +19,15 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import FAQSection from "@/components/FAQSection";
 
 export const metadata: Metadata = {
   title: "Enterprise AI Automation for Nigerian Businesses",
   description:
     "ShadowSpark Technologies delivers enterprise-structured AI automation — WhatsApp chatbots, workflow orchestration, and BI dashboards — built for measurable growth in Nigeria.",
+  alternates: {
+    canonical: "https://shadowspark-tech.org",
+  },
   openGraph: {
     title: "Enterprise AI Automation for Nigerian Businesses | ShadowSpark",
     description:
@@ -57,6 +61,7 @@ export default function Home() {
       <TestimonialsSection />    {/* Social proof */}
       <StatsSection />
       <PricingPreview />         {/* Remove price ambiguity */}
+      <FAQSection />              {/* Cost · Security · ROI · Implementation */}
       <RequestDemoSection />     {/* Clear, low-friction CTA */}
       <CTASection />
       <Footer />

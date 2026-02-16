@@ -9,11 +9,21 @@ import PricingCalculator from "@/components/PricingCalculator";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Transparent AI automation pricing for Nigerian businesses. Starter from ₦25,000/month. No hidden fees.",
+    "Transparent AI automation pricing for Nigerian businesses. Starter from ₦25,000/month. No hidden fees. Month-to-month billing.",
+  alternates: {
+    canonical: "https://shadowspark-tech.org/pricing",
+  },
   openGraph: {
-    title: "ShadowSpark Pricing",
+    title: "Pricing | ShadowSpark",
     description:
-      "Transparent AI automation pricing for Nigerian businesses. Plans from ₦25,000/month.",
+      "Transparent AI automation pricing for Nigerian businesses. Plans from ₦25,000/month. No long-term contracts.",
+    url: "https://shadowspark-tech.org/pricing",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Pricing | ShadowSpark",
+    description: "AI automation plans from ₦25,000/month. No hidden fees. Month-to-month.",
   },
 };
 

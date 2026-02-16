@@ -20,6 +20,13 @@ const steps = [
   },
 ];
 
+const trustSignals = [
+  "No long-term contracts.",
+  "Transparent pricing.",
+  "Security-first deployment.",
+  "Response within 1 business day.",
+];
+
 export default function RequestDemoSection() {
   return (
     <section id="demo" className="bg-[#080d18] py-24">
@@ -69,16 +76,24 @@ export default function RequestDemoSection() {
                 Book your demo
               </h3>
               <p className="mt-2 text-sm text-slate-400">
-                Choose how you would like to start. Both options are free and
-                require no commitment.
+                Both options are free and require no commitment.
               </p>
 
               <div className="mt-8 space-y-3">
-                {/* WhatsApp CTA */}
+                {/* Primary CTA — demo form */}
+                <Link
+                  href="/demo"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-5 py-3.5 text-sm font-semibold text-slate-900 shadow-lg transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
+                >
+                  Request a Demo
+                  <ArrowRight size={15} />
+                </Link>
+
+                {/* Secondary — WhatsApp */}
                 <WhatsAppLink
                   href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20request%20a%20demo%20of%20ShadowSpark"
                   source="request_demo_section"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-700/40 bg-emerald-600/10 px-5 py-3.5 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-600/20"
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
@@ -86,23 +101,15 @@ export default function RequestDemoSection() {
                   </svg>
                   Message us on WhatsApp
                 </WhatsAppLink>
-
-                {/* Email / Contact CTA */}
-                <Link
-                  href="/contact"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 px-5 py-3.5 text-sm font-semibold text-slate-300 transition-all hover:border-[#d4a843]/40 hover:text-[#d4a843]"
-                >
-                  Submit a contact form
-                  <ArrowRight size={15} />
-                </Link>
               </div>
 
-              {/* Reassurances */}
-              <ul className="mt-6 space-y-2 text-xs text-slate-600">
-                <li>✓ No credit card required</li>
-                <li>✓ Response within 1 business day</li>
-                <li>✓ Demo scoped to your specific business</li>
-                <li>✓ No obligation to proceed after demo</li>
+              {/* Trust microcopy */}
+              <ul className="mt-6 space-y-2">
+                {trustSignals.map((t) => (
+                  <li key={t} className="flex items-center gap-2 text-xs text-slate-600">
+                    <span className="text-[#d4a843]/60">✓</span> {t}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
