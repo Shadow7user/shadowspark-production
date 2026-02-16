@@ -20,6 +20,9 @@ import Footer from "@/components/Footer";
 import ChatWidget from "@/components/ChatWidget";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import FAQSection from "@/components/FAQSection";
+import IndustrySectorsSection from "@/components/IndustrySectorsSection";
+import GovernanceSection from "@/components/GovernanceSection";
+import MethodologySection from "@/components/MethodologySection";
 
 export const metadata: Metadata = {
   title: "Enterprise AI Automation for Nigerian Businesses",
@@ -50,12 +53,15 @@ export default function Home() {
       <HeroSection />
       <LiveTicker />
       <SecurityBadges />        {/* Trust anchors early — right after the hook */}
+      <IndustrySectorsSection /> {/* Sector breadth — who this is for */}
       <FeaturesSection />
       <SolutionsSection />
       <PlatformArchitecture />  {/* How the system works — enterprise buyers */}
       <TechStackSection />      {/* Infrastructure transparency */}
+      <GovernanceSection />     {/* Control framework — enterprise buyers */}
       <TechLogos />
       <AIConcernsSection />     {/* Neutralise objections */}
+      <MethodologySection />    {/* Structured process after concerns */}
       <AutomationImpactSection /> {/* Prove ROI with numbers */}
       <CaseStudySection />       {/* Validate with a real story */}
       <TestimonialsSection />    {/* Social proof */}

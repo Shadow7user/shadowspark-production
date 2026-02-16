@@ -5,8 +5,7 @@ import React, { useEffect, useRef } from "react";
 interface RevealProps {
   children: React.ReactNode;
   className?: string;
-  /** Extra classes for the inner wrapper only */
-  innerClassName?: string;
+  style?: React.CSSProperties;
   /** Stagger children entrances */
   stagger?: boolean;
   /** IntersectionObserver rootMargin — default '0px 0px -60px 0px' */
@@ -27,6 +26,7 @@ interface RevealProps {
 export default function Reveal({
   children,
   className = "",
+  style,
   stagger = false,
   rootMargin = "0px 0px -60px 0px",
   threshold = 0.12,
@@ -62,7 +62,7 @@ export default function Reveal({
 
   return (
     // @ts-expect-error dynamic tag
-    <Tag ref={ref} className={classes}>
+    <Tag ref={ref} className={classes} style={style}>
       {children}
     </Tag>
   );
