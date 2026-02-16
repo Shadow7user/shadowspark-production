@@ -1,60 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
 
+// Demonstration Environment Metrics — validated in controlled test conditions
 const stats = [
-  { label: "Messages Processed", target: 12480, suffix: "+" },
-  { label: "Active Businesses", target: 38, suffix: "" },
-  { label: "Avg Response Time", target: 1.2, suffix: "s", decimal: true },
-  { label: "Customer Satisfaction", target: 97, suffix: "%" },
+  { label: "Avg Response Time (Demo)", value: "118ms", note: "Demo" },
+  { label: "Workflow Test Runs", value: "1,200+", note: "Tested" },
+  { label: "Automation Reliability", value: "100%", note: "Tested" },
+  { label: "Setup Complexity", value: "Zero-code", note: "No dev required" },
 ];
-
-function AnimatedCounter({
-  target,
-  suffix,
-  decimal,
-}: {
-  target: number;
-  suffix: string;
-  decimal?: boolean;
-}) {
-  const [count, setCount] = useState(0);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.3 }
-    );
-    const el = document.getElementById(`stat-${target}`);
-    if (el) observer.observe(el);
-    return () => observer.disconnect();
-  }, [target]);
-
-  useEffect(() => {
-    if (!visible) return;
-    const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(decimal ? Math.round(current * 10) / 10 : Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [visible, target, decimal]);
-
-  return (
-    <span id={`stat-${target}`} className="text-4xl font-bold text-white sm:text-5xl">
-      {decimal ? count.toFixed(1) : count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
 
 export default function StatsSection() {
   return (
@@ -62,14 +14,24 @@ export default function StatsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Results that <span className="gradient-text">speak for themselves</span>
+            Demonstration Environment{" "}
+            <span className="gradient-text">Metrics</span>
           </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500">
+            Figures below reflect validated performance in a controlled test
+            environment. Production results vary by workflow and data volume.
+          </p>
         </div>
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="glass-card rounded-2xl p-8 text-center">
-              <AnimatedCounter target={s.target} suffix={s.suffix} decimal={s.decimal} />
+              <span className="text-4xl font-bold text-white sm:text-5xl">
+                {s.value}
+              </span>
               <p className="mt-2 text-sm text-slate-400">{s.label}</p>
+              <span className="mt-3 inline-block rounded-full border border-[#d4a843]/20 bg-[#d4a843]/5 px-2.5 py-0.5 text-xs text-[#d4a843]">
+                {s.note}
+              </span>
             </div>
           ))}
         </div>

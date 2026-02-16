@@ -18,17 +18,18 @@ export default function HeroSection() {
           {/* Copy */}
           <div className="animate-slide-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#d4a843]/20 bg-[#d4a843]/5 px-4 py-1.5 text-sm text-[#d4a843]">
-              <Zap size={14} /> AI-Powered Business Automation
+              <Zap size={14} /> Enterprise AI Automation · Nigeria
             </div>
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Build Smarter.
-              <br />
-              <span className="gradient-text">Grow Faster.</span>
+              Enterprise-Structured AI Automation for{" "}
+              <span className="gradient-text">Measurable Growth</span>{" "}
+              in Nigeria.
             </h1>
             <p className="mt-6 max-w-lg text-lg text-slate-400">
-              We help Nigerian businesses automate customer support, generate
-              leads, and make data-driven decisions with AI chatbots, BI
-              dashboards, and RPA workflows.
+              We help Nigerian businesses reduce operational cost, accelerate
+              customer response, and build reliable automation workflows—with
+              transparent pricing, verifiable results, and no technical
+              complexity required on your end.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
@@ -36,13 +37,13 @@ export default function HeroSection() {
                 onClick={() => trackCTAClick("start_free_trial", "hero")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg shadow-[#d4a843]/15 transition-all hover:shadow-[#d4a843]/25 hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
-                Start Free Trial <ArrowRight size={20} />
+                Request a Demo <ArrowRight size={20} />
               </Link>
               <a
-                href="#solutions"
+                href="#concerns"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 px-8 py-4 text-lg text-slate-300 transition-all hover:border-[#d4a843]/30 hover:text-white"
               >
-                See Solutions
+                Address My Concerns
               </a>
             </div>
           </div>
@@ -76,7 +77,7 @@ export default function HeroSection() {
                   </div>
                   <div className="rounded-lg rounded-tl-none bg-white/5 px-4 py-2 text-sm text-slate-300">
                     Great choice! Our AI chatbot handles orders, FAQs, and
-                    customer support 24/7. Pricing starts at &#8358;50,000/mo.
+                    customer support 24/7. Pricing starts at &#8358;25,000/mo.
                     Want a demo?
                   </div>
                 </div>

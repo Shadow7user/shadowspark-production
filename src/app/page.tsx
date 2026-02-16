@@ -4,6 +4,8 @@ import LiveTicker from "@/components/LiveTicker";
 import FeaturesSection from "@/components/FeaturesSection";
 import SolutionsSection from "@/components/SolutionsSection";
 import TechLogos from "@/components/TechLogos";
+import AIConcernsSection from "@/components/AIConcernsSection";
+import AutomationImpactSection from "@/components/AutomationImpactSection";
 import StatsSection from "@/components/StatsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -19,6 +21,8 @@ export default function Home() {
       <FeaturesSection />
       <SolutionsSection />
       <TechLogos />
+      <AIConcernsSection />
+      <AutomationImpactSection />
       <StatsSection />
       <CTASection />
       <Footer />

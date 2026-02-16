@@ -9,45 +9,46 @@ import PricingCalculator from "@/components/PricingCalculator";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Affordable AI chatbot, BI dashboard, and automation plans for Nigerian businesses. Starting from \u20A650,000/month.",
+    "Transparent AI automation pricing for Nigerian businesses. Starter from ₦25,000/month. No hidden fees.",
   openGraph: {
     title: "ShadowSpark Pricing",
     description:
-      "Affordable AI solutions for Nigerian businesses. Plans from \u20A650,000/month.",
+      "Transparent AI automation pricing for Nigerian businesses. Plans from ₦25,000/month.",
   },
 };
 
 const plans = [
   {
     name: "Starter",
-    price: "\u20A650,000",
+    price: "₦25,000",
     period: "/month",
-    description: "Perfect for small businesses getting started with AI",
+    description: "For small businesses deploying a single AI automation channel",
     features: [
       "1 WhatsApp AI chatbot",
       "Up to 1,000 messages/month",
       "Basic analytics dashboard",
       "Email support",
       "Pre-built response templates",
+      "Onboarding walkthrough included",
     ],
-    cta: "Start Free Trial",
+    cta: "Get Started",
     href: "/register",
     popular: false,
   },
   {
     name: "Growth",
-    price: "\u20A6150,000",
+    price: "₦50,000",
     period: "/month",
-    description: "For growing businesses that need more power",
+    description: "For businesses scaling across multiple channels and workflows",
     features: [
       "3 AI chatbots (WhatsApp, Web, SMS)",
       "Up to 10,000 messages/month",
       "Full BI dashboard with reports",
       "Lead capture & CRM integration",
-      "Priority support",
+      "Priority support (1-business-day SLA)",
       "Custom response training",
     ],
-    cta: "Start Free Trial",
+    cta: "Get Started",
     href: "/register",
     popular: true,
   },
@@ -55,7 +56,7 @@ const plans = [
     name: "Enterprise",
     price: "Custom",
     period: "",
-    description: "Tailored solutions for large organizations",
+    description: "Scoped solutions for organisations with complex or regulated workflows",
     features: [
       "Unlimited chatbots & channels",
       "Unlimited messages",
@@ -64,6 +65,7 @@ const plans = [
       "Custom AI model training",
       "SLA & uptime guarantee",
       "On-premise deployment option",
+      "NDPR compliance documentation",
     ],
     cta: "Contact Sales",
     href: "https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20the%20Enterprise%20plan",
@@ -101,8 +103,9 @@ export default function PricingPage() {
             Simple, transparent <span className="gradient-text">pricing</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
-            No hidden fees. No long-term contracts. Start with a free trial and
-            scale as you grow.
+            Fixed monthly prices in Naira. No hidden setup fees, no per-message
+            surcharges, no long-term lock-in. Every plan includes onboarding
+            and a 30-day performance report.
           </p>
         </section>
 
