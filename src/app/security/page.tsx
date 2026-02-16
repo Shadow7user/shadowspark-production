@@ -7,6 +7,19 @@ export const metadata: Metadata = {
   title: "Security & Data Protection",
   description:
     "How ShadowSpark Technologies protects your business data: encryption, NDPR awareness, access controls, audit logging, and hosting infrastructure.",
+  openGraph: {
+    title: "Security & Data Protection | ShadowSpark",
+    description:
+      "TLS 1.3 in transit, AES-256 at rest, NDPR-aware data handling, role-based access control, and immutable audit logging — how ShadowSpark protects your business.",
+    url: "https://shadowspark-tech.org/security",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Security & Data Protection | ShadowSpark",
+    description:
+      "TLS 1.3, AES-256, NDPR awareness, RBAC, and audit logging. How ShadowSpark protects your data.",
+  },
 };
 
 const sections = [

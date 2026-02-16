@@ -25,7 +25,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="w-full max-w-md space-y-8 rounded-2xl bg-[#111827]/80 p-8 shadow-2xl backdrop-blur-sm border border-[#d4a843]/10">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
@@ -85,6 +85,6 @@ export default function LoginPage() {
           </a>
         </p>
       </div>
-    </div>
+    </main>
   );
 }
