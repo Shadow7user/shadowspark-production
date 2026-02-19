@@ -15,6 +15,28 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }]
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "shadowspark-tech.org" }],
+        destination: "https://shadowspark-tech.site/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.shadowspark-tech.site" }],
+        destination: "https://shadowspark-tech.site/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.shadowspark-tech.org" }],
+        destination: "https://shadowspark-tech.site/:path*",
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default withSentryConfig(nextConfig, {

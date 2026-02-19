@@ -29,13 +29,13 @@ export const metadata: Metadata = {
   description:
     "ShadowSpark Technologies delivers enterprise-structured AI automation — WhatsApp chatbots, workflow orchestration, and BI dashboards — built for measurable growth in Nigeria.",
   alternates: {
-    canonical: "https://shadowspark-tech.org",
+    canonical: "https://shadowspark-tech.site",
   },
   openGraph: {
     title: "Enterprise AI Automation for Nigerian Businesses | ShadowSpark",
     description:
       "AI chatbots, workflow automation, and BI dashboards for Nigerian SMEs and enterprises. Transparent pricing. Measurable ROI from day one.",
-    url: "https://shadowspark-tech.org",
+    url: "https://shadowspark-tech.site",
     type: "website",
   },
   twitter: {
