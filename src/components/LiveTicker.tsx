@@ -99,7 +99,6 @@ export default function LiveTicker() {
   const [isVisible, setIsVisible] = useState(false);
   const [stats, setStats] = useState<Stats>(defaultStats);
   const [socketConnected, setSocketConnected] = useState(false);
-  const [leads, setLeads] = useState(0);
 
   // 3G optimization: Delay rendering for slow connections
   // Shows skeleton first, then loads real-time data
@@ -176,7 +175,6 @@ export default function LiveTicker() {
         if (response.ok) {
           const data = await response.json();
           setStats(data);
-          if (data.leadsGenerated != null) setLeads(data.leadsGenerated);
         }
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -196,9 +194,6 @@ export default function LiveTicker() {
     <div className="border-y border-white/5 bg-[#0f1521]/50 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
         {isVisible ? <TickerContent stats={stats} /> : <TickerSkeleton />}
-      </div>
-      <div className="text-cyan-400 animate-pulse text-lg font-semibold">
-        Leads Generated: {leads}
       </div>
     </div>
   );
