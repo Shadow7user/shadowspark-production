@@ -5,6 +5,7 @@ import ConsentBanner from "@/components/ConsentBanner";
 import "./globals.css"; // Ensure CSS module declaration is recognized
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +65,9 @@ export const metadata: Metadata = {
   other: {
     "facebook-domain-verification": "b2i7hCpw3wbjkwjIhcsc5jok7xk",
     "mobile-web-app-capable": "yes",
+    ...(GOOGLE_SITE_VERIFICATION
+      ? { "google-site-verification": GOOGLE_SITE_VERIFICATION }
+      : {}),
   },
 };
 
