@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description:
     "Transparent AI automation pricing for Nigerian businesses. Starter from ₦25,000/month. No hidden fees. Month-to-month billing.",
   alternates: {
-    canonical: "https://shadowspark-tech.org/pricing",
+    canonical: "https://shadowspark-tech.site/pricing",
   },
   openGraph: {
     title: "Pricing | ShadowSpark",
     description:
       "Transparent AI automation pricing for Nigerian businesses. Plans from ₦25,000/month. No long-term contracts.",
-    url: "https://shadowspark-tech.org/pricing",
+    url: "https://shadowspark-tech.site/pricing",
     type: "website",
   },
   twitter: {

@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     "AI automation services Nigeria",
   ],
   authors: [
-    { name: "ShadowSpark Technologies", url: "https://shadowspark-tech.org" },
+    { name: "ShadowSpark Technologies", url: "https://shadowspark-tech.site" },
   ],
   creator: "ShadowSpark Technologies",
   publisher: "ShadowSpark Technologies",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_NG",
-    url: "https://shadowspark-tech.org/about",
+    url: "https://shadowspark-tech.site/about",
     siteName: "ShadowSpark Technologies",
     title: "About ShadowSpark Technologies - AI Solutions for African SMEs",
     description:
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://shadowspark-tech.org/about",
+    canonical: "https://shadowspark-tech.site/about",
   },
 };
 

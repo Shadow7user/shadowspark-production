@@ -35,12 +35,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "ShadowSpark Technologies" }],
   creator: "ShadowSpark Technologies",
-  metadataBase: new URL("https://shadowspark-tech.org"),
+  metadataBase: new URL("https://shadowspark-tech.site"),
   openGraph: {
     title: "ShadowSpark Technologies | AI-Powered Business Solutions",
     description:
       "AI chatbots, BI dashboards, and RPA automation for Nigerian businesses.",
-    url: "https://shadowspark-tech.org",
+    url: "https://shadowspark-tech.site",
     siteName: "ShadowSpark Technologies",
     locale: "en_NG",
     type: "website",
@@ -88,7 +88,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "ShadowSpark Technologies",
-              url: "https://shadowspark-tech.org",
+              url: "https://shadowspark-tech.site",
               description: "AI-powered business solutions for Nigerian SMEs",
               areaServed: "NG",
               sameAs: [],
@@ -102,14 +102,14 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "ShadowSpark Technologies",
-              url: "https://shadowspark-tech.org",
+              url: "https://shadowspark-tech.site",
               description:
                 "Enterprise AI automation platform for Nigerian businesses — WhatsApp chatbots, workflow orchestration, and BI dashboards.",
               potentialAction: {
                 "@type": "SearchAction",
                 target: {
                   "@type": "EntryPoint",
-                  urlTemplate: "https://shadowspark-tech.org/blog?q={search_term_string}",
+                  urlTemplate: "https://shadowspark-tech.site/blog?q={search_term_string}",
                 },
                 "query-input": "required name=search_term_string",
               },

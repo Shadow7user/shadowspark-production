@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   description:
     "AI tips, automation strategies, and business insights for Nigerian SMEs. Learn how to leverage chatbots, dashboards, and RPA.",
   alternates: {
-    canonical: "https://shadowspark-tech.org/blog",
+    canonical: "https://shadowspark-tech.site/blog",
   },
   openGraph: {
     title: "Blog | ShadowSpark",
     description: "AI tips and automation strategies for Nigerian businesses.",
-    url: "https://shadowspark-tech.org/blog",
+    url: "https://shadowspark-tech.site/blog",
     type: "website",
   },
   twitter: {

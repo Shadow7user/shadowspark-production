@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description:
     "Request a free, custom demo of ShadowSpark's AI automation platform — scoped to your business, your workflow, and your data. No long-term commitment required.",
   alternates: {
-    canonical: "https://shadowspark-tech.org/demo",
+    canonical: "https://shadowspark-tech.site/demo",
   },
   openGraph: {
     title: "Request a Demo | ShadowSpark",
     description:
       "Free custom demo scoped to your business. 30-min discovery call, baseline audit, live demo on your data. No commitment.",
-    url: "https://shadowspark-tech.org/demo",
+    url: "https://shadowspark-tech.site/demo",
     type: "website",
   },
   twitter: {
