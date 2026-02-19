@@ -190,7 +190,18 @@ a[role="button"],
   animation: float 5s ease-in-out infinite;
 }
 
-/* ── 8. Reduced-motion overrides ──────────────────────────── */
+/* ── 8. Glow pulse (chat button) ──────────────────────────── */
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(212, 168, 67, 0.35); }
+  50%       { box-shadow: 0 0 22px rgba(212, 168, 67, 0.65); }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ── 9. Reduced-motion overrides ──────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -222,6 +233,7 @@ a[role="button"],
   .animate-float,
   .animate-slide-up,
   .animate-fade-in,
+  .animate-glow-pulse,
   .counter-enter {
     animation: none;
     opacity: 1;
