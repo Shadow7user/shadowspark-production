@@ -1,5 +1,9 @@
 {
   "framework": "nextjs",
+  "alias": [
+    "shadowspark-tech.site",
+    "www.shadowspark-tech.site"
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -9,6 +13,19 @@
           "value": "s-maxage=1, stale-while-revalidate=59"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.shadowspark-tech.site"
+        }
+      ],
+      "destination": "https://shadowspark-tech.site/$1",
+      "permanent": true
     }
   ]
 }
