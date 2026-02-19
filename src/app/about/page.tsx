@@ -1,5 +1,6 @@
 import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   MapPin,
@@ -86,6 +87,7 @@ const team = [
     linkedin: "https://linkedin.com/in/stephen-chijioke-okoronkwo",
     github: "https://github.com/ShadowWeaver",
     location: "Port Harcourt, Nigeria",
+    image: "/images/founder.jpg",
   },
   {
     name: "ShadowWeaver",
@@ -95,6 +97,7 @@ const team = [
     linkedin: "https://linkedin.com/in/shadowweaver",
     github: "https://github.com/shadowweaver",
     location: "Port Harcourt, Nigeria",
+    image: null,
   },
 ];
 
@@ -276,9 +279,21 @@ export default function AboutPage() {
                 <div className="relative z-10">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-magenta-500 text-3xl font-bold text-white neon-glow">
-                        {member.name[0]}
-                      </div>
+                      {member.image ? (
+                        <div className="relative h-20 w-20 rounded-full overflow-hidden neon-glow">
+                          <Image
+                            src={member.image}
+                            alt={`${member.name} - ${member.role} at ShadowSpark Technologies`}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-magenta-500 text-3xl font-bold text-white neon-glow">
+                          {member.name[0]}
+                        </div>
+                      )}
                       <div>
                         <h3 className="text-xl font-semibold text-white">
                           {member.name}
