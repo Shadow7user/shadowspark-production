@@ -42,3 +42,6 @@ next-env.d.ts
 
 /src/generated/prisma
 .env*.local
+
+# npm lock file (project uses pnpm)
+package-lock.json
