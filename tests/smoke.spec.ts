@@ -66,6 +66,28 @@ test.describe("Blog page", () => {
   })
 })
 
+test.describe("Survey / Feedback page", () => {
+  test("loads with 200", async ({ page }) => {
+    const response = await page.goto("/survey")
+    expect(response?.status()).toBe(200)
+  })
+
+  test("feedback heading is visible", async ({ page }) => {
+    await page.goto("/survey")
+    await expect(page.locator("h1").first()).toBeVisible()
+  })
+
+  test("survey embed container is present", async ({ page }) => {
+    await page.goto("/survey")
+    await expect(page.locator("#smcx-sdk")).toBeAttached()
+  })
+
+  test("nav contains Feedback link", async ({ page }) => {
+    await page.goto("/survey")
+    await expect(page.getByRole("link", { name: "Feedback" }).first()).toBeVisible()
+  })
+})
+
 test.describe("Portfolio page", () => {
   test("loads with 200", async ({ page }) => {
     const response = await page.goto("/portfolio")
