@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "shadowspark-technologies"
+  },
+  "targets": {
+    "shadowspark-technologies": {
+      "hosting": {
+        "shadowspark-platform": [
+          "shadowspark-platform"
+        ]
+      }
+    }
+  }
+}

@@ -129,24 +129,20 @@ export default function LiveTicker() {
       });
 
       socket.on("connect", () => {
-        console.log("Socket connected:", socket?.id);
         setSocketConnected(true);
         // Join the stats room
         socket?.emit("join-stats");
       });
 
       socket.on("stats-update", (newStats: Stats) => {
-        console.log("Received stats update:", newStats);
         setStats(newStats);
       });
 
       socket.on("disconnect", () => {
-        console.log("Socket disconnected");
         setSocketConnected(false);
       });
 
-      socket.on("connect_error", (error) => {
-        console.error("Socket connection error:", error);
+      socket.on("connect_error", () => {
         setSocketConnected(false);
       });
     };
@@ -178,8 +174,7 @@ export default function LiveTicker() {
           setStats(data);
           if (data.leadsGenerated != null) setLeads(data.leadsGenerated);
         }
-      } catch (error) {
-        console.error("Failed to fetch stats:", error);
+      } catch {
       }
     };
 

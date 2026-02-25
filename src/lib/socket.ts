@@ -18,16 +18,12 @@ export function initializeSocket(httpServer: HTTPServer): SocketIOServer {
   });
 
   io.on("connection", (socket) => {
-    console.log("Client connected:", socket.id);
-
     socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
     });
 
     // Join a room for stats updates
     socket.on("join-stats", () => {
       socket.join("stats-room");
-      console.log("Client joined stats room:", socket.id);
     });
   });
 

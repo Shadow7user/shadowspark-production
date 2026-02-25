@@ -1,3 +1,4 @@
+'use client';
 import WhatsAppLink from "@/components/WhatsAppLink";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PricingCalculator from "@/components/PricingCalculator";
+import { usePageView, useTrackEvent } from '@/hooks/useAnalytics';
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -103,6 +105,9 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  usePageView('Pricing');
+  const trackEvent = useTrackEvent();
+
   return (
     <>
       <Navbar />
@@ -168,6 +173,9 @@ export default function PricingPage() {
                           ? "bg-gradient-to-r from-[#d4a843] to-[#c0935a] text-white hover:from-[#e8c56d] hover:to-[#d4a843]"
                           : "border border-slate-700 text-slate-300 hover:border-[#d4a843] hover:text-[#d4a843]"
                       }`}
+                      onClick={async () => {
+                        await trackEvent('pricing_cta_clicked', { plan: plan.name.toLowerCase() });
+                      }}
                     >
                       {plan.cta}
                     </Link>
@@ -180,6 +188,9 @@ export default function PricingPage() {
                           ? "bg-gradient-to-r from-[#d4a843] to-[#c0935a] text-white hover:from-[#e8c56d] hover:to-[#d4a843]"
                           : "border border-slate-700 text-slate-300 hover:border-[#d4a843] hover:text-[#d4a843]"
                       }`}
+                      onClick={async () => {
+                        await trackEvent('pricing_cta_clicked', { plan: plan.name.toLowerCase() });
+                      }}
                     >
                       {plan.cta}
                     </WhatsAppLink>

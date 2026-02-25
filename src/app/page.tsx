@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+'use client';
+import { usePageView } from '@/hooks/useAnalytics';
+
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import LiveTicker from "@/components/LiveTicker";
@@ -47,6 +50,8 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  usePageView('Homepage');
+
   return (
     <ErrorBoundary>
       <Navbar />

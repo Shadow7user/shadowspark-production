@@ -36,6 +36,7 @@ export default function PricingCalculator() {
   const [features, setFeatures] = useState<string[]>([]);
 
   const tier = messageTiers[messageVolume];
+  if (!tier) return null;
   const channelCost = channelOptions
     .filter((c) => channels.includes(c.id))
     .reduce((sum, c) => sum + c.price, 0);
@@ -95,7 +96,7 @@ export default function PricingCalculator() {
                 setMessageVolume(v);
                 trackCalculatorInteract(
                   "message_volume",
-                  messageTiers[v].label,
+                  messageTiers[v]?.label ?? "Unknown",
                 );
               }}
               className="w-full cursor-pointer accent-[#d4a843]"

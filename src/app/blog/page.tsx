@@ -91,6 +91,15 @@ function formatDate(dateStr: string) {
 }
 
 export default function BlogPage() {
+  const featuredPost = posts[0];
+  if (!featuredPost) {
+    return (
+      <main className="min-h-screen bg-slate-950 pt-24">
+        <p className="text-center text-slate-400">No posts available yet.</p>
+      </main>
+    );
+  }
+
   return (
     <>
       <Navbar />
@@ -109,24 +118,24 @@ export default function BlogPage() {
         {/* Featured Post */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Link
-            href={`/blog/${posts[0].slug}`}
+            href={`/blog/${featuredPost.slug}`}
             className="group block rounded-2xl border border-[#d4a843]/10 bg-gradient-to-r from-[#d4a843]/5 to-[#c0935a]/5 p-8 transition-all hover:border-[#d4a843]/20 md:p-12"
           >
             <span className="inline-block rounded-full bg-[#d4a843]/10 px-3 py-1 text-xs font-medium text-[#d4a843]">
-              {posts[0].category}
+              {featuredPost.category}
             </span>
             <h2 className="mt-4 text-2xl font-bold text-white group-hover:text-[#d4a843] sm:text-3xl">
-              {posts[0].title}
+              {featuredPost.title}
             </h2>
-            <p className="mt-3 max-w-3xl text-slate-400">{posts[0].excerpt}</p>
+            <p className="mt-3 max-w-3xl text-slate-400">{featuredPost.excerpt}</p>
             <div className="mt-4 flex items-center gap-4 text-sm text-slate-500">
               <span className="flex items-center gap-1">
                 <Calendar size={14} />
-                {formatDate(posts[0].date)}
+                {formatDate(featuredPost.date)}
               </span>
               <span className="flex items-center gap-1">
                 <Clock size={14} />
-                {posts[0].readTime}
+                {featuredPost.readTime}
               </span>
             </div>
           </Link>

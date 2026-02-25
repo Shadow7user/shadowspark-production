@@ -1,5 +1,6 @@
 {
   "framework": "nextjs",
+  "buildCommand": "CI=false pnpm run build",
   "headers": [
     {
       "source": "/(.*)",

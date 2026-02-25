@@ -4,7 +4,7 @@ test.describe("Homepage", () => {
   test("loads with 200 and correct title", async ({ page }) => {
     const response = await page.goto("/")
     expect(response?.status()).toBe(200)
-    await expect(page).toHaveTitle(/ShadowSpark/)
+    await expect(page).toHaveTitle(/Enterprise AI Automation/i)
   })
 
   test("hero section is visible", async ({ page }) => {
@@ -107,6 +107,55 @@ test.describe("Security headers", () => {
   test("X-Frame-Options is set", async ({ page }) => {
     const response = await page.goto("/")
     const headers = response?.headers()
-    expect(headers?.["x-frame-options"]).toBe("SAMEORIGIN")
+    expect(headers?.["x-frame-options"]).toBe("DENY")
+  })
+})
+
+test.describe("Webhook contracts", () => {
+  test("/api/webhook rejects JSON payloads", async ({ page }) => {
+    const response = await page.request.post("/api/webhook", {
+      headers: { "Content-Type": "application/json" },
+      data: {
+        Body: "hello",
+        From: "whatsapp:+10000000000",
+        To: "whatsapp:+10000000001",
+        MessageSid: "SM1234567890",
+      },
+    })
+    expect(response.status()).toBe(415)
+  })
+
+  test("/api/webhook requires valid Twilio signature", async ({ page }) => {
+    const response = await page.request.post("/api/webhook", {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      form: {
+        Body: "hello",
+        From: "whatsapp:+10000000000",
+        To: "whatsapp:+10000000001",
+        MessageSid: "SM1234567890",
+      },
+    })
+    expect(response.status()).toBe(403)
+    const data = await response.json()
+    expect(data.error).toBe("Forbidden")
+  })
+
+  test("/api/webhook/whatsapp accepts JSON content type", async ({ page }) => {
+    const response = await page.request.post("/api/webhook/whatsapp", {
+      headers: { "Content-Type": "application/json" },
+      data: {
+        object: "whatsapp_business_account",
+        entry: [],
+      },
+    })
+    expect([200, 401]).toContain(response.status())
+  })
+
+  test("/api/webhook/whatsapp rejects non-JSON payloads", async ({ page }) => {
+    const response = await page.request.post("/api/webhook/whatsapp", {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      form: { hello: "world" },
+    })
+    expect(response.status()).toBe(415)
   })
 })

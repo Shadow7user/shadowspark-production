@@ -6,6 +6,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CheckCircle2, ArrowRight, MessageSquare, BarChart2, CalendarCheck, ShieldCheck } from "lucide-react";
+import { usePageView, useTrackEvent } from '@/hooks/useAnalytics';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 const businessTypes = [
   "Fintech / Lending",
@@ -58,6 +60,9 @@ const reassurances = [
 type FormState = "idle" | "submitting" | "success";
 
 export default function DemoPage() {
+  usePageView('Demo');
+  const trackEvent = useTrackEvent();
+
   const [form, setForm] = useState({
     name: "",
     company: "",
@@ -96,6 +101,8 @@ export default function DemoPage() {
       setErrors(errs);
       return;
     }
+    // track demo start event
+    await trackEvent('chatbot_demo_started', { source: 'demo_page' });
     setState("submitting");
     // No backend — simulate brief delay then show success
     await new Promise((r) => setTimeout(r, 900));
@@ -252,14 +259,16 @@ export default function DemoPage() {
               {/* WhatsApp alternative */}
               <p className="mt-6 text-center text-sm text-slate-500">
                 Prefer to message us directly?{" "}
-                <a
+                <WhatsAppLink
                   href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20request%20a%20demo%20of%20ShadowSpark"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  source="demo_page"
                   className="font-semibold text-emerald-400 hover:text-emerald-300"
+                  onClick={async () => {
+                    await trackEvent('whatsapp_cta_clicked', { source: 'demo_page', phone: '2349037621612' });
+                  }}
                 >
                   Open WhatsApp →
-                </a>
+                </WhatsAppLink>
               </p>
             </div>
 
@@ -337,7 +346,7 @@ function Field({
   children,
 }: {
   label: string;
-  error?: string;
+  error?: string | undefined;
   children: React.ReactNode;
 }) {
   return (
