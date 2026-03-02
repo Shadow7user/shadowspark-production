@@ -1,3 +1,4 @@
+// Run `npx prisma db push` locally after setting DATABASE_URL
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
