@@ -18,24 +18,24 @@ export type ShadowSparkEvent =
   | 'chatbot_demo_started';
 
 export function useTrackEvent() {
-  return useCallback(async (
-    eventName: ShadowSparkEvent,
-    params?: Record<string, string | number | boolean>
-  ) => {
-    try {
-      const analytics = await getFirebaseAnalytics();
-      if (analytics) {
-        // firebase logEvent typings are strict; cast eventName to string to avoid
-      // conflicts with the generated CustomEventName union.
-      logEvent(analytics, eventName as string, {
-          ...params,
-          timestamp: Date.now(),
-        });
+  return useCallback(
+    async (eventName: ShadowSparkEvent, params?: Record<string, string | number | boolean>) => {
+      try {
+        const analytics = await getFirebaseAnalytics();
+        if (analytics) {
+          // firebase logEvent typings are strict; cast eventName to string to avoid
+          // conflicts with the generated CustomEventName union.
+          logEvent(analytics, eventName as string, {
+            ...params,
+            timestamp: Date.now(),
+          });
+        }
+      } catch (error) {
+        console.warn("Analytics event failed silently:", eventName, error);
       }
-    } catch (error) {
-      console.warn('Analytics event failed silently:', eventName);
-    }
-  }, []);
+    },
+    [],
+  );
 }
 
 export function usePageView(pageName: string) {

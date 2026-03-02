@@ -101,3 +101,10 @@ export async function handleMessage(input: {
 
   return "Got it. Please describe the issue, urgency (low/medium/high), and any error logs. I’ll create a ticket and notify Emmanuel.";
 }
+
+export const flow = {
+  persona,
+  welcomeMessage,
+  assignedTo,
+  handleMessage,
+};

@@ -73,3 +73,10 @@ export async function handleMessage(input: {
 
   return "Please share the API endpoint, request payload, and exact error so I can assist. If this is critical, reply 'EMERGENCY' to alert Stephen + Emmanuel.";
 }
+
+export const flow = {
+  persona,
+  welcomeMessage,
+  assignedTo,
+  handleMessage,
+};

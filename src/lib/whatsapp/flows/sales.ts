@@ -105,3 +105,10 @@ export async function handleMessage(input: {
 
   return "Thanks for reaching out! Can I get your name, business type, and challenge so Reginald can help with a free demo?";
 }
+
+export const flow = {
+  persona,
+  welcomeMessage,
+  assignedTo,
+  handleMessage,
+};

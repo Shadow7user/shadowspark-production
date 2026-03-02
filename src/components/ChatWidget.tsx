@@ -28,6 +28,7 @@ export default function ChatWidget() {
   const [sessionId] = useState(
     () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
   );
+  const waSalesNumber = process.env.NEXT_PUBLIC_WA_SALES_NUMBER ?? "2348107677660";
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const proactiveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const decoderRef = useRef(new TextDecoder());
@@ -239,7 +240,7 @@ export default function ChatWidget() {
           {/* WhatsApp CTA */}
           {(showWhatsApp || messages.length >= 4) && (
             <WhatsAppLink
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WA_SALES_NUMBER ?? "2348107677660"}?text=${encodeURIComponent("Hi Reginald! Interested in ShadowSpark services.")}`}
+              href={`https://wa.me/${waSalesNumber}?text=${encodeURIComponent("Hi Reginald! Interested in ShadowSpark services.")}`}
               source="chatwidget"
               className="mx-4 mb-2 flex items-center justify-center gap-2 rounded-lg bg-green-600/20 px-3 py-1.5 text-xs text-green-400 transition-colors hover:bg-green-600/30"
             >

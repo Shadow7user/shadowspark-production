@@ -8,7 +8,6 @@ import {
   Lock,
   Users,
   FileText,
-  Trash2,
   AlertTriangle,
   Activity,
   ArrowRight,

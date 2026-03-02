@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Shield } from "lucide-react";
 import {
   grantConsent,
@@ -9,31 +9,28 @@ import {
 } from "@/lib/analytics";
 
 export default function ConsentBanner() {
-  const [visible, setVisible] = useState(false);
+  const [storedConsent] = useState(() => getStoredConsent());
+  const [visible, setVisible] = useState(() => storedConsent !== "granted" && storedConsent !== "denied");
 
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (stored === "granted") {
+    if (storedConsent === "granted") {
       grantConsent();
       setUserRegionProperties();
-    } else if (stored === "denied") {
+    } else if (storedConsent === "denied") {
       denyConsent();
-    } else {
-      // No stored preference — show banner
-      setVisible(true);
     }
-  }, []);
+  }, [storedConsent]);
 
-  function handleAccept() {
+  const handleAccept = useCallback(() => {
     grantConsent();
     setUserRegionProperties();
     setVisible(false);
-  }
+  }, []);
 
-  function handleDecline() {
+  const handleDecline = useCallback(() => {
     denyConsent();
     setVisible(false);
-  }
+  }, []);
 
   if (!visible) return null;
 
