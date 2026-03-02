@@ -216,7 +216,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // Process first message (queue-based systems would fan out here)
   const msg = messages[0]!;
   const userHash = hashPhone(msg.from);
-  const mode = detectMode(msg.text.body);
+  const text = msg.text.body;
+  const mode = detectMode(text);
+
+  const techModes = ["technical", "developer", "api", "integration", "emergency", "bug", "error"];
+  const salesModes = ["sales", "sme", "enterprise", "lead", "pricing", "demo", "quote"];
+
+  let targetPhoneId = process.env.WA_PHONE_NUMBER_ID_SUPPORT;
+  if (techModes.some((m) => text.toLowerCase().includes(m))) {
+    targetPhoneId = process.env.WA_PHONE_NUMBER_ID_TECHNICAL;
+  } else if (salesModes.some((m) => text.toLowerCase().includes(m))) {
+    targetPhoneId = process.env.WA_PHONE_NUMBER_ID_SALES;
+  }
 
   // Best-effort idempotency guard for duplicated webhook retries.
   const { result: dedupeResult } = await redisOp(async (client) => {
@@ -309,8 +320,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           async () => {
             const { result } = await redisOp(async (client) => {
               await client.lpush(
-                "whatsapp:queue",
-                JSON.stringify({ userHash, mode, timestamp: Date.now() }),
+                 "whatsapp:queue",
+                 JSON.stringify({
+                   userHash,
+                   mode,
+                   targetPhoneId,
+                   timestamp: Date.now(),
+                 }),
               );
               return true;
             });

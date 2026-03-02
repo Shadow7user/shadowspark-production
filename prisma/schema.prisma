@@ -1,3 +1,4 @@
+// Run `npx prisma db push` locally after setting DATABASE_URL
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -65,27 +66,67 @@ model Business {
   email     String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  leads     Lead[]
+  leads     BusinessLead[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Lead {
-  id         String     @id @default(cuid())
+model BusinessLead {
+  id         String            @id @default(cuid())
   name       String
   phone      String
   email      String?
-  status     LeadStatus @default(NEW)
+  status     BusinessLeadStatus @default(NEW)
   businessId String
-  business   Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
 }
 
-enum LeadStatus {
+enum BusinessLeadStatus {
   NEW
   CONTACTED
   QUALIFIED
   CONVERTED
   LOST
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+model Lead {
+  id           String   @id @default(cuid())
+  name         String?
+  phone        String   @unique
+  businessType String?
+  challenge    String?
+  channel      String   @default("sales")
+  assignedTo   String   @default("reginald")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([phone])
+  @@index([channel, assignedTo])
+}
+
+model SupportTicket {
+  id         String   @id @default(cuid())
+  userHash   String
+  issue      String
+  urgency    String   @default("medium")
+  channel    String
+  assignedTo String   @default("emmanuel")
+  status     String   @default("OPEN")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userHash])
+  @@index([status, urgency])
 }

@@ -15,6 +15,7 @@ const company = [
   { href: "/security",  label: "Security" },
   { href: "/pricing",   label: "Pricing" },
   { href: "/blog",      label: "Blog" },
+  { href: "/team",      label: "Team" },
 ];
 
 export default function Navbar() {
