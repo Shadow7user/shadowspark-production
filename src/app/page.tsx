@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-'use client';
-import { usePageView } from '@/hooks/useAnalytics';
+import PageTracker from "@/components/PageTracker";
 
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -50,10 +49,9 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  usePageView('Homepage');
-
   return (
     <ErrorBoundary>
+      <PageTracker page="Homepage" />
       <Navbar />
       <HeroSection />
       <LiveTicker />
