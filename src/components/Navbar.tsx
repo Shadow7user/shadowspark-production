@@ -14,6 +14,7 @@ const platform = [
 const company = [
   { href: "/security",  label: "Security" },
   { href: "/pricing",   label: "Pricing" },
+  { href: "/survey",    label: "Feedback" },
   { href: "/blog",      label: "Blog" },
 ];
 
