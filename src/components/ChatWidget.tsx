@@ -12,59 +12,6 @@ import {
 
 type Message = { role: "bot" | "user"; text: string };
 
-const responses: Array<{ keywords: string[]; reply: string }> = [
-  {
-    keywords: ["price", "cost", "how much", "pricing", "plan", "package"],
-    reply:
-      "Our plans start at \u20A650,000/month for SMEs. Check out our pricing page at /pricing or I can connect you with sales on WhatsApp!",
-  },
-  {
-    keywords: ["demo", "try", "trial", "test"],
-    reply:
-      "You can try our chatbot live on WhatsApp! Send 'join neighbor-crew' to +1 (415) 523-8886. We also offer a 14-day free trial.",
-  },
-  {
-    keywords: ["hello", "hi", "hey", "good morning", "good afternoon"],
-    reply:
-      "Hello! Welcome to ShadowSpark. We build AI chatbots, BI dashboards, and automation tools for Nigerian businesses. What would you like to know?",
-  },
-  {
-    keywords: ["chatbot", "whatsapp", "bot", "automate"],
-    reply:
-      "Our AI chatbots handle customer queries 24/7 on WhatsApp, web, and SMS. They can answer FAQs, qualify leads, and escalate to your team when needed.",
-  },
-  {
-    keywords: ["dashboard", "analytics", "report", "data", "bi"],
-    reply:
-      "Our BI dashboards connect to your existing data sources and give you real-time insights on sales, customers, and operations. No technical skills required!",
-  },
-  {
-    keywords: ["rpa", "automation", "workflow", "invoice", "process"],
-    reply:
-      "We build custom RPA workflows that automate repetitive tasks like invoice processing, data entry, and report generation. Most setups take 2-4 weeks.",
-  },
-  {
-    keywords: ["about", "team", "who", "company", "location"],
-    reply:
-      "We're based in Port Harcourt, Nigeria. ShadowSpark Technologies builds AI solutions for African SMEs. Visit our About page to learn more!",
-  },
-  {
-    keywords: ["contact", "speak", "call", "reach", "support"],
-    reply:
-      "The fastest way to reach us is WhatsApp! Click the green button below, or email us. We typically respond within 30 minutes.",
-  },
-];
-
-function findReply(text: string): string {
-  const lower = text.toLowerCase();
-  for (const entry of responses) {
-    if (entry.keywords.some((kw) => lower.includes(kw))) {
-      return entry.reply;
-    }
-  }
-  return "Thanks for your message! For detailed assistance, chat with our full AI on WhatsApp or sign up for a free trial. Our team typically responds within 30 minutes.";
-}
-
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -77,8 +24,14 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [showProactive, setShowProactive] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [showWhatsApp, setShowWhatsApp] = useState(false);
+  const [sessionId] = useState(
+    () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const proactiveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const decoderRef = useRef(new TextDecoder());
+  const messageCountRef = useRef(0);
 
   // Proactive engagement — show nudge after 10s if user hasn't interacted
   useEffect(() => {
@@ -120,15 +73,55 @@ export default function ChatWidget() {
 
     setInput("");
     setHasInteracted(true);
-    setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+    setMessages((prev) => [...prev, { role: "user", text: trimmed }, { role: "bot", text: "" }]);
     setLoading(true);
     trackChatbotMessage(trimmed);
 
-    const reply = findReply(trimmed);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: trimmed, sessionId }),
+      });
 
-    await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
-    setMessages((prev) => [...prev, { role: "bot", text: reply }]);
-    setLoading(false);
+      if (!response.body) {
+        throw new Error("No response body");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = decoderRef.current;
+      let botReply = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        botReply += decoder.decode(value, { stream: true });
+        setMessages((prev) => {
+          const next = [...prev];
+          next[next.length - 1] = { role: "bot", text: botReply };
+          return next;
+        });
+      }
+
+      if (botReply) {
+        messageCountRef.current += 1;
+        if (messageCountRef.current >= 3) {
+          setShowWhatsApp(true);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => {
+        const next = [...prev];
+        next[next.length - 1] = {
+          role: "bot",
+          text: "Sorry, I had trouble responding. Please try again or reach us on WhatsApp.",
+        };
+        return next;
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleSend() {
@@ -214,7 +207,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto space-y-3 p-4">
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -244,13 +237,15 @@ export default function ChatWidget() {
           </div>
 
           {/* WhatsApp CTA */}
-          <WhatsAppLink
-            href="https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20ShadowSpark"
-            source="chatwidget"
-            className="mx-4 mb-2 flex items-center justify-center gap-2 rounded-lg bg-green-600/20 px-3 py-1.5 text-xs text-green-400 transition-colors hover:bg-green-600/30"
-          >
-            Continue on WhatsApp for full AI support
-          </WhatsAppLink>
+          {(showWhatsApp || messages.length >= 4) && (
+            <WhatsAppLink
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WA_SALES_NUMBER ?? "2348107677660"}?text=${encodeURIComponent("Hi Reginald! Interested in ShadowSpark services.")}`}
+              source="chatwidget"
+              className="mx-4 mb-2 flex items-center justify-center gap-2 rounded-lg bg-green-600/20 px-3 py-1.5 text-xs text-green-400 transition-colors hover:bg-green-600/30"
+            >
+              Continue on WhatsApp for full AI support
+            </WhatsAppLink>
+          )}
 
           {/* Input */}
           <div className="flex items-center gap-2 border-t border-white/5 p-3">

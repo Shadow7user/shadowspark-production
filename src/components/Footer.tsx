@@ -25,13 +25,34 @@ const getStarted = [
   },
 ];
 
+const channels = [
+  {
+    label: "💬 Sales — Reginald",
+    number: "2348107677660",
+    msg: "Hi Reginald! Interested in ShadowSpark services.",
+    desc: "New enquiries & demos",
+  },
+  {
+    label: "🛠️ Support — Emmanuel",
+    number: "2349040014125",
+    msg: "Hi Emmanuel! Need help with project.",
+    desc: "Client support",
+  },
+  {
+    label: "🔧 Technical",
+    number: process.env.NEXT_PUBLIC_WA_TECHNICAL_NUMBER || "",
+    msg: "Hi! Technical assistance needed.",
+    desc: "API & integrations",
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="border-t border-white/5 bg-[#080d18]">
 
       {/* ── Main grid ─────────────────────────────────── */}
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1.4fr]">
 
           {/* Brand column */}
           <div>
@@ -55,6 +76,32 @@ export default function Footer() {
               </svg>
               +234 903 762 1612
             </a>
+          </div>
+
+          {/* WhatsApp reach-out */}
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Reach Us on WhatsApp
+            </p>
+            <div className="grid gap-3">
+              {channels.map(({ label, number, msg, desc }) => (
+                <a
+                  key={label}
+                  href={`https://wa.me/${number}?text=${encodeURIComponent(msg)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-2xl border border-cyan-500/30 bg-white/5 p-4 transition hover:border-cyan-400/60 hover:bg-white/[0.07]"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold text-white">{label}</p>
+                    <span className="text-xs text-cyan-300 opacity-70 group-hover:opacity-100">
+                      wa.me/{number || "tbd"}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400">{desc}</p>
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Platform column */}
