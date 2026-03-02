@@ -3,6 +3,7 @@ import { z } from "zod";
 import { env } from "@/lib/env";
 import { formDataToStringRecord, getClientIp } from "@/lib/http/request";
 import { verifyTwilioSignature } from "@/lib/twilio/verify";
+import { getTwilioClient } from "@/lib/twilio/client";
 import { checkRateLimit, hashPhone, logger } from "@/lib/observability";
 
 const TwilioWebhookSchema = z.object({
@@ -76,6 +77,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     message_sid: MessageSid,
     body_length: Body.length,
   });
+
+  // ── Send outbound reply via Twilio Messages API ──────────────────────────
+  const twilioClient = getTwilioClient();
+  const fromNumber = env.twilioWhatsappNumber
+    ? `whatsapp:${env.twilioWhatsappNumber}`
+    : To; // fall back to the number that received the message
+
+  if (twilioClient) {
+    try {
+      await twilioClient.messages.create({
+        body: "Thank you for your message. Our team will get back to you shortly.",
+        from: fromNumber,
+        to: From,
+      });
+    } catch (err) {
+      logger.warn("Twilio outbound reply failed", {
+        from_hash: hashPhone(From),
+        error: err instanceof Error ? err.message : String(err),
+      });
+      // Non-critical — still return 200 to Twilio so it doesn't retry
+    }
+  }
 
   return NextResponse.json({ ok: true }, { status: 200 });
 }

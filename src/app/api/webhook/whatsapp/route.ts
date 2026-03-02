@@ -419,7 +419,49 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  // ── 7. Final latency log ─────────────────────────────────────────────────
+  // ── 7. Send outbound reply via Meta Messages API ────────────────────────
+  // Route sales-intent messages to the sales number; everything else to support.
+  const salesModes: MessageMode[] = ["sales", "sme", "enterprise"];
+  const phoneNumberId = salesModes.includes(mode)
+    ? (env.waPhoneNumberIdSales || env.waPhoneNumberIdSupport)
+    : (env.waPhoneNumberIdSupport || env.waPhoneNumberIdSales);
+
+  if (phoneNumberId && env.whatsappAccessToken) {
+    try {
+      const metaRes = await fetch(
+        `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${env.whatsappAccessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            to: msg.from,
+            type: "text",
+            text: { body: aiResponse },
+          }),
+        },
+      );
+      if (!metaRes.ok) {
+        logger.warn("webhook.meta_reply_failed", {
+          user_hash: userHash,
+          mode,
+          status: metaRes.status,
+        });
+      }
+    } catch (err) {
+      logger.warn("webhook.meta_reply_error", {
+        user_hash: userHash,
+        mode,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      // Non-critical — continue to final log
+    }
+  }
+
+  // ── 8. Final latency log ─────────────────────────────────────────────────
   const totalMs = webhookTimer();
   metricsStore.record("webhook", { duration_ms: totalMs, error: false });
 
