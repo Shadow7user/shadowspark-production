@@ -31,7 +31,7 @@ const PharmacyInventory: React.FC = () => {
             type="text"
             placeholder="Search drug name or scan barcode..."
             aria-label="Search drugs by name or scan barcode"
-            className="w-full pl-10 pr-12 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-blue-500 focus:ring-0 rounded-lg transition-all text-sm outline-none"
+            className="w-full pl-10 pr-12 py-3 bg-gray-100 border border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-0 rounded-lg transition-all text-sm outline-none"
           />
           <button
             className="absolute right-2 top-2 p-1 bg-white rounded border border-gray-200 shadow-sm active:bg-gray-100"

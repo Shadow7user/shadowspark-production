@@ -128,6 +128,7 @@ const LogisticsDashboard: React.FC = () => {
 
       <button
         type="button"
+        aria-label="Optimize my fleet now"
         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2"
       >
         <MapPin className="w-5 h-5" />
