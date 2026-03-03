@@ -34,7 +34,7 @@ const LogisticsDashboard: React.FC = () => {
     <div className="w-full max-w-4xl mx-auto p-4 space-y-6 font-sans">
       <div className="flex justify-between items-end border-b border-gray-200 pb-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Frontier Logist AI</h2>
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Frontier Logistics AI</h2>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             System Operational • Port Harcourt Node
