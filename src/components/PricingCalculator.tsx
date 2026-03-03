@@ -9,6 +9,18 @@ import {
   trackCalculatorQuoteClick,
 } from "@/lib/analytics";
 
+export interface LeadCapturePayload {
+  name: string;
+  email: string;
+  industry: string;
+  painPoint: string;
+  calculatedRoi: number;
+}
+
+interface PricingCalculatorProps {
+  onCalculate?: (payload: LeadCapturePayload) => Promise<void> | void;
+}
+
 const channelOptions = [
   { id: "whatsapp", label: "WhatsApp", price: 30000 },
   { id: "web", label: "Web Chat", price: 20000 },
@@ -30,10 +42,24 @@ const messageTiers = [
   { max: Infinity, label: "Unlimited", base: 200000 },
 ];
 
-export default function PricingCalculator() {
+const DEFAULT_PAIN_POINT = "Pricing estimate";
+const TOAST_DISPLAY_DURATION_MS = 2500;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function PricingCalculator(
+  props: PricingCalculatorProps = {},
+) {
+  const { onCalculate } = props;
   const [messageVolume, setMessageVolume] = useState(1);
   const [channels, setChannels] = useState<string[]>(["whatsapp"]);
   const [features, setFeatures] = useState<string[]>([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [painPoint, setPainPoint] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const tier = messageTiers[messageVolume];
   if (!tier) return null;
@@ -44,6 +70,38 @@ export default function PricingCalculator() {
     .filter((f) => features.includes(f.id))
     .reduce((sum, f) => sum + f.price, 0);
   const total = tier.base + channelCost + featureCost;
+
+  async function handleCalculate(): Promise<boolean> {
+    if (!onCalculate) return true;
+    if (!name.trim() || !email.trim() || !industry.trim()) {
+      setError("Add your name, email, and industry to save this calculation.");
+      return false;
+    }
+    if (!EMAIL_PATTERN.test(email.trim())) {
+      setError("Enter a valid email address.");
+      return false;
+    }
+    setIsSaving(true);
+    setError(null);
+    try {
+      const payload: LeadCapturePayload = {
+        name: name.trim(),
+        email: email.trim(),
+        industry: industry.trim(),
+        painPoint: painPoint.trim() || DEFAULT_PAIN_POINT,
+        calculatedRoi: total,
+      };
+      await onCalculate(payload);
+      setToastVisible(true);
+      setTimeout(() => setToastVisible(false), TOAST_DISPLAY_DURATION_MS);
+      return true;
+    } catch {
+      setError("Could not save lead. Please try again.");
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   function toggleChannel(id: string) {
     const willEnable = !channels.includes(id);
@@ -238,12 +296,65 @@ export default function PricingCalculator() {
               </div>
             </div>
 
+            <div className="mt-6 space-y-3 rounded-lg border border-slate-800 bg-slate-900/40 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#d4a843]">
+                Save calculation
+              </p>
+              <input
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-[#d4a843]/60 focus:outline-none"
+              />
+              <input
+                type="email"
+                placeholder="Work email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-[#d4a843]/60 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Industry (e.g. Private Education)"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-[#d4a843]/60 focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Primary pain point (optional)"
+                value={painPoint}
+                onChange={(e) => setPainPoint(e.target.value)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-[#d4a843]/60 focus:outline-none"
+              />
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={handleCalculate}
+                className="w-full rounded-lg bg-[#d4a843] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#e8c56d] disabled:opacity-60"
+              >
+                {isSaving ? "Saving..." : "Save ROI snapshot"}
+              </button>
+              {error && (
+                <p className="text-xs text-red-400">{error}</p>
+              )}
+              {toastVisible && (
+                <div className="flex items-center gap-2 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+                  Neural Link Established - calculation saved.
+                </div>
+              )}
+            </div>
+
             <WhatsAppLink
               href={`https://wa.me/2349037621612?text=${encodeURIComponent(
                 `Hi, I'm interested in a custom plan:\n- ${tier.label} messages/month\n- Channels: ${channels.join(", ")}\n- Add-ons: ${features.length > 0 ? features.join(", ") : "none"}\n- Estimated: \u20A6${total.toLocaleString()}/mo`,
               )}`}
               source="pricing_calculator"
-              onClick={() => trackCalculatorQuoteClick(total)}
+              onClick={async (event) => {
+                trackCalculatorQuoteClick(total);
+                return handleCalculate();
+              }}
               className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
               Get This Quote on WhatsApp
