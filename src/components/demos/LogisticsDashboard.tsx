@@ -56,7 +56,12 @@ const LogisticsDashboard: React.FC = () => {
               </div>
               {React.createElement(getTrendIcon(metric.trend), {
                 className: `w-5 h-5 ${metric.color}`,
-                "aria-label": `${metric.trend} trend`,
+                "aria-label":
+                  metric.trend === "down"
+                    ? "Decreasing trend"
+                    : metric.trend === "neutral"
+                      ? "Stable trend"
+                      : "Increasing trend",
               })}
             </div>
           </div>
