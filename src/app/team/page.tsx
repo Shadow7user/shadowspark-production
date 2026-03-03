@@ -11,7 +11,15 @@ const jsonLd = {
   "@type": "Organization",
   name: "ShadowSpark Technologies",
   url: "https://shadowspark-tech.org",
-  location: "Port Harcourt, Rivers State, Nigeria",
+  location: {
+    "@type": "Place",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Port Harcourt",
+      addressRegion: "Rivers State",
+      addressCountry: "NG",
+    },
+  },
   founders: ["Okoronkwo Stephen Chijioke", "Emmanuel"],
 };
 

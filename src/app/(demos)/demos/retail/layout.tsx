@@ -11,7 +11,13 @@ const jsonLd = {
   "@type": "SoftwareApplication",
   name: "ShadowSpark Retail Hub",
   applicationCategory: "BusinessApplication",
-  offers: { price: "1500000", priceCurrency: "NGN" },
+  offers: {
+    "@type": "Offer",
+    price: "1500000",
+    priceCurrency: "NGN",
+    availability: "https://schema.org/InStock",
+    url: canonical,
+  },
   areaServed: "Nigeria",
   url: canonical,
 };

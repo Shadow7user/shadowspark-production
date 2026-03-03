@@ -8,6 +8,9 @@ import Footer from "@/components/Footer";
 import PricingCalculator from "@/components/PricingCalculator";
 import { usePageView, useTrackEvent } from '@/hooks/useAnalytics';
 
+const salesPhone = "2349037621612";
+const salesHref = `https://wa.me/${salesPhone}?text=Hi%2C%20I%27d%20like%20a%20pricing%20quote%20for%20ShadowSpark`;
+
 const plans = [
   {
     name: "Starter",
@@ -59,7 +62,7 @@ const plans = [
       "NDPR compliance documentation",
     ],
     cta: "Contact Sales",
-    href: "https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20the%20Enterprise%20plan",
+    href: `https://wa.me/${salesPhone}?text=Hi%2C%20I%27m%20interested%20in%20the%20Enterprise%20plan`,
     popular: false,
   },
 ];
@@ -175,11 +178,11 @@ export default function PricingClient() {
                 </p>
               </div>
               <WhatsAppLink
-                href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20a%20pricing%20quote%20for%20ShadowSpark"
+                href={salesHref}
                 source="pricing_page"
                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
                 onClick={async () => {
-                  await trackEvent('whatsapp_cta_clicked', { source: 'pricing_page', phone: '2349037621612' });
+                  await trackEvent('whatsapp_cta_clicked', { source: 'pricing_page', phone: salesPhone });
                 }}
               >
                 Talk to sales →

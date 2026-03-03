@@ -11,7 +11,13 @@ const jsonLd = {
   "@type": "SoftwareApplication",
   name: "ShadowSpark Property Portal",
   applicationCategory: "BusinessApplication",
-  offers: { price: "2500000", priceCurrency: "NGN" },
+  offers: {
+    "@type": "Offer",
+    price: "2500000",
+    priceCurrency: "NGN",
+    availability: "https://schema.org/InStock",
+    url: canonical,
+  },
   areaServed: "Nigeria",
   url: canonical,
 };

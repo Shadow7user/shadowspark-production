@@ -11,7 +11,13 @@ const jsonLd = {
   "@type": "SoftwareApplication",
   name: "ShadowSpark School Portal",
   applicationCategory: "EducationalApplication",
-  offers: { price: "1200000", priceCurrency: "NGN" },
+  offers: {
+    "@type": "Offer",
+    price: "1200000",
+    priceCurrency: "NGN",
+    availability: "https://schema.org/InStock",
+    url: canonical,
+  },
   areaServed: "Nigeria",
   url: canonical,
 };
