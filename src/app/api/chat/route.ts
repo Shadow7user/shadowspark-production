@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateAIResponse, type MessageHistory } from "@/lib/ai";
-import { env } from "@/lib/env";
+import { getEscalationContact } from "@/lib/ai/config";
 import { checkRateLimit, hashPhone } from "@/lib/observability";
 
 const SYSTEM_PROMPT =
   "You are the ShadowSpark website assistant. Provide concise, friendly answers, and guide users to WhatsApp when appropriate.";
-const ESCALATION_NUMBER = env.whatsappEscalationNumber || "+2349037621612";
-const ESCALATION_URL = `https://wa.me/${ESCALATION_NUMBER.replace(/\D/g, "")}`;
+const { url: ESCALATION_URL } = getEscalationContact();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let payload: { message?: string; history?: MessageHistory };

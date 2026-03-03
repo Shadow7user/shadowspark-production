@@ -1,6 +1,6 @@
-import { env } from "@/lib/env";
 import { generateWithGemini } from "./gemini";
 import { generateWithOpenAI } from "./openai";
+import { getEscalationContact } from "./config";
 import type { MessageHistory } from "./types";
 export type { MessageHistory } from "./types";
 
@@ -31,13 +31,11 @@ export async function generateAIResponse(
     }
   }
 
-  const fallbackNumber =
-    env.whatsappEscalationNumber || "+2348107677660";
-  const fallbackName = env.whatsappEscalationName || "Reginald";
+  const { number, name } = getEscalationContact();
 
   return (
     "I'm having trouble connecting right now. " +
-    `Please WhatsApp us directly at ${fallbackNumber} ` +
-    `and ${fallbackName} will assist you immediately.`
+    `Please WhatsApp us directly at ${number} ` +
+    `and ${name} will assist you immediately.`
   );
 }
