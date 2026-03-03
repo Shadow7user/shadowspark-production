@@ -16,7 +16,7 @@ const INVENTORY: DrugItem[] = [
   { id: "3", name: "Ciprotab 500mg", category: "Antibiotics", stock: 12, price: 4500, status: "low" },
 ];
 
-const formatNGNCurrency = (amount: number) =>
+const formatNgnCurrency = (amount: number) =>
   amount.toLocaleString("en-NG", { style: "currency", currency: "NGN", minimumFractionDigits: 0 });
 
 const PharmacyInventory: React.FC = () => {
@@ -64,7 +64,7 @@ const PharmacyInventory: React.FC = () => {
             </div>
 
             <div className="text-right">
-              <p className="text-sm font-bold text-gray-900 tabular-nums">{formatNGNCurrency(item.price)}</p>
+              <p className="text-sm font-bold text-gray-900 tabular-nums">{formatNgnCurrency(item.price)}</p>
 
               {item.status === "critical" ? (
                 <button
@@ -107,7 +107,7 @@ const PharmacyInventory: React.FC = () => {
         </button>
         <button type="button" className="text-center flex flex-col items-center gap-1" aria-label="Shortages">
           <div className="mx-auto w-6 h-6">
-            <AlertCircle className="w-5 h-5" aria-label="Shortages" />
+            <AlertCircle className="w-5 h-5" />
           </div>
           <span className="text-[10px]">Shortages</span>
         </button>
