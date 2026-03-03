@@ -12,9 +12,15 @@ interface DeliveryMetric {
 const formatNgnCurrency = (amount: number) =>
   amount.toLocaleString("en-NG", { style: "currency", currency: "NGN", minimumFractionDigits: 0 });
 
+const FUEL_COST_PER_KM = 420;
+const MAP_PATTERN = {
+  backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)",
+  backgroundSize: "24px 24px",
+};
+
 const METRICS: DeliveryMetric[] = [
   { id: "1", label: "Active Fleet", value: "12 Trucks", trend: "up", color: "text-blue-600" },
-  { id: "2", label: "Fuel Cost", value: `${formatNgnCurrency(420)}/km`, trend: "down", color: "text-emerald-600" },
+  { id: "2", label: "Fuel Cost", value: `${formatNgnCurrency(FUEL_COST_PER_KM)}/km`, trend: "down", color: "text-emerald-600" },
   { id: "3", label: "Delay Risk", value: "Low (Rumuokoro)", trend: "neutral", color: "text-amber-600" },
 ];
 
@@ -72,14 +78,7 @@ const LogisticsDashboard: React.FC = () => {
       </div>
 
       <div className="bg-slate-900 rounded-xl overflow-hidden shadow-2xl text-white relative">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
+        <div className="absolute inset-0 opacity-10" style={MAP_PATTERN} />
 
         <div className="relative p-6 z-10">
           <div className="flex items-center gap-3 mb-6">

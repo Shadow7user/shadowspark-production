@@ -55,7 +55,10 @@ const PharmacyInventory: React.FC = () => {
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-gray-900">{item.name}</h3>
                 {item.status === "critical" && (
-                  <AlertCircle className="w-4 h-4 text-red-500 animate-bounce" aria-label="Critical stock level" />
+                  <AlertCircle
+                    className="w-4 h-4 text-red-500 motion-safe:animate-bounce"
+                    aria-label="Critical stock level"
+                  />
                 )}
               </div>
               <p className="text-xs text-gray-500 mt-1">
@@ -64,7 +67,12 @@ const PharmacyInventory: React.FC = () => {
             </div>
 
             <div className="text-right">
-              <p className="text-sm font-bold text-gray-900 tabular-nums">{formatNgnCurrency(item.price)}</p>
+              <p
+                className="text-sm font-bold text-gray-900 tabular-nums"
+                aria-label={`Price: ${formatNgnCurrency(item.price)}`}
+              >
+                {formatNgnCurrency(item.price)}
+              </p>
 
               {item.status === "critical" ? (
                 <button
