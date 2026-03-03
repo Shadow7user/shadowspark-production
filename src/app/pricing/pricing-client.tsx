@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PricingCalculator from "@/components/PricingCalculator";
+import PricingCalculator, { LeadCapturePayload } from "@/components/PricingCalculator";
 import { usePageView, useTrackEvent } from '@/hooks/useAnalytics';
 
 const salesPhone = "2349037621612";
@@ -89,6 +89,18 @@ const faqs = [
 export default function PricingClient() {
   usePageView('Pricing');
   const trackEvent = useTrackEvent();
+
+  const handleLeadCapture = async (payload: LeadCapturePayload) => {
+    const response = await fetch("/api/leads/capture", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to capture lead");
+    }
+  };
 
   return (
     <>
@@ -190,7 +202,7 @@ export default function PricingClient() {
             </div>
 
             <div className="mt-8">
-              <PricingCalculator />
+              <PricingCalculator onCalculate={handleLeadCapture} />
             </div>
           </div>
         </section>

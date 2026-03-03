@@ -1,4 +1,5 @@
 "use client";
+import type { MouseEvent, ReactNode } from "react";
 import { trackWhatsAppCTA } from "@/lib/analytics";
 import { useTrackEvent } from '@/hooks/useAnalytics';
 
@@ -12,19 +13,24 @@ export default function WhatsAppLink({
   href: string;
   source: string;
   className?: string;
-  children: React.ReactNode;
-  onClick?: () => void;
+  children: ReactNode;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void | boolean | Promise<void | boolean>;
 }) {
   const trackEvent = useTrackEvent();
 
-  const handleClick = async () => {
+  const handleClick = async (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
     trackWhatsAppCTA(source);
     try {
       await trackEvent('whatsapp_cta_clicked', { source });
     } catch {
       // swallow
     }
-    onClick?.();
+    const allowNavigation = onClick ? (await onClick(event)) !== false : true;
+
+    if (allowNavigation) {
+      window.open(href, "_blank", "noopener,noreferrer");
+    }
   };
 
   return (
