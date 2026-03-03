@@ -11,7 +11,7 @@ interface DeliveryMetric {
 
 const METRICS: DeliveryMetric[] = [
   { id: "1", label: "Active Fleet", value: "12 Trucks", trend: "up", color: "text-blue-600" },
-  { id: "2", label: "Fuel Efficiency", value: "₦420/km", trend: "down", color: "text-red-600" },
+  { id: "2", label: "Fuel Cost", value: "₦420/km", trend: "down", color: "text-emerald-600" },
   { id: "3", label: "Delay Risk", value: "Low (Rumuokoro)", trend: "neutral", color: "text-amber-600" },
 ];
 

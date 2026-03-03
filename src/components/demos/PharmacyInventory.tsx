@@ -11,7 +11,7 @@ interface DrugItem {
 }
 
 const INVENTORY: DrugItem[] = [
-  { id: "1", name: "Lonart DS (Antimalarial)", category: "Malaria", stock: 4, price: 2850, status: "critical" },
+  { id: "1", name: "Lonart DS (Antimalarial)", category: "Antimalarial", stock: 4, price: 2850, status: "critical" },
   { id: "2", name: "Emzor Paracetamol", category: "Pain Relief", stock: 156, price: 300, status: "ok" },
   { id: "3", name: "Ciprotab 500mg", category: "Antibiotics", stock: 12, price: 4500, status: "low" },
 ];
