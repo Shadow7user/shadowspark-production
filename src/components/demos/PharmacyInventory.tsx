@@ -55,7 +55,9 @@ const PharmacyInventory: React.FC = () => {
             </div>
 
             <div className="text-right">
-              <p className="text-sm font-bold text-gray-900 tabular-nums">₦{item.price.toLocaleString()}</p>
+              <p className="text-sm font-bold text-gray-900 tabular-nums">
+                {item.price.toLocaleString("en-NG", { style: "currency", currency: "NGN", minimumFractionDigits: 0 })}
+              </p>
 
               {item.status === "critical" ? (
                 <button className="mt-1 px-3 py-1 bg-red-50 text-red-600 text-xs font-medium rounded border border-red-100">

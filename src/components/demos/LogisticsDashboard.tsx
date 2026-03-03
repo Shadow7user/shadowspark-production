@@ -11,11 +11,22 @@ interface DeliveryMetric {
 
 const METRICS: DeliveryMetric[] = [
   { id: "1", label: "Active Fleet", value: "12 Trucks", trend: "up", color: "text-blue-600" },
-  { id: "2", label: "Fuel Efficiency", value: "₦420/km", trend: "down", color: "text-emerald-600" },
+  { id: "2", label: "Fuel Efficiency", value: "₦420/km", trend: "down", color: "text-red-600" },
   { id: "3", label: "Delay Risk", value: "Low (Rumuokoro)", trend: "neutral", color: "text-amber-600" },
 ];
 
 const LogisticsDashboard: React.FC = () => {
+  const trendIcon = (trend: DeliveryMetric["trend"]) => {
+    switch (trend) {
+      case "down":
+        return TrendingDown;
+      case "neutral":
+        return Minus;
+      default:
+        return TrendingUp;
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4 space-y-6 font-sans">
       <div className="flex justify-between items-end border-b border-gray-200 pb-4">
@@ -43,10 +54,7 @@ const LogisticsDashboard: React.FC = () => {
                 <p className="text-xs font-medium text-gray-500 uppercase">{metric.label}</p>
                 <h3 className="text-2xl font-bold text-gray-900 mt-1">{metric.value}</h3>
               </div>
-              {(metric.trend === "down" && <TrendingDown className={`w-5 h-5 ${metric.color}`} />) ||
-                (metric.trend === "neutral" && <Minus className={`w-5 h-5 ${metric.color}`} />) || (
-                  <TrendingUp className={`w-5 h-5 ${metric.color}`} />
-                )}
+              {React.createElement(trendIcon(metric.trend), { className: `w-5 h-5 ${metric.color}` })}
             </div>
           </div>
         ))}
