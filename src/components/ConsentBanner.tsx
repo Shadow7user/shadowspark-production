@@ -19,8 +19,8 @@ export default function ConsentBanner() {
     } else if (stored === "denied") {
       denyConsent();
     } else {
-      // No stored preference — show banner
-      setVisible(true);
+      // No stored preference — show banner after mount to avoid SSR mismatch
+      setTimeout(() => setVisible(true), 0);
     }
   }, []);
 

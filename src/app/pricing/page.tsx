@@ -1,33 +1,11 @@
-'use client';
+"use client";
 import WhatsAppLink from "@/components/WhatsAppLink";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PricingCalculator from "@/components/PricingCalculator";
 import { usePageView, useTrackEvent } from '@/hooks/useAnalytics';
-
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Transparent AI automation pricing for Nigerian businesses. Starter from ₦25,000/month. No hidden fees. Month-to-month billing.",
-  alternates: {
-    canonical: "https://shadowspark-tech.org/pricing",
-  },
-  openGraph: {
-    title: "Pricing | ShadowSpark",
-    description:
-      "Transparent AI automation pricing for Nigerian businesses. Plans from ₦25,000/month. No long-term contracts.",
-    url: "https://shadowspark-tech.org/pricing",
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "Pricing | ShadowSpark",
-    description: "AI automation plans from ₦25,000/month. No hidden fees. Month-to-month.",
-  },
-};
 
 const plans = [
   {
