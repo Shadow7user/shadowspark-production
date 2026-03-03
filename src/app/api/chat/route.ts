@@ -5,7 +5,6 @@ import { checkRateLimit, hashPhone } from "@/lib/observability";
 
 const SYSTEM_PROMPT =
   "You are the ShadowSpark website assistant. Provide concise, friendly answers, and guide users to WhatsApp when appropriate.";
-const { url: ESCALATION_URL } = getEscalationContact();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let payload: { message?: string; history?: MessageHistory };
@@ -50,9 +49,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   ];
 
   const userMessages = conversationHistory.filter((h) => h.role === "user").length;
+  const { url: escalationUrl } = getEscalationContact();
   const whatsappCta =
     userMessages >= 3
-      ? `\n\nPrefer WhatsApp? Message us at ${ESCALATION_URL} for faster replies.`
+      ? `\n\nPrefer WhatsApp? Message us at ${escalationUrl} for faster replies.`
       : "";
 
   return NextResponse.json({

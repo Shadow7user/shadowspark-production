@@ -15,6 +15,13 @@ describe("generateAIResponse", () => {
     process.env.OPENAI_API_KEY = "test-key";
   });
 
+  afterEach(() => {
+    delete process.env.GEMINI_API_KEY;
+    delete process.env.OPENAI_API_KEY;
+    delete process.env.WHATSAPP_ESCALATION_NUMBER;
+    delete process.env.WHATSAPP_ESCALATION_NAME;
+  });
+
   it("uses Gemini when key is available", async () => {
     const { generateWithGemini } = await import("./gemini");
     const result = await generateAIResponse("system", "hello", []);
