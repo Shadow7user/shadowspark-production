@@ -8,6 +8,15 @@ This guide will help you set up the ShadowSpark platform for development on Ubun
 - Git configured
 - PostgreSQL database (Neon or local)
 
+### GitHub Codespaces
+
+You can start a Codespace with the included devcontainer:
+
+1. Open the repository in GitHub and click **Code → Codespaces → Create codespace on main**.
+2. Wait for the devcontainer to finish; it installs pnpm and project dependencies automatically.
+3. Copy `.env.example` to `.env` and fill in your secrets (use Codespaces secrets for sensitive values).
+4. Run `pnpm dev` inside the Codespace.
+
 ## Quick Start
 
 ### 1. Clone the Repository
