@@ -85,7 +85,7 @@ const PharmacyInventory: React.FC = () => {
           </div>
         ))}
 
-        <div className="bg-white p-3 rounded-lg border border-gray-100 opacity-50" aria-hidden="true" role="presentation">
+        <div className="bg-white p-3 rounded-lg border border-gray-100 opacity-50" aria-hidden="true">
           <div className="h-4 bg-gray-200 rounded w-2/3 mb-2 animate-pulse" />
           <div className="h-3 bg-gray-200 rounded w-1/3 animate-pulse" />
         </div>
