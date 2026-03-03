@@ -1,5 +1,5 @@
 import React from "react";
-import { Truck, MapPin, AlertTriangle, TrendingUp } from "lucide-react";
+import { Truck, MapPin, AlertTriangle, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 interface DeliveryMetric {
   id: string;
@@ -43,7 +43,10 @@ const LogisticsDashboard: React.FC = () => {
                 <p className="text-xs font-medium text-gray-500 uppercase">{metric.label}</p>
                 <h3 className="text-2xl font-bold text-gray-900 mt-1">{metric.value}</h3>
               </div>
-              <TrendingUp className={`w-5 h-5 ${metric.color}`} />
+              {(metric.trend === "down" && <TrendingDown className={`w-5 h-5 ${metric.color}`} />) ||
+                (metric.trend === "neutral" && <Minus className={`w-5 h-5 ${metric.color}`} />) || (
+                  <TrendingUp className={`w-5 h-5 ${metric.color}`} />
+                )}
             </div>
           </div>
         ))}

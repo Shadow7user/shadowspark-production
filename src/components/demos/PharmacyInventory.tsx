@@ -18,7 +18,7 @@ const INVENTORY: DrugItem[] = [
 
 const PharmacyInventory: React.FC = () => {
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-50 min-h-[500px] border border-gray-200 rounded-2xl overflow-hidden font-sans">
+    <div className="relative w-full max-w-md mx-auto bg-gray-50 min-h-[500px] border border-gray-200 rounded-2xl overflow-hidden font-sans">
       <div className="bg-white p-4 border-b border-gray-200 sticky top-0 z-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold text-gray-800">Dispense & Track</h2>
@@ -76,7 +76,7 @@ const PharmacyInventory: React.FC = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full max-w-md bg-white border-t border-gray-200 p-4 flex justify-around text-gray-400">
+      <div className="absolute left-0 right-0 bottom-0 bg-white border-t border-gray-200 p-4 flex justify-around text-gray-400">
         <div className="text-center text-blue-600">
           <div className="mx-auto w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mb-1">
             <CheckCircle2 className="w-4 h-4" />
