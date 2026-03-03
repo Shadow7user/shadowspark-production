@@ -11,6 +11,13 @@ const platform = [
   { href: "/#case-studies",   label: "Case Studies" },
 ];
 
+const demosLinks = [
+  { href: "/demos",           label: "All demos" },
+  { href: "/demos/school",    label: "School Management" },
+  { href: "/demos/retail",    label: "AI Retail Hub" },
+  { href: "/demos/shortlet",  label: "Short-let Portal" },
+];
+
 const company = [
   { href: "/security",  label: "Security" },
   { href: "/pricing",   label: "Pricing" },
@@ -20,6 +27,7 @@ const company = [
 export default function Navbar() {
   const [open, setOpen]           = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
+  const [demosOpen, setDemosOpen]       = useState(false);
   const pathname = usePathname();
   const isHome   = pathname === "/";
 
@@ -61,6 +69,33 @@ export default function Navbar() {
                     >
                       {label}
                     </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Demos dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setDemosOpen(true)}
+            onMouseLeave={() => setDemosOpen(false)}
+          >
+            <button className="flex items-center gap-1 rounded-md px-3 py-2 text-sm text-slate-400 transition-colors hover:text-white">
+              Demos <ChevronDown size={13} className={`transition-transform ${demosOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {demosOpen && (
+              <div className="absolute left-0 top-full pt-2">
+                <div className="min-w-[200px] rounded-xl border border-slate-800 bg-[#0d1320] py-2 shadow-xl">
+                  {demosLinks.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="block px-4 py-2.5 text-sm text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
+                    >
+                      {label}
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -126,6 +161,21 @@ export default function Navbar() {
               >
                 {label}
               </a>
+            ))}
+
+            {/* Demos group */}
+            <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-600">
+              Demos
+            </p>
+            {demosLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm text-slate-400 hover:text-white"
+              >
+                {label}
+              </Link>
             ))}
 
             {/* Company group */}
