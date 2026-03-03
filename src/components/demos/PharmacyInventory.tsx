@@ -30,9 +30,13 @@ const PharmacyInventory: React.FC = () => {
           <input
             type="text"
             placeholder="Search drug name or scan barcode..."
+            aria-label="Search drugs by name or scan barcode"
             className="w-full pl-10 pr-12 py-3 bg-gray-100 border-transparent focus:bg-white focus:border-blue-500 focus:ring-0 rounded-lg transition-all text-sm outline-none"
           />
-          <button className="absolute right-2 top-2 p-1 bg-white rounded border border-gray-200 shadow-sm active:bg-gray-100">
+          <button
+            className="absolute right-2 top-2 p-1 bg-white rounded border border-gray-200 shadow-sm active:bg-gray-100"
+            aria-label="Scan barcode"
+          >
             <Scan className="w-5 h-5 text-gray-600" />
           </button>
         </div>
@@ -60,11 +64,17 @@ const PharmacyInventory: React.FC = () => {
               </p>
 
               {item.status === "critical" ? (
-                <button className="mt-1 px-3 py-1 bg-red-50 text-red-600 text-xs font-medium rounded border border-red-100">
+                <button
+                  className="mt-1 px-3 py-1 bg-red-50 text-red-600 text-xs font-medium rounded border border-red-100"
+                  aria-label={`Reorder ${item.name}`}
+                >
                   Reorder
                 </button>
               ) : (
-                <button className="mt-1 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded shadow-sm hover:bg-blue-700">
+                <button
+                  className="mt-1 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded shadow-sm hover:bg-blue-700"
+                  aria-label={`Dispense ${item.name}`}
+                >
                   Dispense
                 </button>
               )}
