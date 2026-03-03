@@ -14,7 +14,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
-import OpenAI from "openai";
 import { prisma } from "@/lib/prisma";
 import { redisOp } from "@/lib/redis";
 import { withRetry } from "@/lib/reliability/retry";
@@ -34,20 +33,17 @@ import {
   buildErrorResponse,
   checkRateLimit,
 } from "@/lib/observability";
+import { generateAIResponse, type MessageHistory } from "@/lib/ai";
 
-// ── OpenAI Client ──────────────────────────────────────────────────────────
-
-const openai = env.openaiApiKey
-  ? new OpenAI({ apiKey: env.openaiApiKey })
-  : null;
+// ── AI Circuit Breakers ─────────────────────────────────────────────────────
 
 const globalForWebhookReliability = globalThis as unknown as {
-  _openaiBreaker?: CircuitBreaker;
+  _aiBreaker?: CircuitBreaker;
   _redisBreaker?: CircuitBreaker;
 };
 
-if (!globalForWebhookReliability._openaiBreaker) {
-  globalForWebhookReliability._openaiBreaker = new CircuitBreaker({
+if (!globalForWebhookReliability._aiBreaker) {
+  globalForWebhookReliability._aiBreaker = new CircuitBreaker({
     failureThreshold: 4,
     resetTimeoutMs: 20_000,
   });
@@ -60,7 +56,7 @@ if (!globalForWebhookReliability._redisBreaker) {
   });
 }
 
-const openaiBreaker = globalForWebhookReliability._openaiBreaker!;
+const aiBreaker = globalForWebhookReliability._aiBreaker!;
 const redisBreaker = globalForWebhookReliability._redisBreaker!;
 
 function isRetryableByClassifier(error: unknown): boolean {
@@ -349,72 +345,52 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Non-critical: continue to OpenAI even if Redis is down
   }
 
-  // ── 6. OpenAI — generate response ────────────────────────────────────────
+  // ── 6. AI — generate response ───────────────────────────────────────────
   let openaiMs = 0;
   let aiResponse = "Thank you for your message. We'll get back to you shortly.";
 
-  if (openai) {
-    const openaiTimer = startTimer();
-    try {
-      const { result, duration_ms } = await measureAsync(async () => {
-        return openaiBreaker.execute(async () => {
-          return withRetry(
-            async () => {
-              const completion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                max_tokens: 300,
-                temperature: 0.65,
-                messages: [
-                  {
-                    role: "system",
-                    content: `You are a helpful WhatsApp assistant for ShadowSpark Technologies. Mode: ${mode}. Be concise and professional.`,
-                  },
-                  {
-                    role: "user",
-                    // We pass the message content to OpenAI but never log it
-                    content: msg.text.body,
-                  },
-                ],
-              });
-              const content = completion.choices[0]?.message?.content?.trim();
-              if (!content) {
-                throw new Error("Empty OpenAI completion");
-              }
-              return content;
-            },
-            {
-              retries: 2,
-              baseDelayMs: 250,
-              shouldRetry: isRetryableByClassifier,
-            },
-          );
-        });
+  const openaiTimer = startTimer();
+  try {
+    const { result, duration_ms } = await measureAsync(async () => {
+      return aiBreaker.execute(async () => {
+        return withRetry(
+          async () => {
+            const systemPrompt = `You are a helpful WhatsApp assistant for ShadowSpark Technologies. Mode: ${mode}. Be concise and professional.`;
+            const history: MessageHistory = [];
+            return generateAIResponse(systemPrompt, msg.text.body, history);
+          },
+          {
+            retries: 2,
+            baseDelayMs: 250,
+            shouldRetry: isRetryableByClassifier,
+          },
+        );
+      });
+    });
+
+    openaiMs = duration_ms;
+    aiResponse = result;
+    metricsStore.record("openai", { duration_ms, error: false });
+  } catch (err) {
+    openaiMs = openaiTimer();
+    metricsStore.record("openai", { duration_ms: openaiMs, error: true });
+    if (err instanceof CircuitBreakerOpenError) {
+      aiResponse = "We're experiencing high load. Please try again shortly.";
+      logger.warn("webhook.openai_circuit_open", {
+        user_hash: userHash,
+        mode,
+      });
+    } else {
+      const classified = classifyError(err);
+      logger.classifiedError("webhook.openai_failed", {
+        type: classified.type,
+        severity: classified.severity,
+        error: err,
+        meta: { user_hash: userHash, mode },
       });
 
-      openaiMs = duration_ms;
-      aiResponse = result;
-      metricsStore.record("openai", { duration_ms, error: false });
-    } catch (err) {
-      openaiMs = openaiTimer();
-      metricsStore.record("openai", { duration_ms: openaiMs, error: true });
-      if (err instanceof CircuitBreakerOpenError) {
-        aiResponse = "We're experiencing high load. Please try again shortly.";
-        logger.warn("webhook.openai_circuit_open", {
-          user_hash: userHash,
-          mode,
-        });
-      } else {
-        const classified = classifyError(err);
-        logger.classifiedError("webhook.openai_failed", {
-          type: classified.type,
-          severity: classified.severity,
-          error: err,
-          meta: { user_hash: userHash, mode },
-        });
-
-        if (isCritical(classified)) {
-          aiResponse = classified.fallbackResponse;
-        }
+      if (isCritical(classified)) {
+        aiResponse = classified.fallbackResponse;
       }
     }
   }

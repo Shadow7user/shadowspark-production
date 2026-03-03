@@ -5,6 +5,8 @@ export const env = {
   metricsToken: process.env.METRICS_TOKEN ?? "",
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  geminiApiKey: process.env.GEMINI_API_KEY ?? "",
+  geminiModel: process.env.GEMINI_MODEL ?? "gemini-2.0-flash-exp",
   whatsappAppSecret: process.env.WHATSAPP_APP_SECRET ?? "",
   whatsappVerifyToken: process.env.WHATSAPP_VERIFY_TOKEN ?? "",
   nextPublicBaseUrl:
