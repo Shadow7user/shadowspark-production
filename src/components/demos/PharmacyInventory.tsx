@@ -51,7 +51,9 @@ const PharmacyInventory: React.FC = () => {
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                {item.status === "critical" && <AlertCircle className="w-4 h-4 text-red-500 animate-bounce" />}
+                {item.status === "critical" && (
+                  <AlertCircle className="w-4 h-4 text-red-500 animate-bounce" aria-label="Critical stock level" />
+                )}
               </div>
               <p className="text-xs text-gray-500 mt-1">
                 {item.category} • {item.stock} units left
@@ -97,7 +99,7 @@ const PharmacyInventory: React.FC = () => {
         </div>
         <div className="text-center">
           <div className="mx-auto w-6 h-6 mb-1">
-            <AlertCircle className="w-5 h-5" />
+            <AlertCircle className="w-5 h-5" aria-label="Shortages" />
           </div>
           <span className="text-[10px]">Shortages</span>
         </div>

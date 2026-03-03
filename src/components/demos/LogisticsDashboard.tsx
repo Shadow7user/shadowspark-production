@@ -16,7 +16,7 @@ const METRICS: DeliveryMetric[] = [
 ];
 
 const LogisticsDashboard: React.FC = () => {
-  const trendIcon = (trend: DeliveryMetric["trend"]) => {
+  const getTrendIcon = (trend: DeliveryMetric["trend"]) => {
     switch (trend) {
       case "down":
         return TrendingDown;
@@ -54,7 +54,10 @@ const LogisticsDashboard: React.FC = () => {
                 <p className="text-xs font-medium text-gray-500 uppercase">{metric.label}</p>
                 <h3 className="text-2xl font-bold text-gray-900 mt-1">{metric.value}</h3>
               </div>
-              {React.createElement(trendIcon(metric.trend), { className: `w-5 h-5 ${metric.color}` })}
+              {React.createElement(getTrendIcon(metric.trend), {
+                className: `w-5 h-5 ${metric.color}`,
+                "aria-label": `${metric.trend} trend`,
+              })}
             </div>
           </div>
         ))}
