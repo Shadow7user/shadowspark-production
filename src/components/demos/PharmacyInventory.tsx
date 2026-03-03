@@ -85,26 +85,33 @@ const PharmacyInventory: React.FC = () => {
           </div>
         ))}
 
-        <div className="bg-white p-3 rounded-lg border border-gray-100 opacity-50">
+        <div className="bg-white p-3 rounded-lg border border-gray-100 opacity-50" aria-hidden="true">
           <div className="h-4 bg-gray-200 rounded w-2/3 mb-2 animate-pulse" />
           <div className="h-3 bg-gray-200 rounded w-1/3 animate-pulse" />
         </div>
       </div>
 
-      <div className="absolute left-0 right-0 bottom-0 bg-white border-t border-gray-200 p-4 flex justify-around text-gray-400">
-        <div className="text-center text-blue-600">
-          <div className="mx-auto w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mb-1">
+      <nav
+        className="absolute left-0 right-0 bottom-0 bg-white border-t border-gray-200 p-4 flex justify-around text-gray-400"
+        aria-label="Bottom navigation"
+      >
+        <button
+          type="button"
+          className="text-center text-blue-600 flex flex-col items-center gap-1"
+          aria-label="Sales"
+        >
+          <div className="mx-auto w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
             <CheckCircle2 className="w-4 h-4" />
           </div>
           <span className="text-[10px] font-bold">Sales</span>
-        </div>
-        <div className="text-center">
-          <div className="mx-auto w-6 h-6 mb-1">
+        </button>
+        <button type="button" className="text-center flex flex-col items-center gap-1" aria-label="Shortages">
+          <div className="mx-auto w-6 h-6">
             <AlertCircle className="w-5 h-5" aria-label="Shortages" />
           </div>
           <span className="text-[10px]">Shortages</span>
-        </div>
-      </div>
+        </button>
+      </nav>
     </div>
   );
 };
