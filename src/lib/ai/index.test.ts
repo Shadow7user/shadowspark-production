@@ -12,6 +12,8 @@ describe("generateAIResponse", () => {
   beforeEach(() => {
     process.env.GEMINI_API_KEY = "test-key";
     process.env.OPENAI_API_KEY = "test-key";
+    process.env.WHATSAPP_ESCALATION_NUMBER = "+2348107677660";
+    process.env.WHATSAPP_ESCALATION_NAME = "Reginald";
   });
 
   it("uses Gemini when key is available", async () => {
@@ -36,6 +38,6 @@ describe("generateAIResponse", () => {
     (generateWithGemini as jest.Mock).mockRejectedValueOnce(new Error("Gemini error"));
     (generateWithOpenAI as jest.Mock).mockRejectedValueOnce(new Error("OpenAI error"));
     const result = await generateAIResponse("system", "hello", []);
-    expect(result).toContain("+2348107677660");
+    expect(result).toContain(process.env.WHATSAPP_ESCALATION_NUMBER!);
   });
 });

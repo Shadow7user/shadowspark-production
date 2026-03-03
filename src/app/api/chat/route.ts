@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateAIResponse, type MessageHistory } from "@/lib/ai";
+import { env } from "@/lib/env";
 import { checkRateLimit, hashPhone } from "@/lib/observability";
 
 const SYSTEM_PROMPT =
   "You are the ShadowSpark website assistant. Provide concise, friendly answers, and guide users to WhatsApp when appropriate.";
+const ESCALATION_NUMBER = env.whatsappEscalationNumber || "+2349037621612";
+const ESCALATION_URL = `https://wa.me/${ESCALATION_NUMBER.replace(/\D/g, "")}`;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let payload: { message?: string; history?: MessageHistory };
@@ -50,7 +53,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const userMessages = conversationHistory.filter((h) => h.role === "user").length;
   const whatsappCta =
     userMessages >= 3
-      ? "\n\nPrefer WhatsApp? Message us at https://wa.me/2349037621612 for faster replies."
+      ? `\n\nPrefer WhatsApp? Message us at ${ESCALATION_URL} for faster replies.`
       : "";
 
   return NextResponse.json({

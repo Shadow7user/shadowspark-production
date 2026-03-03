@@ -9,9 +9,7 @@ module.exports = {
     "<rootDir>/src/lib/observability/observability.test.ts",
     "<rootDir>/tests/",
   ],
-  globals: {
-    "ts-jest": {
-      tsconfig: "tsconfig.jest.json",
-    },
+  transform: {
+    "^.+\\.ts$": ["ts-jest", { tsconfig: "tsconfig.jest.json" }],
   },
 };

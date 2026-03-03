@@ -1,9 +1,5 @@
 import OpenAI from "openai";
-
-export type MessageHistory = Array<{
-  role: "user" | "assistant";
-  content: string;
-}>;
+import type { MessageHistory } from "./types";
 
 const getOpenAIClient = (): OpenAI | null => {
   const apiKey = process.env.OPENAI_API_KEY;

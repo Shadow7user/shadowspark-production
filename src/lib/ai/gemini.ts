@@ -1,9 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-
-export type MessageHistory = Array<{
-  role: "user" | "assistant";
-  content: string;
-}>;
+import type { MessageHistory } from "./types";
 
 const getGeminiClient = (): GoogleGenerativeAI | null => {
   const apiKey = process.env.GEMINI_API_KEY;
