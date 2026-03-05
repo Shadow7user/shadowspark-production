@@ -165,7 +165,7 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
-              We're an AI engineering studio based in Port Harcourt, Nigeria. We
+              We&apos;re an AI engineering studio based in Port Harcourt, Nigeria. We
               build chatbots, dashboards, and automation tools that help African
               businesses compete globally.
             </p>
@@ -185,7 +185,7 @@ export default function AboutPage() {
               <div className="text-cyan-300">
                 <span className="text-magenta-400">const</span> mission ={" "}
                 <span className="text-yellow-300">
-                  "Democratizing AI for African businesses"
+                  &quot;Democratizing AI for African businesses&quot;
                 </span>
                 <span className="cursor-blink"></span>
               </div>
@@ -203,7 +203,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <p className="mt-4 max-w-3xl text-slate-400">
-              ShadowSpark Technologies operates from the heart of Nigeria's
+              ShadowSpark Technologies operates from the heart of Nigeria&apos;s
               Garden City. We serve clients across Lagos, Abuja, Port Harcourt,
               and the broader West African market — all remotely, all
               efficiently. Our infrastructure runs on global cloud platforms
@@ -379,7 +379,7 @@ export default function AboutPage() {
               Ready to work with us?
             </h2>
             <p className="mt-2 text-slate-400">
-              Let's discuss how AI can transform your business operations.
+              Let&apos;s discuss how AI can transform your business operations.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link

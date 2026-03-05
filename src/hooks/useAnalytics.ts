@@ -32,7 +32,7 @@ export function useTrackEvent() {
           timestamp: Date.now(),
         });
       }
-    } catch (error) {
+    } catch {
       console.warn('Analytics event failed silently:', eventName);
     }
   }, []);
