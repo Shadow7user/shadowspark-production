@@ -85,7 +85,7 @@ export default function GovernanceSection() {
 
         {/* Pillars */}
         <div className="mt-14 space-y-5">
-          {pillars.map(({ number, Icon, title, description, details }, i) => (
+          {pillars.map(({ number, Icon, title, description, details }) => (
             <Reveal key={number}>
               <div className="card-lift grid rounded-2xl border border-slate-800 bg-[#0d1320] hover:border-slate-700 lg:grid-cols-[72px_1fr_1fr]">
 

@@ -9,8 +9,14 @@ import {
 } from "@/lib/analytics";
 
 export default function ConsentBanner() {
-  const [visible, setVisible] = useState(false);
+  // Initialise visibility synchronously from localStorage (avoids setState-in-effect)
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const stored = getStoredConsent();
+    return stored !== "granted" && stored !== "denied";
+  });
 
+  // Apply previously stored consent to the analytics layer on mount
   useEffect(() => {
     const stored = getStoredConsent();
     if (stored === "granted") {
@@ -18,9 +24,6 @@ export default function ConsentBanner() {
       setUserRegionProperties();
     } else if (stored === "denied") {
       denyConsent();
-    } else {
-      // No stored preference — show banner
-      setVisible(true);
     }
   }, []);
 

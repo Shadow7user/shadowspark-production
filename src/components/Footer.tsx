@@ -137,9 +137,9 @@ export default function Footer() {
             <Link href="/security" className="hover:text-slate-400 transition-colors">
               Privacy &amp; Security
             </Link>
-            <a href="/#demo" className="hover:text-slate-400 transition-colors">
+            <Link href="/#demo" className="hover:text-slate-400 transition-colors">
               Contact
-            </a>
+            </Link>
           </div>
         </div>
       </div>
