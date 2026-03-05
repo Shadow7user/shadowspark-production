@@ -38,6 +38,13 @@ Repo: Shadow7user/shadowspark-production
 9. proxy.ts handles routing (NOT middleware.ts — renamed in Next.js 16)
 10. Server components by default, 'use client' only when needed
 
+## BRAND PERSONA & CONTENT RULES
+1. Tone: Friendly, empathetic, and action-oriented.
+2. Language: Nigerian English (e.g., use phrases like 'Traffic and logistics delays happen sometimes, especially in Lagos').
+3. Data Source: Reference 'config/demo-responses.json' for all chatbot response logic.
+4. Discounts: Reference 5% off first order (WELCOME5) and bulk discounts for 3+ or 20+ units as per local codebase.
+5. Goal: Help the customer quickly with an exact ETA or direct connection to the wholesale team.
+
 ## CURRENT BLOCKERS (fix these first)
 - src/lib/prisma.ts uses wrong adapter — REMOVE IT
 - .env needs real Neon credentials
@@ -45,4 +52,3 @@ Repo: Shadow7user/shadowspark-production
 - Railway chatbot service sleeping
 
 ## CORRECT prisma.ts PATTERN
-```ts
