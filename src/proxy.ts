@@ -29,7 +29,7 @@ function hasSessionCookie(req: NextRequest): boolean {
   )
 }
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const isLoggedIn = hasSessionCookie(req)
   const { pathname } = req.nextUrl
 
@@ -73,6 +73,6 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Exclude Next.js internals, static assets, and auth API routes from middleware
+  // Exclude Next.js internals, static assets, and auth API routes from proxy
   matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 }
