@@ -52,3 +52,15 @@ Repo: Shadow7user/shadowspark-production
 - Railway chatbot service sleeping
 
 ## CORRECT prisma.ts PATTERN
+## PROTECTED FILE — DO NOT MODIFY
+src/lib/prisma.ts
+
+CORRECT CONTENT (memorize this):
+plain PrismaClient only.
+NO @prisma/adapter-pg
+NO @prisma/adapter-neon  
+NO pg package
+NO PrismaPg
+NO Pool
+This was confirmed working March 5 2026.
+Build passed with this exact pattern.
