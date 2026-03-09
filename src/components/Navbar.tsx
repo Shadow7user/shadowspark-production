@@ -1,8 +1,10 @@
+
 "use client";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
+import Logo from "@/components/brand/logo";
 
 /* ── Nav structure ──────────────────────────────────────── */
 const platform = [
@@ -29,12 +31,15 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/5 bg-[#0a0f1a]/85 backdrop-blur-xl">
+    <nav className="fixed top-0 z-50 w-full border-b border-[#BD00FF]/20 bg-[#050508]/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
-        {/* Logo */}
-        <Link href="/" className="shrink-0 text-xl font-bold gradient-text">
-          ShadowSpark
+        {/* THE GLYPH INJECTION */}
+        <Link href="/" className="flex items-center gap-2">
+          <Logo className="h-10 w-10" /> 
+          <span className="text-xl font-bold tracking-tighter text-white">
+            SHADOW<span className="text-[#00FFD5]">SPARK</span>
+          </span>
         </Link>
 
         {/* ── Desktop nav ──────────────────────────────── */}

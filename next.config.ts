@@ -1,3 +1,4 @@
+
 import type { NextConfig } from "next"
 import { withSentryConfig } from "@sentry/nextjs"
 
@@ -13,7 +14,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
+    ],
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }]
