@@ -1,78 +1,54 @@
-import { NextRequest, NextResponse } from "next/server"
 
-function hasContentType(contentType: string, expected: string): boolean {
-  return contentType.toLowerCase().includes(expected)
-}
+import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 
-function applySecurityHeaders(response: NextResponse): NextResponse {
-  response.headers.set("X-Content-Type-Options", "nosniff")
-  response.headers.set("X-Frame-Options", "DENY")
-  response.headers.set("X-XSS-Protection", "1; mode=block")
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()",
-  )
-  response.headers.set(
-    "Strict-Transport-Security",
-    "max-age=63072000; includeSubDomains; preload",
-  )
-  return response
-}
+// The list of all public routes that do not require authentication
+const publicRoutes = ["/", "/auth/login", "/api/auth/.*", "/api/webhooks/.*"];
 
-function hasSessionCookie(req: NextRequest): boolean {
-  return Boolean(
-    req.cookies.get("__Secure-authjs.session-token")?.value ||
-      req.cookies.get("authjs.session-token")?.value ||
-      req.cookies.get("__Secure-next-auth.session-token")?.value ||
-      req.cookies.get("next-auth.session-token")?.value,
-  )
-}
+// The mapping of roles to their dashboard/home pages
+const roleHomepages: Record<string, string> = {
+  ADMIN: "/admin/dashboard",
+  FINANCE: "/finance/dashboard",
+  SUPPORT: "/support/dashboard",
+  USER: "/dashboard",
+};
 
-export default function middleware(req: NextRequest) {
-  const isLoggedIn = hasSessionCookie(req)
-  const { pathname } = req.nextUrl
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+  const userRole = req.auth?.user?.role;
 
-  if (pathname.startsWith("/dashboard") && !isLoggedIn) {
-    return applySecurityHeaders(
-      NextResponse.redirect(new URL("/login", req.url)),
-    )
-  }
+  const isPublicRoute = publicRoutes.some((pattern) =>
+    new RegExp(`^${pattern}$`.replace(".*", ".*")).test(nextUrl.pathname)
+  );
 
-  if (pathname === "/api/webhook") {
-    const contentType = req.headers.get("content-type") ?? ""
-    if (
-      req.method === "POST" &&
-      !hasContentType(contentType, "application/x-www-form-urlencoded")
-    ) {
-      return applySecurityHeaders(
-        NextResponse.json(
-          { error: "Unsupported Media Type" },
-          { status: 415 },
-        ),
-      )
+  if (isPublicRoute) {
+    // If the user is logged in and tries to access a public-only page like login,
+    // redirect them to their respective dashboard.
+    if (isLoggedIn && nextUrl.pathname.startsWith("/auth/login")) {
+      const homePage = roleHomepages[userRole!] || "/dashboard";
+      return NextResponse.redirect(new URL(homePage, nextUrl));
     }
+    return NextResponse.next();
   }
 
-  if (pathname === "/api/webhook/whatsapp") {
-    const contentType = req.headers.get("content-type") ?? ""
-    if (
-      req.method === "POST" &&
-      !hasContentType(contentType, "application/json")
-    ) {
-      return applySecurityHeaders(
-        NextResponse.json(
-          { error: "Unsupported Media Type" },
-          { status: 415 },
-        ),
-      )
-    }
+  // If the user is not logged in and the route is not public, redirect to login
+  if (!isLoggedIn) {
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
-  return applySecurityHeaders(NextResponse.next())
-}
+  // Add role-based route protection here if needed.
+  // For example, if /admin/** should only be accessible by ADMIN role.
+  if (nextUrl.pathname.startsWith("/admin") && userRole !== "ADMIN") {
+    const homePage = roleHomepages[userRole!] || "/dashboard";
+    return NextResponse.redirect(new URL(homePage, nextUrl));
+  }
 
+  // Allow the request to proceed
+  return NextResponse.next();
+});
+
+// This config specifies which routes the middleware should run on.
 export const config = {
-  // Exclude Next.js internals, static assets, and auth API routes from middleware
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
-}
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).+)"],
+};

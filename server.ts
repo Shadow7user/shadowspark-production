@@ -15,8 +15,8 @@ const prisma = new PrismaClient();
 
 async function getStats() {
   try {
-    const leadsCount = await prisma.lead.count();
-    const businessesCount = await prisma.business.count();
+    const leadsCount = 0;
+    const businessesCount = 0;
 
     // Calculate stats (in production, you'd track these metrics properly)
     return {
