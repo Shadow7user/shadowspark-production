@@ -121,12 +121,6 @@ export class PaystackProvider implements PaymentProvider {
       return;
     }
 
-    // In a real application, you would need to find the correct user account
-    // and the correct internal accounts for the ledger transaction.
-    // For now, we'll use placeholder IDs.
-    const userAccountId = "clx...."; // Placeholder for user's wallet account ID
-    const revenueAccountId = "clx...."; // Placeholder for internal revenue account ID
-
     await prisma.$transaction(async (tx) => {
       // Update the payment status
       await tx.payment.update({
@@ -137,22 +131,12 @@ export class PaystackProvider implements PaymentProvider {
       // Create the ledger transaction
       await createTransaction(
         {
+          amount: payment.amount,
           description: `Wallet funding via Paystack - ${reference}`,
-          idempotencyKey: `paystack-charge-${reference}`,
-          entries: [
-            {
-              accountId: userAccountId,
-              direction: "DEBIT",
-              amount: payment.amount,
-            },
-            {
-              accountId: revenueAccountId,
-              direction: "CREDIT",
-              amount: payment.amount,
-            },
-          ],
+          type: "CREDIT",
+          userId: payment.userId,
         },
-        tx as any // Pass the transaction client
+        tx
       );
     });
 

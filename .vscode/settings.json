@@ -11,20 +11,20 @@
   "editor.guides.bracketPairs": true,
   "editor.inlineSuggest.enabled": true,
   "editor.suggestSelection": "first",
-  
+
   "files.autoSave": "onFocusChange",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  
+
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "relative",
-  
+
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ],
-  
+
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
@@ -34,26 +34,28 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  
+
   "github.copilot.enable": {
     "*": true,
     "yaml": true,
     "plaintext": false,
     "markdown": true
   },
-  
+
   "workbench.colorTheme": "GitHub Dark",
   "workbench.iconTheme": "material-icon-theme",
-  
+
   "git.autofetch": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
-  
+
   "errorLens.enabled": true,
   "errorLens.fontSize": "12px",
-  
+
   "emmet.includeLanguages": {
     "typescript": "typescriptreact",
     "javascript": "javascriptreact"
-  }
+  },
+  "IDX.aI.showChatInEditorTab": true,
+  "IDX.agenticWorkspace": true
 }

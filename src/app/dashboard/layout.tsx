@@ -130,7 +130,7 @@ export default function DashboardLayout({
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col">
+            <SheetContent className="flex flex-col">
               <nav className="grid gap-2 text-lg font-medium">
                 <Link
                   href="#"

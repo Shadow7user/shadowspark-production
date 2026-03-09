@@ -1,6 +1,6 @@
 
 import { IAccountRepository, Account } from "@/domain/accounts/domain/account";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export class PrismaAccountRepository implements IAccountRepository {
   async findAll(): Promise<Account[]> {

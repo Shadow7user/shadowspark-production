@@ -1,11 +1,11 @@
 
 import { NextResponse } from "next/server";
-import { PaystackProvider } from "@/server/payments/paystack/PaystackProvider";
-
-const paystackProvider = new PaystackProvider();
 
 export async function POST(req: Request) {
   try {
+    const { PaystackProvider } = await import("@/server/payments/paystack/PaystackProvider");
+    const paystackProvider = new PaystackProvider();
+
     const signature = req.headers.get("x-paystack-signature");
     if (!signature) {
       return NextResponse.json({ error: "No signature" }, { status: 400 });
