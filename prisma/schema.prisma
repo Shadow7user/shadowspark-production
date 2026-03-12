@@ -178,3 +178,38 @@ enum PaymentProviderName {
   PAYSTACK
   STRIPE
 }
+
+model DemoSession {
+  id               String   @id @default(cuid())
+  organizationName String
+  industry         String
+  location         String?
+  services         String
+  whatsapp         String
+  challenge        String?
+  website          String?
+  generatedConfig  Json?
+  status           String   @default("draft")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([industry])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Lead {
+  id         String   @id @default(cuid())
+  name       String?
+  email      String?
+  phone      String?
+  status     String   @default("new")
+  source     String?
+  notes      String?
+  businessId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

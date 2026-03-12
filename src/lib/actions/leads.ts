@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 export async function getLeads() {
   return await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
-    include: { business: true },
   });
 }
 
