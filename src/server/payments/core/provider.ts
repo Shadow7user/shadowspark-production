@@ -9,7 +9,7 @@ export interface CreatePaymentIntentParams {
   currency: string;     // ISO 4217 currency code
   userEmail: string;
   userId: string;
-  metadata?: Record<string, any>; // Optional data to pass to the provider
+  metadata?: Record<string, unknown>; // Optional data to pass to the provider
 }
 
 /**

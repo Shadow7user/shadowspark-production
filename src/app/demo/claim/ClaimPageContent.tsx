@@ -34,7 +34,7 @@ export default function ClaimPageContent() {
           ShadowSpark Technologies
         </p>
         <h1 className="text-3xl font-bold text-white mb-4">
-          We'll build this system for you
+          We&apos;ll build this system for you
         </h1>
         <p className="text-gray-400 mb-2">
           {orgName} can now deploy this AI system.

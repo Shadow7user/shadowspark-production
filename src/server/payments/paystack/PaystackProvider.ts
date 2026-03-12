@@ -9,15 +9,21 @@ import {
   CreatePaymentIntentResult,
 } from "@/server/payments/core/provider";
 import { PaymentProviderName, PaymentStatus } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY!;
 
+type PaystackChargeData = {
+  reference: string;
+  [key: string]: Prisma.InputJsonValue;
+};
+
 export class PaystackProvider implements PaymentProvider {
   name = "paystack";
-  private paystack: any;
+  private paystack: ReturnType<typeof Paystack>;
 
   constructor() {
-    this.paystack = new Paystack(PAYSTACK_SECRET_KEY);
+    this.paystack = Paystack(PAYSTACK_SECRET_KEY);
   }
 
   async createPaymentIntent(
@@ -61,7 +67,11 @@ export class PaystackProvider implements PaymentProvider {
   async handleWebhookEvent(payload: Buffer, signature: string): Promise<void> {
     this.verifyWebhookSignature(payload, signature);
 
-    const event = JSON.parse(payload.toString());
+    const event = JSON.parse(payload.toString()) as {
+      id: string;
+      event: string;
+      data: PaystackChargeData;
+    };
 
     // Log the event for idempotency
     const existingEvent = await prisma.webhookEvent.findFirst({
@@ -81,7 +91,7 @@ export class PaystackProvider implements PaymentProvider {
         provider: PaymentProviderName.PAYSTACK,
         eventId: event.id,
         eventType: event.event,
-        payload: event.data,
+        payload: event.data as Prisma.InputJsonValue,
       },
     });
 
@@ -102,7 +112,7 @@ export class PaystackProvider implements PaymentProvider {
     }
   }
 
-  private async processSuccessfulPayment(data: any): Promise<void> {
+  private async processSuccessfulPayment(data: PaystackChargeData): Promise<void> {
     const reference = data.reference;
 
     const payment = await prisma.payment.findUnique({

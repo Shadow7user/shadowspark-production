@@ -15,11 +15,10 @@ export async function POST(req: Request) {
     await paystackProvider.handleWebhookEvent(Buffer.from(payload), signature);
 
     return NextResponse.json({ status: "ok" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Paystack webhook error:", error);
-    return NextResponse.json(
-      { error: error.message || "An unknown error occurred" },
-      { status: 400 }
-    );
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -9,20 +9,17 @@ import {
 } from "@/lib/analytics";
 
 export default function ConsentBanner() {
-  const [visible, setVisible] = useState(false);
+  const storedConsent = getStoredConsent();
+  const [visible, setVisible] = useState(() => storedConsent === undefined);
 
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (stored === "granted") {
+    if (storedConsent === "granted") {
       grantConsent();
       setUserRegionProperties();
-    } else if (stored === "denied") {
+    } else if (storedConsent === "denied") {
       denyConsent();
-    } else {
-      // No stored preference — show banner
-      setVisible(true);
     }
-  }, []);
+  }, [storedConsent]);
 
   function handleAccept() {
     grantConsent();

@@ -2,7 +2,6 @@ import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
 import { Server } from "socket.io";
-import { PrismaClient } from "@prisma/client";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -10,8 +9,6 @@ const port = parseInt(process.env.PORT || "3000", 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
-
-const prisma = new PrismaClient();
 
 async function getStats() {
   try {

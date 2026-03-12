@@ -35,7 +35,7 @@ export default function DemoSitesIndexPage() {
               <div className="absolute -right-16 -top-20 h-40 w-40 rounded-full blur-3xl opacity-60" style={{ backgroundColor: accent }} />
               <div className="relative flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-white group-hover:text-[##00ffd5]" style={{ color: "white" }}>
+                  <h2 className="text-xl font-semibold text-white group-hover:text-[#00ffd5]" style={{ color: "white" }}>
                     {demo.name}
                   </h2>
                   <p className="mt-2 text-sm text-slate-300">{demo.summary}</p>
