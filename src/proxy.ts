@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 // The list of all public routes that do not require authentication
 const publicRoutes = [
   "/",
-  "/auth/login",
+  "/login",
   "/api/auth/.*",
   "/api/webhooks/.*",
   "/demo-sites",
@@ -43,7 +43,7 @@ export default auth((req) => {
   if (isPublicRoute) {
     // If the user is logged in and tries to access a public-only page like login,
     // redirect them to their respective dashboard.
-    if (isLoggedIn && nextUrl.pathname.startsWith("/auth/login")) {
+    if (isLoggedIn && nextUrl.pathname.startsWith("/login")) {
       const homePage = roleHomepages[userRole!] || "/dashboard";
       return NextResponse.redirect(new URL(homePage, nextUrl));
     }
@@ -52,7 +52,7 @@ export default auth((req) => {
 
   // If the user is not logged in and the route is not public, redirect to login
   if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
   // Add role-based route protection here if needed.
