@@ -3,7 +3,25 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 // The list of all public routes that do not require authentication
-const publicRoutes = ["/", "/auth/login", "/api/auth/.*", "/api/webhooks/.*"];
+const publicRoutes = [
+  "/",
+  "/auth/login",
+  "/api/auth/.*",
+  "/api/webhooks/.*",
+  "/demo-sites",
+  "/demo-sites/.*",
+  "/demo",
+  "/demo/.*",
+  "/about",
+  "/blog",
+  "/blog/.*",
+  "/pricing",
+  "/portfolio",
+  "/security",
+  "/login",
+  "/register",
+  "/api/.*",
+];
 
 // The mapping of roles to their dashboard/home pages
 const roleHomepages: Record<string, string> = {
