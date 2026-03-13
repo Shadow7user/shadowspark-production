@@ -25,13 +25,13 @@ export const metadata: Metadata = {
   description:
     "Technical architecture of the ShadowSpark automation platform. Five-layer design covering client interfaces, API integration, workflow orchestration, analytics, and infrastructure.",
   alternates: {
-    canonical: "https://shadowspark-tech.org/architecture",
+    canonical: "https://shadowspark-tech.site/architecture",
   },
   openGraph: {
     title: "Platform Architecture | ShadowSpark",
     description:
       "Five-layer technical architecture: client interfaces, API & integration, automation engine, analytics, and infrastructure. Built for horizontal scale and observability.",
-    url: "https://shadowspark-tech.org/architecture",
+    url: "https://shadowspark-tech.site/architecture",
     type: "website",
   },
 };

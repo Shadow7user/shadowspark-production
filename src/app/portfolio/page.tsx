@@ -18,13 +18,13 @@ export const metadata: Metadata = {
   description:
     "See how ShadowSpark AI solutions help Nigerian businesses automate support, capture leads, and make data-driven decisions.",
   alternates: {
-    canonical: "https://shadowspark-tech.org/portfolio",
+    canonical: "https://shadowspark-tech.site/portfolio",
   },
   openGraph: {
     title: "Portfolio | ShadowSpark",
     description:
       "AI chatbot, BI dashboard, and workflow automation results for Nigerian businesses.",
-    url: "https://shadowspark-tech.org/portfolio",
+    url: "https://shadowspark-tech.site/portfolio",
     type: "website",
   },
   twitter: {

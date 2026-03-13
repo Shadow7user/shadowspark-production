@@ -8,7 +8,7 @@ export default defineConfig({
   ...(process.env.CI ? { workers: 1 } : {}),
   reporter: "html",
   use: {
-    baseURL: process.env.BASE_URL || "https://shadowspark-tech.org",
+    baseURL: process.env.BASE_URL || "https://shadowspark-tech.site",
     trace: "on-first-retry",
   },
   projects: [
