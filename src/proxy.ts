@@ -68,5 +68,5 @@ export default auth((req) => {
 
 // This config specifies which routes the middleware should run on.
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).+)"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/finance/:path*", "/support/:path*"],
 };
