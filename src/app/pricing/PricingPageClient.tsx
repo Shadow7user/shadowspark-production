@@ -21,8 +21,8 @@ const plans = [
       "Pre-built response templates",
       "Onboarding walkthrough included",
     ],
-    cta: "Get Started",
-    href: "/register",
+    cta: "Book Demo",
+    href: "https://calendly.com/morontomornica7/audit",
     popular: false,
   },
   {
@@ -38,8 +38,8 @@ const plans = [
       "Priority support (1-business-day SLA)",
       "Custom response training",
     ],
-    cta: "Get Started",
-    href: "/register",
+    cta: "Book Demo",
+    href: "https://calendly.com/morontomornica7/audit",
     popular: true,
   },
   {
@@ -58,7 +58,7 @@ const plans = [
       "NDPR compliance documentation",
     ],
     cta: "Contact Sales",
-    href: "https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20the%20Enterprise%20plan",
+    href: "https://wa.me/2349045770572",
     popular: false,
   },
 ];
@@ -208,7 +208,7 @@ export default function PricingPageClient() {
               your business.
             </p>
             <WhatsAppLink
-              href="https://wa.me/2349037621612?text=Hi%2C%20I%20need%20help%20choosing%20a%20plan"
+              href="https://wa.me/2349045770572"
               source="pricing_page"
               className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
             >

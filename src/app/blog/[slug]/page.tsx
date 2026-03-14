@@ -362,13 +362,13 @@ export default async function BlogPostPage({ params }: PageParams) {
             </p>
             <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
-                href="/register"
+                href="https://calendly.com/morontomornica7/audit"
                 className="rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-2.5 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
-                Start Free Trial
+                Book Demo
               </Link>
               <WhatsAppLink
-                href="https://wa.me/2349037621612"
+                href="https://wa.me/2349045770572"
                 source="blog_post"
                 className="rounded-lg border border-emerald-500/20 px-6 py-2.5 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >

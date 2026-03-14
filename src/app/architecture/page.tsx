@@ -531,10 +531,10 @@ export default function ArchitecturePage() {
               </div>
               <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/demo"
+                  href="https://calendly.com/morontomornica7/audit"
                   className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-slate-900 transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
                 >
-                  Request Demo <ArrowRight size={15} />
+                  Book Demo <ArrowRight size={15} />
                 </Link>
                 <Link
                   href="/security"

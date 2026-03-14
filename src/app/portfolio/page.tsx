@@ -247,17 +247,17 @@ export default function PortfolioPage() {
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/register"
+                href="https://calendly.com/morontomornica7/audit"
                 className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
-                Start Free Trial <ArrowRight size={16} />
+                Book Demo <ArrowRight size={16} />
               </Link>
               <WhatsAppLink
-                href="https://wa.me/2349037621612?text=Hi%2C%20I%20saw%20your%20portfolio%20and%20I%27m%20interested"
+                href="https://wa.me/2349045770572"
                 source="portfolio_page"
                 className="rounded-lg border border-emerald-500/20 px-6 py-3 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
-                Discuss on WhatsApp
+                Chat on WhatsApp
               </WhatsAppLink>
             </div>
           </div>

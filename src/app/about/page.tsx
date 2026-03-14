@@ -383,13 +383,13 @@ export default function AboutPage() {
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/register"
+                href="https://calendly.com/morontomornica7/audit"
                 className="cyber-button rounded-lg px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
-                Start Free Trial
+                Book Demo
               </Link>
               <WhatsAppLink
-                href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20discuss%20a%20project"
+                href="https://wa.me/2349045770572"
                 source="about_page"
                 className="rounded-lg border border-emerald-500/20 px-6 py-3 text-sm font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/10"
               >
