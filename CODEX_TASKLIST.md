@@ -31,7 +31,7 @@
       "Clients Served: 0", "Projects Completed: 0")
       Replace with static social proof copy or remove the section entirely.
 
-[ ] 4. Standardize CTA system site-wide
+[x] 4. Standardize CTA system site-wide
       Primary CTA everywhere: "Book Demo"
       Secondary CTA everywhere: "Chat on WhatsApp"
       WhatsApp link format: https://wa.me/2349045770572
@@ -39,7 +39,7 @@
       Demote "Create Account" and "Start Free Trial" from top-level marketing prominence.
       Keep "Sign In" in nav only — do not remove it from header.
 
-[ ] 5. Rewrite homepage hero section
+[x] 5. Rewrite homepage hero section
       Headline target: address Nigerian SME pain directly
       Example direction: "Stop losing leads in your WhatsApp inbox."
       Subheadline: explain ShadowSpark's core offer in one sentence
@@ -140,4 +140,3 @@
 [ ] /login works and redirects to /dashboard after auth
 [ ] Mobile layout tested on all new/changed pages
 [ ] No placeholder text or "Lorem ipsum" anywhere
-
