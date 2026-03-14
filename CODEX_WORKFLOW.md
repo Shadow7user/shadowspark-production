@@ -98,6 +98,11 @@ If any gate fails:
 - Do not propose a commit until all three are green
 - Report what failed and what you did to fix it
 
+NOTE: pnpm build inside Codex sandbox may fail on font/image fetches due to
+network restrictions. This is a sandbox limitation, not a code error.
+If tsc and lint pass and the only build failure is a network fetch,
+commit and push — Vercel will confirm the true build result.
+
 ---
 
 ## Coding rules
@@ -209,4 +214,23 @@ Context will be provided when this workstream begins.
 Do not guess. Do not assume. Do not proceed.
 Ask: "I'm not sure about [X]. Should I [option A] or [option B]?"
 That is always better than an unrecoverable edit to a live production repo.
+
+---
+
+## Network access (updated March 2026)
+
+Codex CLI blocks network by default — git push, pnpm install, and curl
+will fail with "Could not resolve host" errors.
+
+Permanent fix (run once):
+  mkdir -p ~/.codex
+  echo '[sandbox_workspace_write]' >> ~/.codex/config.toml
+  echo 'network_access = true' >> ~/.codex/config.toml
+
+Per-session fix:
+  codex --sandbox workspace-write -c 'sandbox_workspace_write.network_access=true'
+
+Verify network is live at session start:
+  /status   run this first in every Codex session
+  network_access: true must show before any git or curl command
 
