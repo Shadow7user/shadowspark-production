@@ -21,29 +21,26 @@ export default function HeroSection() {
               <Zap size={14} /> Enterprise AI Automation · Nigeria
             </div>
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Enterprise-Structured AI Automation for{" "}
-              <span className="gradient-text">Measurable Growth</span>{" "}
-              in Nigeria.
+              Stop losing leads in your WhatsApp inbox.
             </h1>
             <p className="mt-6 max-w-lg text-lg text-slate-400">
-              We help Nigerian businesses reduce operational cost, accelerate
-              customer response, and build reliable automation workflows—with
-              transparent pricing, verifiable results, and no technical
-              complexity required on your end.
-            </p>
+              ShadowSpark builds WhatsApp-first AI systems that help Nigerian businesses
+              capture leads, automate customer support, and follow up — without hiring
+              extra staff or needing a technical team.
+              </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/register"
+                href="/demo"
                 onClick={() => trackCTAClick("start_free_trial", "hero")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg shadow-[#d4a843]/15 transition-all hover:shadow-[#d4a843]/25 hover:from-[#e8c56d] hover:to-[#d4a843]"
               >
-                Request a Demo <ArrowRight size={20} />
+                Book Demo <ArrowRight size={20} />
               </Link>
               <a
-                href="#concerns"
+                href="https://wa.me/2349045770572"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 px-8 py-4 text-lg text-slate-300 transition-all hover:border-[#d4a843]/30 hover:text-white"
               >
-                Address My Concerns
+                Chat on WhatsApp
               </a>
             </div>
           </div>

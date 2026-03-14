@@ -23,7 +23,7 @@ export default function CTASection() {
             onClick={() => trackCTAClick("start_free_trial", "cta_section")}
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg shadow-[#d4a843]/15 transition-all hover:shadow-[#d4a843]/25 hover:from-[#e8c56d] hover:to-[#d4a843]"
           >
-            Start Free Trial <ArrowRight size={20} />
+            Book Demo <ArrowRight size={20} />
           </Link>
           <WhatsAppLink
             href="https://wa.me/2349037621612?text=Hi%2C%20I%27m%20interested%20in%20ShadowSpark"

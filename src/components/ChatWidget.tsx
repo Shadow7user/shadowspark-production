@@ -249,7 +249,7 @@ export default function ChatWidget() {
             source="chatwidget"
             className="mx-4 mb-2 flex items-center justify-center gap-2 rounded-lg bg-green-600/20 px-3 py-1.5 text-xs text-green-400 transition-colors hover:bg-green-600/30"
           >
-            Continue on WhatsApp for full AI support
+            Chat on WhatsApp
           </WhatsAppLink>
 
           {/* Input */}

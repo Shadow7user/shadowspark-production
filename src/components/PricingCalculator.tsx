@@ -244,10 +244,10 @@ export default function PricingCalculator() {
               )}`}
               source="pricing_calculator"
               onClick={() => trackCalculatorQuoteClick(total)}
-              className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
-            >
-              Get This Quote on WhatsApp
-            </WhatsAppLink>
+            className="mt-6 block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
+          >
+            Chat on WhatsApp
+          </WhatsAppLink>
             <p className="mt-3 text-center text-xs text-slate-500">
               Prices are estimates. Final pricing confirmed after consultation.
             </p>

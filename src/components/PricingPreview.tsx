@@ -16,8 +16,8 @@ const plans = [
       "Pre-built response templates",
       "Onboarding walkthrough",
     ],
-    cta: "Get Started",
-    href: "/register",
+    cta: "Book Demo",
+    href: "/demo",
     waLink: null,
   },
   {
@@ -34,8 +34,8 @@ const plans = [
       "1-business-day support SLA",
       "Custom response training",
     ],
-    cta: "Get Started",
-    href: "/register",
+    cta: "Book Demo",
+    href: "/demo",
     waLink: null,
   },
   {

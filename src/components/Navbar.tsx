@@ -100,7 +100,7 @@ export default function Navbar() {
             href="/demo"
             className="ml-2 rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-2 text-sm font-semibold text-slate-900 transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
           >
-            Request Demo
+            Book Demo
           </Link>
         </div>
 
@@ -158,13 +158,13 @@ export default function Navbar() {
               >
                 Sign In
               </Link>
-              <Link
-                href="/demo"
-                onClick={() => setOpen(false)}
-                className="block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-slate-900"
-              >
-                Request Demo
-              </Link>
+            <Link
+              href="/demo"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-4 py-3 text-center text-sm font-semibold text-slate-900"
+            >
+              Book Demo
+            </Link>
             </div>
           </div>
         </div>

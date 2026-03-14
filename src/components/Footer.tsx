@@ -15,12 +15,12 @@ const company = [
 ];
 
 const getStarted = [
-  { href: "/demo",      label: "Request Demo" },
+  { href: "/demo",      label: "Book Demo" },
   { href: "/login",     label: "Sign In" },
   { href: "/register",  label: "Create Account" },
   {
     href: "https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20know%20more%20about%20ShadowSpark",
-    label: "WhatsApp Us",
+    label: "Chat on WhatsApp",
     external: true,
   },
 ];

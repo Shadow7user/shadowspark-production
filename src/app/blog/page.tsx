@@ -186,7 +186,7 @@ export default function BlogPage() {
               source="blog_page"
               className="mt-6 inline-block rounded-lg bg-gradient-to-r from-[#d4a843] to-[#c0935a] px-6 py-3 text-sm font-semibold text-white transition-all hover:from-[#e8c56d] hover:to-[#d4a843]"
             >
-              Subscribe via WhatsApp
+              Chat on WhatsApp
             </WhatsAppLink>
           </div>
         </section>
