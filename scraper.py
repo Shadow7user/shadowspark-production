@@ -130,7 +130,7 @@ def clean_text(value: str) -> str:
 
 def normalise_phone(value: str) -> str | None:
     digits = re.sub(r"\D+", "", value)
-    if len(digits) < 8:
+    if len(digits) < 10:
         return None
     if digits.startswith("00"):
         digits = digits[2:]
@@ -286,7 +286,6 @@ def iter_candidates(session: requests.Session, source_urls: Iterable[str]) -> It
 
 def push_lead(api_url: str, api_key: str, candidate: LeadCandidate) -> bool:
     payload = {
-        "email": candidate.email,
         "location": urlparse(candidate.url).netloc[:120],
         "metadata": {
             "scrapedFrom": candidate.url[:500],
@@ -298,6 +297,9 @@ def push_lead(api_url: str, api_key: str, candidate: LeadCandidate) -> bool:
         "phone": candidate.phone,
         "source": candidate.source,
     }
+
+    if candidate.email:
+        payload["email"] = candidate.email
 
     try:
         response = requests.post(
