@@ -263,7 +263,6 @@ def fingerprint(candidate: LeadCandidate) -> str:
             candidate.organization_name.lower(),
             candidate.phone.lower(),
             (candidate.email or "").lower(),
-            candidate.url.lower(),
         ]
     )
     return hashlib.sha256(material.encode("utf-8")).hexdigest()
@@ -333,6 +332,7 @@ def main() -> int:
     source_urls = load_source_urls()
     state = load_state()
     session = build_session()
+    seen_this_run: set[str] = set()
 
     submitted = 0
     skipped = 0
@@ -341,12 +341,13 @@ def main() -> int:
     for candidate in iter_candidates(session, source_urls):
         discovered += 1
         lead_key = fingerprint(candidate)
-        if state.get(lead_key):
+        if lead_key in seen_this_run or state.get(lead_key):
             skipped += 1
             continue
 
         if push_lead(api_url, api_key, candidate):
             state[lead_key] = True
+            seen_this_run.add(lead_key)
             submitted += 1
 
     save_state(state)
