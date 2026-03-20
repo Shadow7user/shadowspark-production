@@ -121,7 +121,7 @@ export default function DemoPage() {
               No commitment required
             </p>
             <h1 className="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Request a Demo
+              Book Demo
             </h1>
             <p className="mt-5 text-lg text-slate-400">
               Tell us about your business and we will configure a working
@@ -239,10 +239,13 @@ export default function DemoPage() {
                       </>
                     ) : (
                       <>
-                        Request My Demo <ArrowRight size={15} />
+                        Book Demo <ArrowRight size={15} />
                       </>
                     )}
                   </button>
+                  <p className="text-center text-xs text-slate-500">
+                    Response within 1 business day
+                  </p>
 
                   {/* Reassurances */}
                   <ul className="flex flex-wrap gap-x-6 gap-y-1.5 pt-1">
@@ -260,11 +263,11 @@ export default function DemoPage() {
               <p className="mt-6 text-center text-sm text-slate-500">
                 Prefer to message us directly?{" "}
                 <WhatsAppLink
-                  href="https://wa.me/2349037621612?text=Hi%2C%20I%27d%20like%20to%20request%20a%20demo%20of%20ShadowSpark"
+                  href="https://wa.me/2349045770572?text=Hi%2C%20I%27d%20like%20to%20request%20a%20demo%20of%20ShadowSpark"
                   source="demo_page"
                   className="font-semibold text-emerald-400 hover:text-emerald-300"
                   onClick={async () => {
-                    await trackEvent('whatsapp_cta_clicked', { source: 'demo_page', phone: '2349037621612' });
+                    await trackEvent('whatsapp_cta_clicked', { source: 'demo_page', phone: '2349045770572' });
                   }}
                 >
                   Chat on WhatsApp
@@ -402,7 +405,7 @@ function SuccessCard({ name }: { name: string }) {
       </p>
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <a
-          href="https://wa.me/2349037621612?text=Hi%2C%20I%20just%20submitted%20a%20demo%20request"
+          href="https://wa.me/2349045770572?text=Hi%2C%20I%20just%20submitted%20a%20demo%20request"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"

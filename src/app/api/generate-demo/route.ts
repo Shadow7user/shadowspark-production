@@ -1,195 +1,239 @@
-import { NextResponse } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { Prisma } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-
-const SYSTEM_PROMPT =
-  "You are an AI systems architect for Nigerian businesses. Generate a structured demo config as JSON only. No markdown.";
-
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 export const dynamic = "force-dynamic";
 
-interface GenerateDemoBody {
-  organizationName?: string;
-  industry?: string;
-  services?: string | string[];
-  challenge?: string;
-  location?: string;
-  whatsapp?: string;
-  website?: string;
-}
+const SYSTEM_INSTRUCTION =
+  "You are the Shadowweaver v2 AI. Role: Tactical influence engine. Voice: Controlled, grounded, measured power. Never apologize. Analyze intent and provide a 3-step automation solution.";
+
+const generateDemoSchema = z.object({
+  orgName: z.string().trim().min(1).optional(),
+  organizationName: z.string().trim().min(1).optional(),
+  industry: z.string().trim().min(1, "industry is required"),
+  whatsapp: z.string().trim().min(1, "whatsapp is required"),
+  intent: z.string().trim().min(1).optional(),
+  challenge: z.string().trim().min(1).optional(),
+  location: z.string().trim().min(1).optional(),
+  website: z.string().trim().min(1).optional(),
+  services: z.union([z.string(), z.array(z.string())]).optional(),
+}).superRefine((value, ctx) => {
+  if (!value.orgName?.trim() && !value.organizationName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "organizationName is required",
+      path: ["organizationName"],
+    });
+  }
+});
+
+type GenerateDemoBody = z.infer<typeof generateDemoSchema>;
 
 type NormalizedInput = {
-  organizationName: string;
+  orgName: string;
   industry: string;
-  services: string;
-  challenge: string;
+  whatsapp: string;
+  intent: string;
   location?: string;
-  whatsapp?: string;
   website?: string;
+  services: string;
 };
 
-function normalizeServices(services: string | string[] | undefined): string {
+type GeminiDemoConfig = {
+  organization: string;
+  industry: string;
+  intent_analysis: string;
+  proposed_solution: string;
+  automation_steps: [string, string, string];
+  recommended_channels: string[];
+};
+
+const genAI = process.env.GEMINI_API_KEY
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  : null;
+
+function normalizeServices(services: GenerateDemoBody["services"]): string {
   if (Array.isArray(services)) {
-    return services.map((item) => item?.trim()).filter(Boolean).join(", ");
+    return services
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+      .join(", ");
   }
-  return (services ?? "").trim();
+
+  return services?.trim() || "Not specified";
 }
 
-function stripJsonFence(content: string): string {
-  const trimmed = content.trim();
-  if (trimmed.startsWith("```")) {
-    return trimmed.replace(/^```[a-zA-Z]*\s*/u, "").replace(/```\s*$/u, "");
-  }
-  return trimmed;
-}
-
-function buildMockConfig(input: NormalizedInput) {
-  return {
-    version: "mock-1",
-    organizationName: input.organizationName,
-    industry: input.industry,
-    services: input.services,
-    challenge: input.challenge,
-    architecture: {
-      channels: ["WhatsApp", "Web chat"],
-      integrations: ["Knowledge base", "CRM", "Payment links"],
-      latencyBudgetMs: 1200,
-    },
-    automations: [
-      {
-        name: "High-intent lead capture",
-        trigger: "Inbound WhatsApp message",
-        steps: [
-          "Detect intent and classify lead tier",
-          "Collect name, company, and budget",
-          "Sync to CRM and alert sales",
-        ],
-      },
-      {
-        name: "Service routing",
-        trigger: "Customer asks for specific service",
-        steps: [
-          "Confirm requirements",
-          "Fetch SLA/pricing from config",
-          "Book follow-up or generate payment link",
-        ],
-      },
-    ],
-    metrics: {
-      targetFRTSeconds: 1.5,
-      deflectionRate: 0.42,
-      csatTarget: 4.7,
-    },
-  };
-}
-
-async function getAiConfig(input: NormalizedInput) {
-  const userPrompt = [
-    `Organization: ${input.organizationName}`,
+function buildPrompt(input: NormalizedInput): string {
+  return [
+    "Analyze this prospect and respond as JSON only.",
+    "Return keys: organization, industry, intent_analysis, proposed_solution, automation_steps, recommended_channels.",
+    "automation_steps must be an array of exactly 3 concise strings.",
+    "recommended_channels must be an array of concise strings.",
+    `Organization: ${input.orgName}`,
     `Industry: ${input.industry}`,
+    `Intent: ${input.intent}`,
+    `WhatsApp: ${input.whatsapp}`,
     `Services: ${input.services}`,
-    `Primary Challenge: ${input.challenge}`,
     input.location ? `Location: ${input.location}` : undefined,
     input.website ? `Website: ${input.website}` : undefined,
   ]
-    .filter(Boolean)
+    .filter((line): line is string => Boolean(line))
     .join("\n");
+}
 
-  const response = await fetch(OPENROUTER_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://shadowspark-tech.org",
-    },
-    body: JSON.stringify({
-      model: "google/gemini-2.0-flash-001",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 0.3,
-      response_format: { type: "json_object" },
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`OpenRouter request failed with status ${response.status}`);
+function isGeminiDemoConfig(value: unknown): value is GeminiDemoConfig {
+  if (typeof value !== "object" || value === null) {
+    return false;
   }
 
-  const data = await response.json();
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content || typeof content !== "string") {
-    throw new Error("OpenRouter response missing content");
+  const record = value as Record<string, unknown>;
+  return (
+    typeof record.organization === "string" &&
+    typeof record.industry === "string" &&
+    typeof record.intent_analysis === "string" &&
+    typeof record.proposed_solution === "string" &&
+    Array.isArray(record.automation_steps) &&
+    record.automation_steps.length === 3 &&
+    record.automation_steps.every((step) => typeof step === "string") &&
+    Array.isArray(record.recommended_channels) &&
+    record.recommended_channels.every((channel) => typeof channel === "string")
+  );
+}
+
+function parseGeminiJson(text: string): GeminiDemoConfig {
+  const cleaned = text
+    .trim()
+    .replace(/^```json\s*/u, "")
+    .replace(/^```\s*/u, "")
+    .replace(/```\s*$/u, "");
+
+  const parsed: unknown = JSON.parse(cleaned);
+  if (!isGeminiDemoConfig(parsed)) {
+    throw new Error("Gemini returned unexpected JSON structure");
   }
 
-  const parsed = JSON.parse(stripJsonFence(content));
   return parsed;
 }
 
-export async function POST(req: Request) {
+function buildFallbackConfig(input: NormalizedInput): GeminiDemoConfig {
+  return {
+    organization: input.orgName,
+    industry: input.industry,
+    intent_analysis:
+      "The buyer is signaling urgency around operational leverage and faster conversion from inbound interest.",
+    proposed_solution:
+      "Deploy a WhatsApp-first automation system that captures intent, qualifies leads, and routes the highest-value conversations into a controlled follow-up sequence.",
+    automation_steps: [
+      "Capture inbound requests and classify the buyer's intent automatically.",
+      "Collect missing lead data, route qualified prospects, and trigger follow-up tasks instantly.",
+      "Track conversion signals across WhatsApp and your internal pipeline to tighten response time.",
+    ],
+    recommended_channels: ["WhatsApp", "Landing page", "CRM alerts"],
+  };
+}
+
+async function generateConfig(input: NormalizedInput): Promise<{
+  config: GeminiDemoConfig;
+  status: "COMPLETED" | "ERROR";
+}> {
+  if (!genAI) {
+    return {
+      config: buildFallbackConfig(input),
+      status: "ERROR",
+    };
+  }
+
   try {
-    const body = (await req.json()) as GenerateDemoBody;
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3-flash",
+      systemInstruction: SYSTEM_INSTRUCTION,
+    });
 
-    const organizationName = (body.organizationName ?? "").trim();
-    const industry = (body.industry ?? "").trim();
-    const services = normalizeServices(body.services);
-    const challenge = (body.challenge ?? "").trim();
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: buildPrompt(input) }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.4,
+      },
+    });
 
-    if (!organizationName || !industry || !services || !challenge) {
+    const responseText = result.response.text();
+    const config = parseGeminiJson(responseText);
+
+    return { config, status: "COMPLETED" };
+  } catch (error) {
+    console.error("generate-demo Gemini error", error);
+    return {
+      config: buildFallbackConfig(input),
+      status: "ERROR",
+    };
+  }
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  try {
+    const json: unknown = await req.json();
+    const parsed = generateDemoSchema.safeParse(json);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "organizationName, industry, services, and challenge are required" },
+        { error: parsed.error.issues[0]?.message ?? "Invalid request body" },
+        { status: 400 },
+      );
+    }
+
+    const body = parsed.data;
+    const orgName = body.orgName?.trim() || body.organizationName?.trim() || "";
+    const intent = body.intent?.trim() || body.challenge?.trim() || "";
+
+    if (!intent) {
+      return NextResponse.json(
+        { error: "intent is required" },
         { status: 400 },
       );
     }
 
     const normalized: NormalizedInput = {
-      organizationName,
-      industry,
-      services,
-      challenge,
-      ...(body.location?.trim() ? { location: body.location.trim() } : {}),
-      ...(body.whatsapp?.trim() ? { whatsapp: body.whatsapp.trim() } : {}),
-      ...(body.website?.trim() ? { website: body.website.trim() } : {}),
+      orgName,
+      industry: body.industry.trim(),
+      whatsapp: body.whatsapp.trim(),
+      intent,
+      services: normalizeServices(body.services),
+      ...(body.location ? { location: body.location.trim() } : {}),
+      ...(body.website ? { website: body.website.trim() } : {}),
     };
 
-    let generatedConfig: Prisma.InputJsonValue;
-    let status: "COMPLETED" | "ERROR" = "COMPLETED";
-
-    try {
-      generatedConfig = (await getAiConfig(normalized)) as Prisma.InputJsonValue;
-    } catch (error) {
-      console.error("generate-demo OpenRouter error", error);
-      generatedConfig = buildMockConfig(normalized) as Prisma.InputJsonValue;
-      status = "ERROR";
-    }
+    const { config, status } = await generateConfig(normalized);
 
     const session = await prisma.demoSession.create({
       data: {
-        organizationName,
-        industry,
+        orgName: normalized.orgName,
+        industry: normalized.industry,
+        whatsapp: normalized.whatsapp,
+        intent: normalized.intent,
         location: normalized.location ?? null,
-        services,
-        whatsapp: normalized.whatsapp ?? "not-provided",
-        challenge,
         website: normalized.website ?? null,
-        generatedConfig,
+        services: normalized.services,
+        challenge: normalized.intent,
+        generatedConfig: config as Prisma.InputJsonValue,
         status,
       },
-      select: { id: true, status: true, generatedConfig: true },
+      select: { id: true },
     });
 
-    return NextResponse.json({
-      success: true,
-      sessionId: session.id,
-      status: session.status,
-      generatedConfig: session.generatedConfig,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        sessionId: session.id,
+      },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("generate-demo fatal error", error);
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { error: "Internal server error" },
       { status: 500 },
     );
   }

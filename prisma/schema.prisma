@@ -180,18 +180,19 @@ enum PaymentProviderName {
 }
 
 model DemoSession {
-  id               String   @id @default(cuid())
-  organizationName String
-  industry         String
-  location         String?
-  services         String
-  whatsapp         String
-  challenge        String?
-  website          String?
-  generatedConfig  Json?
-  status           String   @default("draft")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id              String   @id @default(cuid())
+  orgName         String   @map("organizationName")
+  industry        String
+  intent          String   @default("")
+  location        String?
+  services        String
+  whatsapp        String
+  challenge       String?
+  website         String?
+  generatedConfig Json?
+  status          String   @default("draft")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([industry])
   @@index([status])

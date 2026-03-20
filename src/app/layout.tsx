@@ -61,8 +61,12 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "ShadowSpark",
   },
+  verification: {
+    other: {
+      "facebook-domain-verification": ["bzi17hcp3wbrkejlwilchsc6jkxk7k"],
+    },
+  },
   other: {
-    "facebook-domain-verification": "b2i7hCpw3wbjkwjIhcsc5jok7xk",
     "mobile-web-app-capable": "yes",
   },
 };
