@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { assertSensitiveActionAllowed } from "@/lib/security";
 
 type ClaimBody = {
   sessionId?: string;
@@ -7,6 +8,12 @@ type ClaimBody = {
 
 export async function POST(req: Request) {
   try {
+    assertSensitiveActionAllowed({
+      action: "modify_record",
+      explicitApproval: false,
+      route: "/api/demo-claim",
+      source: "validated_public_request",
+    });
     const body = (await req.json()) as ClaimBody;
     const sessionId = body.sessionId?.trim();
 

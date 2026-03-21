@@ -34,6 +34,15 @@ import {
   buildErrorResponse,
   checkRateLimit,
 } from "@/lib/observability";
+import {
+  buildShadowSparkAssistantSystemPrompt,
+  createSecurityLogEntry,
+  inferOutputRiskCategories,
+  logSecurityEvent,
+  securePostcheck,
+  securePrecheck,
+} from "@/lib/security";
+import type { SecurityDecision } from "@/lib/security";
 
 // ── OpenAI Client ──────────────────────────────────────────────────────────
 
@@ -172,6 +181,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const webhookTimer = startTimer();
+  const modelName = "gpt-4o-mini";
+  let securityDecision: SecurityDecision = "allow";
 
   // ── 1. Read & verify body ────────────────────────────────────────────────
   let rawBody: string;
@@ -272,6 +283,51 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  const precheck = securePrecheck(msg.text.body, { profile: "customer_support" });
+  logSecurityEvent(
+    createSecurityLogEntry({
+      stage: "precheck",
+      text: msg.text.body,
+      decision: precheck.decision,
+      categories: precheck.categories,
+      reasons: precheck.reasons,
+      normalizedVariants: precheck.normalizedVariants,
+      requiresConfirmation: precheck.requiresConfirmation,
+      route: "/api/webhook/whatsapp",
+      userHash,
+      model: modelName,
+    }),
+  );
+
+  if (precheck.decision !== "allow" && precheck.safeReply) {
+    securityDecision = precheck.decision;
+    const totalMs = webhookTimer();
+    metricsStore.record("webhook", { duration_ms: totalMs, error: false });
+    logger.webhook({
+      service: "webhook",
+      mode,
+      user_hash: userHash,
+      latency_ms: totalMs,
+      openai_ms: 0,
+      redis_ms: 0,
+      db_ms: 0,
+      response_status: 200,
+    });
+
+    return NextResponse.json(
+      {
+        status: "ok",
+        response: precheck.safeReply,
+        meta: {
+          mode,
+          latency_ms: totalMs,
+          security_decision: precheck.decision,
+        },
+      },
+      { status: 200 },
+    );
+  }
+
   // ── 4. Database — persist message ────────────────────────────────────────
   let dbMs = 0;
   const dbTimer = startTimer();
@@ -361,13 +417,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           return withRetry(
             async () => {
               const completion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
+                model: modelName,
                 max_tokens: 300,
                 temperature: 0.65,
                 messages: [
                   {
                     role: "system",
-                    content: `You are a helpful WhatsApp assistant for ShadowSpark Technologies. Mode: ${mode}. Be concise and professional.`,
+                    content: buildShadowSparkAssistantSystemPrompt(mode),
                   },
                   {
                     role: "user",
@@ -394,6 +450,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       openaiMs = duration_ms;
       aiResponse = result;
       metricsStore.record("openai", { duration_ms, error: false });
+
+      const postcheck = securePostcheck(aiResponse);
+      if (!postcheck.allowed) {
+        logSecurityEvent(
+          createSecurityLogEntry({
+          stage: "postcheck",
+          text: aiResponse,
+          decision: "block",
+          categories: inferOutputRiskCategories(aiResponse),
+          reasons: postcheck.reasons,
+          route: "/api/webhook/whatsapp",
+          userHash,
+          model: modelName,
+        }),
+      );
+        securityDecision = "block";
+        aiResponse = postcheck.safeReply ?? aiResponse;
+      }
     } catch (err) {
       openaiMs = openaiTimer();
       metricsStore.record("openai", { duration_ms: openaiMs, error: true });
@@ -441,6 +515,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       meta: {
         mode,
         latency_ms: totalMs,
+        security_decision: securityDecision,
       },
     },
     { status: 200 },
