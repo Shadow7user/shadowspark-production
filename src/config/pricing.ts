@@ -1,20 +1,26 @@
 export const PRICING_PACKAGES = [
   {
-    id: "starter",
-    name: "Starter",
-    priceNGN: 25000,
+    id: "launch",
+    name: "Launch",
+    priceNGN: 30000,
     features: ["Standard Chatbot", "Lead Capture", "Basic Analytics"],
   },
   {
-    id: "professional",
-    name: "Professional",
+    id: "growth",
+    name: "Growth",
     priceNGN: 50000,
     features: ["Advanced Chatbot", "CRM Integration", "Custom Workflows"],
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
-    priceNGN: 150000,
+    id: "automation",
+    name: "Automation",
+    priceNGN: 85000,
+    features: ["Full AI Automation", "Omnichannel Support", "Advanced Routing"],
+  },
+  {
+    id: "enterprise-custom",
+    name: "Enterprise Custom",
+    priceNGN: 0, // Custom pricing
     features: ["Custom AI Training", "Dedicated Support", "SLA"],
   },
 ];

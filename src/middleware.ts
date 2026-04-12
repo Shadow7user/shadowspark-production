@@ -1,4 +1,22 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
-export default NextAuth(authConfig).auth;
-export const config = { matcher: ["/((?!api|_next/static|_next/image|.*\\\\.png$).*)"] };
+import { auth } from "@/auth";
+
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard");
+  const isOnOperator = req.nextUrl.pathname.startsWith("/operator");
+
+  if (isOnDashboard || isOnOperator) {
+    if (isLoggedIn) {
+      // Role-based protection for operator
+      if (isOnOperator && req.auth?.user?.role !== "admin") {
+        return Response.redirect(new URL("/dashboard", req.nextUrl));
+      }
+      return;
+    }
+    return Response.redirect(new URL("/login", req.nextUrl));
+  }
+});
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};

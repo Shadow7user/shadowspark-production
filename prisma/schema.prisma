@@ -22,12 +22,36 @@ model Lead {
   demoApproved   Boolean   @default(false)
   updatedAt      DateTime  @updatedAt
   createdAt      DateTime  @default(now())
+  payments       Payment[]
+  demo           Demo?
 }
 
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
-  role      String?
+  role      String?  @default("user")
   createdAt DateTime @default(now())
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  amount        Int
+  status        String   @default("pending")
+  reference     String   @unique
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Demo {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  leadId        String   @unique
+  lead          Lead     @relation(fields: [leadId], references: [id])
+  config        Json?
+  approved      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
