@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== \`Bearer \${process.env.CRON_SECRET}\`) {
+  if (authHeader !== `Bearer \${process.env.CRON_SECRET}`) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
       await prisma.lead.upsert({
         where: { phoneNumber: cbLead.wa_id },
         update: {
-          lastMessage: \`Automated sync from Chatbot at \${new Date().toISOString()}\`,
+          lastMessage: `Automated sync from Chatbot at \${new Date().toISOString()}`,
           leadScore: cbLead.intent_score,
           miniAuditData: {
             name: cbLead.profile_name,

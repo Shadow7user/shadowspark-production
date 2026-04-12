@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import GlassCard from "@/components/ui/GlassCard";
 
 type Metrics = {
   totalLeads: number;
@@ -24,13 +26,13 @@ function Sparkline({ values }: { values: number[] }) {
     .join(" ");
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-9 w-28">
+    <svg viewBox={`0 0 ${width} ${height}`} className="h-9 w-28 drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]">
       <polyline
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
         points={points}
-        className="text-cyan-300"
+        className="text-cyan-400"
       />
     </svg>
   );
@@ -85,23 +87,40 @@ export default function StatsRow() {
     },
   ];
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  };
+
   return (
     <div className="space-y-4">
       {error ? <p className="text-sm text-red-400">{error}</p> : null}
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {cards.map((card) => (
-          <div
-            key={card.label}
-            className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 shadow-[0_0_30px_rgba(0,229,255,0.04)] backdrop-blur-md"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">{card.label}</p>
-              <Sparkline values={metrics?.sparkline ?? [5, 10, 7, 12, 18, 13, 20]} />
-            </div>
-            <p className="mt-4 text-3xl font-black text-white">{card.value}</p>
-          </div>
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+      >
+        {cards.map((card, idx) => (
+          <motion.div key={card.label} variants={item}>
+            <GlassCard className="p-5 border-zinc-800 bg-zinc-950/80">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300/80">{card.label}</p>
+                <Sparkline values={metrics?.sparkline ?? [5, 10, 7, 12, 18, 13, 20]} />
+              </div>
+              <p className="mt-4 text-3xl font-black text-white drop-shadow-md">{card.value}</p>
+            </GlassCard>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
