@@ -96,7 +96,7 @@ export default function CheckoutClient({ leadId }: { leadId: string }) {
         <div className="bg-zinc-50 dark:bg-zinc-900 p-5 rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium dark:text-white">Live Demo Access Fee</span>
-            <span className="text-xl font-bold dark:text-white">₦1,000</span>
+            <span className="text-xl font-bold dark:text-white">$10</span>
           </div>
           <p className="text-sm text-zinc-500 mb-4">
             This fee secures your dedicated environment and is <strong>fully credited toward your final package</strong> ({selectedPackage?.name}) if you choose to proceed.
@@ -105,7 +105,7 @@ export default function CheckoutClient({ leadId }: { leadId: string }) {
           <div className="flex items-start gap-3 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
             <input required type="checkbox" id="terms" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)} className="mt-1 w-4 h-4" />
             <label htmlFor="terms" className="text-sm text-zinc-600 dark:text-zinc-400">
-              I accept the <a href="#" className="underline hover:text-blue-600">Terms of Service</a> and <a href="#" className="underline hover:text-blue-600">Privacy Policy</a>, and I understand this ₦1,000 fee is a credited deposit for the demo environment.
+              I accept the <a href="#" className="underline hover:text-blue-600">Terms of Service</a> and <a href="#" className="underline hover:text-blue-600">Privacy Policy</a>, and I understand this $10 fee is a credited deposit for the demo environment.
             </label>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function CheckoutClient({ leadId }: { leadId: string }) {
             Back
           </Button>
           <Button disabled={loading || !termsAccepted} type="submit" className="w-2/3 bg-blue-600 text-white hover:bg-blue-700 py-3 rounded-md font-medium text-lg">
-            {loading ? "Processing..." : "Pay ₦1,000 (Test Mode)"}
+            {loading ? "Processing..." : "Pay $10 (Test Mode)"}
           </Button>
         </div>
       </form>

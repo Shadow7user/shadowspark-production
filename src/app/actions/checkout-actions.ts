@@ -12,8 +12,8 @@ export async function processCheckout(leadId: string, data: {
   if (!data.termsAccepted) throw new Error("Terms must be accepted");
 
   // Fixed demo fee
-  const demoFeeNGN = 1000;
-  const mockPaystackLink = `https://checkout.paystack.com/test_${leadId}_${Date.now()}?amount=${demoFeeNGN * 100}`;
+  const demoFeeUSD = 10;
+  const mockPaystackLink = `https://checkout.paystack.com/test_${leadId}_${Date.now()}?amount=${demoFeeUSD * 100}`;
 
   await prisma.lead.update({
     where: { id: leadId },
@@ -25,7 +25,7 @@ export async function processCheckout(leadId: string, data: {
         leadVolume: data.leadVolume,
         painPoint: data.painPoint,
         selectedPackage: data.packageId,
-        demoFee: demoFeeNGN,
+        demoFee: demoFeeUSD,
         creditedToFinal: true
       },
       paymentRef: mockPaystackLink,

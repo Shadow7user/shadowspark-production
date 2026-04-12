@@ -1,3 +1,7 @@
+"use client";
+export const dynamic = "force-dynamic";
+
+
 import CheckoutClient from "./CheckoutClient";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
