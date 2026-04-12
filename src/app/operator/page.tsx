@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import StatsRow from "./StatsRow";
+import GlassCard from "@/components/ui/GlassCard";
+import { BentoGrid, BentoGridItem } from "@/components/ui/templates/BentoGridPro";
 import OperatorLeadTable, { type OperatorLead } from "./OperatorLeadTable";
 
 function normalizeStatus(lead: {
@@ -96,19 +98,23 @@ export default async function OperatorDashboard() {
 
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1.45fr_0.55fr]">
           <div className="space-y-8">
-            <div className="rounded-[1.75rem] border border-zinc-800 bg-zinc-950/80 p-6">
-              <div className="mb-6 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Lead Operations</p>
-                  <h2 className="mt-2 text-2xl font-black text-white">Pipeline command grid</h2>
-                </div>
-              </div>
-              <OperatorLeadTable data={tableData} />
-            </div>
+            <BentoGrid className="md:auto-rows-auto grid-cols-1">
+              <BentoGridItem 
+                title="Pipeline Command Grid"
+                description="Manage all incoming leads and system deployments."
+                className="md:col-span-1 p-6"
+                header={
+                  <div>
+                    <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300 mb-6">Lead Operations</p>
+                    <OperatorLeadTable data={tableData} />
+                  </div>
+                }
+              />
+            </BentoGrid>
           </div>
 
           <div className="space-y-8">
-            <div className="rounded-[1.75rem] border border-zinc-800 bg-zinc-950/80 p-6">
+            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80">
               <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Quick Actions</p>
               <div className="mt-5 space-y-3">
                 <Link href="/" className="block rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-4 text-sm text-zinc-200 transition hover:border-cyan-400/40 hover:text-cyan-300">
@@ -121,27 +127,28 @@ export default async function OperatorDashboard() {
                   Open Main Dashboard
                 </Link>
               </div>
-            </div>
+            </GlassCard>
 
-            <div className="rounded-[1.75rem] border border-zinc-800 bg-zinc-950/80 p-6">
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Recent Activity</p>
+            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80 max-h-[500px] overflow-y-auto overflow-x-hidden relative">
+              <div className="sticky top-0 bg-zinc-950/90 pb-4 z-10 flex items-center justify-between gap-4 border-b border-zinc-800/50 mb-4 backdrop-blur-md">
+                <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Live Activity Feed</p>
                 <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-green-300">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
-                  Healthy
+                  Real-time
                 </span>
               </div>
-              <div className="mt-5 space-y-4">
-                {recentActivity.length ? recentActivity.map((item) => (
-                  <div key={item.id} className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
+              <div className="space-y-4">
+                {recentActivity.length ? recentActivity.map((item, i) => (
+                  <div key={item.id} className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4 transition-colors hover:border-cyan-500/30">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-transparent rounded-l-2xl opacity-0 transition-opacity group-hover:opacity-100" />
                     <p className="text-sm text-white">{item.label}</p>
                     <p className="mt-2 text-xs uppercase tracking-[0.14em] text-zinc-500">{item.timestamp}</p>
                   </div>
                 )) : (
-                  <p className="text-sm text-zinc-500">No recent activity recorded.</p>
+                  <p className="text-sm text-zinc-500 text-center py-10">Listening for signals...</p>
                 )}
               </div>
-            </div>
+            </GlassCard>
           </div>
         </div>
       </main>

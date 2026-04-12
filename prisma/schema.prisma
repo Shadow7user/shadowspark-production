@@ -9,7 +9,7 @@ datasource db {
 
 model Lead {
   id             String    @id @default(cuid())
-  phoneNumber    String
+  phoneNumber    String    @unique
   intent         String?
   status         String
   leadScore      Int?
@@ -28,6 +28,7 @@ model Lead {
 
 model User {
   id        String   @id @default(cuid())
+  name      String?
   email     String   @unique
   password  String
   role      String?  @default("user")
