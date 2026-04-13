@@ -7,8 +7,8 @@ import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import MiniAudit from "@/components/MiniAudit";
 import AssistantBubble from "@/components/ui/AssistantBubble";
-
 import GlassCard from "@/components/ui/GlassCard";
+import { AuroraBackground } from "@/components/ui/templates/AuroraBackground";
 
 type DemoData = {
   id: string;
@@ -87,20 +87,20 @@ export default function DemoPreviewPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050505] px-6 text-zinc-100">
+      <AuroraBackground className="flex min-h-screen items-center justify-center px-6">
         <div className="rounded-[2rem] border border-zinc-800 bg-zinc-950/90 px-8 py-10 text-center shadow-[0_0_60px_rgba(0,229,255,0.08)]">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-cyan-300" />
           <p className="mt-4 font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">
             Synchronizing Preview Environment
           </p>
         </div>
-      </main>
+      </AuroraBackground>
     );
   }
 
   if (error || !demo) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050505] px-6 text-zinc-100">
+      <AuroraBackground className="flex min-h-screen items-center justify-center px-6">
         <div className="max-w-lg rounded-[2rem] border border-zinc-800 bg-zinc-950/90 p-8 text-center">
           <p className="text-xs font-mono uppercase tracking-[0.22em] text-red-400">Preview Unavailable</p>
           <h1 className="mt-4 text-3xl font-black text-white">Preview access could not be established</h1>
@@ -114,13 +114,13 @@ export default function DemoPreviewPage() {
             Return to Homepage
           </Link>
         </div>
-      </main>
+      </AuroraBackground>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-zinc-100 selection:bg-cyan-500/30">
-      <div className="mx-auto max-w-7xl px-6 py-10 relative z-10">
+    <AuroraBackground className="min-h-screen selection:bg-cyan-500/30">
+      <main className="mx-auto max-w-7xl px-6 py-10 relative z-10">
         <div className="pointer-events-none absolute inset-0 -z-10 flex justify-center overflow-hidden [mask-image:radial-gradient(ellipse_at_top,white,transparent)]">
           <div className="absolute top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-[100px]" />
           <div className="absolute top-0 h-[400px] w-[400px] translate-x-1/3 rounded-full bg-blue-500/10 blur-[80px]" />
@@ -245,9 +245,9 @@ export default function DemoPreviewPage() {
           <span>Preview expires in 48 hours.</span>
           <span>{expiresSoon ? "This preview is already nearing expiry." : "Deployment window is active."}</span>
         </footer>
-      </div>
+      </main>
 
       <AssistantBubble />
-    </main>
+    </AuroraBackground>
   );
 }

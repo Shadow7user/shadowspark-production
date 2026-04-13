@@ -1,7 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="100" fill="#000000" />
-  <!-- ShadowSpark "SS" Monogram in Cyan -->
-  <path d="M 336 176 L 336 128 C 336 128 200 128 176 160 C 152 192 176 256 176 256 L 272 256 C 272 256 312 256 312 288 C 312 320 272 352 240 352 L 176 352 L 176 400 L 256 400 C 256 400 360 400 360 336 C 360 272 272 256 272 256 L 176 256 C 176 256 160 256 160 224 C 160 192 184 176 216 176 Z" fill="#00E5FF" />
-  <!-- Spark Element -->
-  <path d="M 384 128 L 416 160 L 384 192 L 352 160 Z" fill="#00E5FF" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="darkLogoTitle darkLogoDesc">
+  <title id="darkLogoTitle">ShadowSpark dark logo</title>
+  <desc id="darkLogoDesc">A compact ShadowSpark SS monogram in spark cyan on an obsidian background.</desc>
+  <rect width="512" height="512" rx="108" fill="#0A0A0A" />
+  <rect x="40" y="40" width="432" height="432" rx="88" fill="#091318" stroke="#16323A" stroke-width="4" />
+  <g opacity="0.35">
+    <path d="M112 172H400" stroke="#17313A" stroke-width="2" />
+    <path d="M112 256H400" stroke="#17313A" stroke-width="2" />
+    <path d="M112 340H400" stroke="#17313A" stroke-width="2" />
+    <path d="M172 112V400" stroke="#17313A" stroke-width="2" />
+    <path d="M256 112V400" stroke="#17313A" stroke-width="2" />
+    <path d="M340 112V400" stroke="#17313A" stroke-width="2" />
+  </g>
+  <path d="M160 182C160 151.072 185.072 126 216 126H338V168H241C218.909 168 201 185.909 201 208C201 230.091 218.909 248 241 248H273C318.84 248 356 285.16 356 331C356 376.84 318.84 414 273 414H160V372H247C269.091 372 287 354.091 287 332C287 309.909 269.091 292 247 292H216C170.16 292 133 254.84 133 209C133 198.087 135.109 187.666 139.019 178.135" fill="none" stroke="#00E5FF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M364 97L381 129L413 146L381 163L364 195L347 163L315 146L347 129L364 97Z" fill="#00E5FF" />
+  <circle cx="130" cy="132" r="8" fill="#00E5FF" opacity="0.9" />
+  <circle cx="384" cy="374" r="8" fill="#00E5FF" opacity="0.6" />
 </svg>

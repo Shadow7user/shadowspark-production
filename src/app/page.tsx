@@ -4,21 +4,17 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  ShieldCheck,
-  Zap,
-  BarChart3,
   Globe,
   MessageSquare,
   Workflow,
   Eye,
   CheckCircle2,
   Play,
-  Pause,
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import { SovereignButton } from "@/components/ui/templates/SovereignButton";
 import { SovereignHero } from "@/components/ui/templates/SovereignHero";
+import { GlassCard } from "@/components/ui/templates/GlassCard";
 
 export default function EnterpriseHomepage() {
   return (
@@ -231,12 +227,12 @@ export default function EnterpriseHomepage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {[
               {
                 name: "Launch System",
                 price: "$149",
-                desc: "For businesses establishing a serious digital foundation",
+                narrative: "Digital Foundation - Replaces web hosting, forms, manual sorting",
                 features: [
                   "AI-powered website infrastructure",
                   "Lead capture + WhatsApp integration",
@@ -250,7 +246,7 @@ export default function EnterpriseHomepage() {
               {
                 name: "Growth System",
                 price: "$349",
-                desc: "For businesses ready to convert traffic into revenue",
+                narrative: "Digital Employee - 24/7 WhatsApp qualification + CRM follow-up",
                 features: [
                   "Full AI chatbot (24/7 qualification)",
                   "Automated follow-up engine",
@@ -265,7 +261,7 @@ export default function EnterpriseHomepage() {
               {
                 name: "Autonomous System",
                 price: "$599",
-                desc: "For teams scaling with automation, payments, and workflows",
+                narrative: "Digital Operations Manager - End-to-end sales automation",
                 features: [
                   "Full sales automation workflows",
                   "Payment + booking integration",
@@ -279,7 +275,7 @@ export default function EnterpriseHomepage() {
               {
                 name: "Enterprise Infrastructure",
                 price: "Custom",
-                desc: "For high-volume teams and specialized operations",
+                narrative: "Bespoke deployment for high-volume operations",
                 features: [
                   "Dedicated AI agents",
                   "Multi-channel automation",
@@ -291,21 +287,22 @@ export default function EnterpriseHomepage() {
                 highlight: false,
               },
             ].map((tier, idx) => (
-              <div
+              <GlassCard
                 key={idx}
-                className={`relative p-6 rounded-2xl flex flex-col h-full ${
+                title={tier.name}
+                description={tier.narrative}
+                highlighted={tier.highlight}
+                className={`relative flex h-full flex-col p-6 ${
                   tier.highlight
-                    ? "border-2 border-cyan-500 bg-cyan-500/5"
-                    : "border border-zinc-800 bg-black"
+                    ? "border-cyan-500 bg-cyan-500/8 shadow-[0_0_40px_rgba(0,229,255,0.18)]"
+                    : "border-white/10 bg-white/[0.04]"
                 }`}
               >
                 {tier.badge && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-500 text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-black">
                     {tier.badge}
                   </span>
                 )}
-                <h3 className="text-xl font-bold text-white mb-1">{tier.name}</h3>
-                <p className="text-sm text-zinc-500 mb-4">{tier.desc}</p>
                 <div className="mb-6">
                   <span className="text-3xl font-bold text-white">{tier.price}</span>
                   {tier.price !== "Custom" && <span className="text-sm text-zinc-500">/month</span>}
@@ -328,7 +325,7 @@ export default function EnterpriseHomepage() {
                 >
                   {tier.cta}
                 </Link>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>

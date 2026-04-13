@@ -7,7 +7,7 @@
   --card-foreground: #fafafa;
   --popover: #09090b;
   --popover-foreground: #fafafa;
-  --primary: #06b6d4; /* Cyan 500 (Spark Cyan) */
+  --primary: oklch(0.75 0.18 190); /* Spark Cyan */
   --primary-foreground: #09090b;
   --secondary: #27272a; /* Zinc 800 */
   --secondary-foreground: #fafafa;
@@ -19,8 +19,9 @@
   --destructive-foreground: #fafafa;
   --border: #27272a;
   --input: #27272a;
-  --ring: #06b6d4;
+  --ring: oklch(0.75 0.18 190);
   --radius: 0.5rem;
+  --spark-cyan: oklch(0.75 0.18 190);
 }
 
 @theme inline {

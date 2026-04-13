@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="iconTitle iconDesc">
-  <title id="iconTitle">ShadowSpark app icon</title>
-  <desc id="iconDesc">Square ShadowSpark SS monogram in spark cyan on an obsidian background.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="markTitle markDesc">
+  <title id="markTitle">ShadowSpark mark</title>
+  <desc id="markDesc">ShadowSpark SS monogram mark in spark cyan on an obsidian background.</desc>
   <rect width="512" height="512" rx="112" fill="#0A0A0A" />
   <rect x="40" y="40" width="432" height="432" rx="88" fill="#091318" stroke="#16323A" stroke-width="4" />
   <g opacity="0.34">
