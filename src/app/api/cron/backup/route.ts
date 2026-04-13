@@ -26,7 +26,7 @@ async function sendSlackStatus(success: boolean, message: string) {
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization")?.trim();
   const secret = process.env.CRON_SECRET?.trim();
-  if (authHeader !== `Bearer \${secret}`) {
+  if (authHeader !== `Bearer ${secret}`) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 

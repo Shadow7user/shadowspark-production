@@ -27,7 +27,7 @@ async function sendSlackAlert(message: string) {
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization")?.trim();
   const secret = process.env.CRON_SECRET?.trim();
-  const expected = `Bearer \${secret}`;
+  const expected = `Bearer ${secret}`;
   
   if (authHeader !== expected) {
     console.log("Auth Failure:", { 
