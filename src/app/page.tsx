@@ -190,19 +190,35 @@ export default function EnterpriseHomepage() {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { industry: "Real Estate", outcome: "Leads from ads and WhatsApp are captured, qualified, and routed faster." },
-            { industry: "Logistics", outcome: "Enquiries turn into structured requests instead of disappearing in chat." },
-            { industry: "Healthcare", outcome: "Patient enquiries are triaged and booked without manual delays." },
-            { industry: "Education", outcome: "Prospective students receive instant course and admission guidance." },
-            { industry: "Professional Services", outcome: "Consultation requests are qualified and scheduled automatically." },
-            { industry: "Hospitality", outcome: "Reservations and enquiries are handled 24/7 with zero wait." },
+            { id: "real-estate", industry: "Real Estate", outcome: "Leads from ads and WhatsApp are captured, qualified, and routed faster." },
+            { id: "logistics", industry: "Logistics", outcome: "Enquiries turn into structured requests instead of disappearing in chat." },
+            { id: "healthcare", industry: "Healthcare", outcome: "Patient enquiries are triaged and booked without manual delays." },
+            { id: "education", industry: "Education", outcome: "Prospective students receive instant course and admission guidance." },
+            { id: "professional-services", industry: "Professional Services", outcome: "Consultation requests are qualified and scheduled automatically." },
+            { id: "hospitality", industry: "Hospitality", outcome: "Reservations and enquiries are handled 24/7 with zero wait." },
           ].map((item, idx) => (
-            <div key={idx} className="p-6 rounded-xl border border-zinc-800 bg-black">
-              <h4 className="text-white font-bold mb-2">{item.industry}</h4>
+            <Link 
+              key={idx} 
+              href={`/industries#${item.id}`}
+              className="p-6 rounded-xl border border-zinc-800 bg-black hover:border-cyan-500/50 transition-all group"
+            >
+              <h4 className="text-white font-bold mb-2 group-hover:text-cyan-400 transition-colors">{item.industry}</h4>
               <p className="text-sm text-zinc-400">{item.outcome}</p>
-            </div>
+              <div className="mt-4 flex items-center gap-2 text-xs font-mono text-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                EXPLORE SOLUTION <ArrowRight className="w-3 h-3" />
+              </div>
+            </Link>
           ))}
         </div>
+      </section>
+
+      <section className="px-6 pb-8">
+        <blockquote className="max-w-4xl mx-auto text-center italic text-xl md:text-2xl text-zinc-200">
+          <span className="text-cyan-400">“</span>
+          Businesses lose <span className="text-cyan-400">40-70%</span> of leads to slow
+          response. ShadowSpark closes that gap with autonomous infrastructure.
+          <span className="text-cyan-400">”</span>
+        </blockquote>
       </section>
 
       {/* ==================== PRICING ==================== */}
@@ -355,7 +371,7 @@ export default function EnterpriseHomepage() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              href="#system-demo"
+              href="/process"
               className="px-8 py-4 border border-zinc-700 text-white rounded-lg hover:bg-white/5 transition-all"
             >
               See Demo Process
@@ -422,7 +438,7 @@ export default function EnterpriseHomepage() {
 
       {/* ==================== FOOTER ==================== */}
       <footer className="py-12 border-t border-zinc-900 text-center text-xs font-mono uppercase tracking-[0.3em] text-zinc-600">
-        © 2026 ShadowSpark Technologies · Autonomous Infrastructure · v2.0.0
+        © 2026 ShadowSpark Technologies · <Link href="/process" className="hover:text-cyan-400 transition-colors">Process</Link> · Autonomous Infrastructure · v2.0.0
       </footer>
     </div>
   );

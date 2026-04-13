@@ -6,6 +6,7 @@ const footerColumns = [
   {
     title: "Product",
     links: [
+      { label: "Solutions", href: "/solutions" },
       { label: "Website Systems", href: "#" },
       { label: "WhatsApp AI", href: "#" },
       { label: "Automation", href: "#" },
@@ -15,15 +16,18 @@ const footerColumns = [
   {
     title: "Company",
     links: [
+      { label: "Industries", href: "/industries" },
+      { label: "Process", href: "/process" },
+      { label: "Enterprise", href: "/enterprise" },
       { label: "About", href: "#" },
       { label: "Blog", href: "#" },
-      { label: "Careers", href: "#" },
       { label: "Contact", href: "/contact" },
     ],
   },
   {
     title: "Resources",
     links: [
+      { label: "FAQ", href: "/faq" },
       { label: "System Demo", href: "/checkout/new" },
       { label: "Documentation", href: "#" },
       { label: "API Status", href: "#" },
