@@ -1,49 +1,74 @@
 import axios from "axios";
+import { PrismaClient } from "@prisma/client";
 
-async function checkWhatsAppHealth() {
-  console.log("--- ShadowSpark WhatsApp Health Audit ---");
+const prisma = new PrismaClient();
+const SLACK_WEBHOOK = process.env.SLACK_WEBHOOK_URL;
+const META_TOKEN = process.env.META_ACCESS_TOKEN;
+const BUSINESS_ID = "1416205687214106";
+const WEBHOOK_URL = "https://shadowspark-chatbot-524469712746.europe-central2.run.app/webhooks/whatsapp";
+const VERIFY_TOKEN = "ShadowSpark_2026_Final";
 
-  // 1. Check Webhook Availability
-  const webhookUrl = "https://shadowspark-chatbot-524469712746.europe-central2.run.app/webhooks/whatsapp";
-  const verifyToken = "shadowspark_meta_verify_2026";
-  
-  try {
-    const res = await axios.get(`${webhookUrl}?hub.mode=subscribe&hub.verify_token=${verifyToken}&hub.challenge=health_check`);
-    if (res.data === "health_check") {
-      console.log("✅ Webhook: Operational (Verification Challenge Passed)");
-    } else {
-      console.log("❌ Webhook: Unexpected response structure");
-    }
-  } catch (error: any) {
-    console.log(`❌ Webhook: Offline or Error (${error.response?.status || error.message})`);
-  }
-
-  // 2. Check Meta API Token Validity
-  // Note: In production, this would use GCP Secret Manager.
-  // This is a template for the health check logic.
-  const metaToken = process.env.META_ACCESS_TOKEN;
-  const businessId = "91416205687214106";
-
-  if (!metaToken) {
-    console.log("⚠️ Meta Token: Not provided in environment (check Secret Manager)");
-  } else {
+async function sendSlackAlert(message: string) {
+  console.log(`Alert: ${message}`);
+  if (SLACK_WEBHOOK) {
     try {
-      const res = await axios.get(`https://graph.facebook.com/v21.0/${businessId}`, {
-        params: { access_token: metaToken, fields: "name,status" }
+      await axios.post(SLACK_WEBHOOK, { 
+        text: `🚨 *WhatsApp Bot Health Alert*\n*Status:* FAILED\n*Detail:* ${message}\n*Project:* shadowspark-production-489115` 
       });
-      console.log(`✅ Meta API: Token Valid (Account: ${res.data.name})`);
-    } catch (error: any) {
-      const subcode = error.response?.data?.error?.error_subcode;
-      if (subcode === 463 || subcode === 467) {
-        console.log("❌ Meta API: Token EXPIRED");
-      } else {
-        console.log(`❌ Meta API: Error (${error.response?.data?.error?.message || error.message})`);
-      }
+    } catch (e: any) {
+      console.error("Failed to send Slack alert:", e.message);
     }
   }
-
-  // 3. Check Chatbot Service Status via logs (Simulated here)
-  console.log("ℹ️ Database Check: Requires log inspection for Prisma errors (P1001/P2028).");
 }
 
-checkWhatsAppHealth();
+async function runHealthCheck() {
+  const status: any = {
+    timestamp: new Date().toISOString(),
+    webhook: "unknown",
+    database: "unknown",
+    meta_api: "unknown"
+  };
+
+  // 1. Webhook Challenge
+  try {
+    const res = await axios.get(`${WEBHOOK_URL}?hub.mode=subscribe&hub.verify_token=${VERIFY_TOKEN}&hub.challenge=health_check`);
+    if (res.data === "health_check") {
+      status.webhook = "ok";
+    } else {
+      status.webhook = "failed";
+      await sendSlackAlert("Webhook returned unexpected challenge response.");
+    }
+  } catch (error: any) {
+    status.webhook = "error";
+    await sendSlackAlert(`Webhook Unreachable: ${error.message}`);
+  }
+
+  // 2. Database Connectivity
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    status.database = "ok";
+  } catch (error: any) {
+    status.database = "error";
+    await sendSlackAlert(`Database Connection Failed: ${error.message}`);
+  } finally {
+    await prisma.$disconnect();
+  }
+
+  // 3. Meta API Token Validity
+  if (META_TOKEN) {
+    try {
+      const res = await axios.get(`https://graph.facebook.com/v21.0/${BUSINESS_ID}`, {
+        params: { access_token: META_TOKEN, fields: "name,status" }
+      });
+      status.meta_api = "ok";
+    } catch (error: any) {
+      status.meta_api = "error";
+      const msg = error.response?.data?.error?.message || error.message;
+      await sendSlackAlert(`Meta Token Issue: ${msg}`);
+    }
+  }
+
+  console.log(JSON.stringify(status, null, 2));
+}
+
+runHealthCheck();

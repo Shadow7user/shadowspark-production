@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ShadowSpark Autonomous Revenue API",
+    "version": "2.0.0",
+    "description": "API documentation for the ShadowSpark autonomous infrastructure."
+  },
+  "servers": [
+    {
+      "url": "https://shadowspark-tech.org/api",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/leads/sync": {
+      "post": {
+        "summary": "Synchronize lead from external source",
+        "security": [{ "ApiKey": [] }],
+        "responses": {
+          "200": { "description": "Lead synchronized" }
+        }
+      }
+    },
+    "/contact": {
+      "post": {
+        "summary": "Submit enterprise contact request",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "company"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "company": { "type": "string" },
+                  "monthlyLeadVolume": { "type": "string" },
+                  "message": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Request received" }
+        }
+      }
+    },
+    "/ai/health": {
+      "get": {
+        "summary": "System health check",
+        "responses": {
+          "200": { "description": "System operational" }
+        }
+      }
+    },
+    "/operator/metrics": {
+      "get": {
+        "summary": "Get real-time operator dashboard metrics",
+        "security": [{ "SessionAuth": [] }],
+        "responses": {
+          "200": { "description": "Metrics retrieved" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-sync-secret"
+      },
+      "SessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "authjs.session-token"
+      }
+    }
+  }
+}

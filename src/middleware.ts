@@ -8,8 +8,9 @@ export default auth((req) => {
   if (isOnDashboard || isOnOperator) {
     if (isLoggedIn) {
       // Role-based protection for operator
-      if (isOnOperator && req.auth?.user?.role !== "admin") {
-        return Response.redirect(new URL("/dashboard", req.nextUrl));
+      const userRole = (req.auth?.user as any)?.role?.toLowerCase();
+      if (isOnOperator && userRole !== "admin") {
+        return Response.redirect(new URL("/", req.nextUrl));
       }
       return;
     }

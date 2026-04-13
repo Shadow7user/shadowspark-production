@@ -12,6 +12,7 @@
     "@ai-sdk/google": "3.0.62",
     "@ai-sdk/react": "^3.0.160",
     "@auth/prisma-adapter": "^2.11.1",
+    "@google-cloud/storage": "^7.19.0",
     "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-slot": "^1.2.4",
     "@tanstack/react-table": "^8.21.3",
