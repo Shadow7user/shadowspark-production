@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "rag:sync": "tsx src/cli/rag-sync.ts",
+    "worker:crawl": "tsx src/workers/crawl-worker.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "3.0.62",
@@ -14,13 +19,16 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@google-cloud/storage": "^7.19.0",
     "@google/generative-ai": "^0.24.1",
+    "@mendable/firecrawl-js": "^4.18.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@tanstack/react-table": "^8.21.3",
     "ai": "^6.0.158",
     "bcryptjs": "^3.0.3",
+    "bullmq": "^5.73.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "ioredis": "^5.10.1",
     "lucide-react": "^1.8.0",
     "next": "16.2.0-canary.98",
     "next-auth": "^5.0.0-beta.30",
@@ -42,7 +50,9 @@
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "tsx": "^4.21.0",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

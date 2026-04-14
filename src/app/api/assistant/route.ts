@@ -1,6 +1,8 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { streamText } from "ai";
 
+import { retrieveRagContext } from "@/lib/rag/retrieve";
+
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
@@ -9,6 +11,14 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
+
+  const lastUserMessage =
+    Array.isArray(messages) ? [...messages].reverse().find((m) => m?.role === "user")?.content : undefined;
+  const query = typeof lastUserMessage === "string" ? lastUserMessage : "";
+
+  const rag = query
+    ? await retrieveRagContext({ query }).catch(() => null)
+    : null;
 
   const result = await streamText({
     // @ts-ignore
@@ -37,6 +47,8 @@ export async function POST(req: Request) {
       - Do not mention other companies unless asked for comparisons.
       - Focus on the Nigerian market and business landscape.
       - Keep responses concise and formatted for a chat interface.
+
+      ${rag?.context ?? ""}
     `,
     messages,
   });
