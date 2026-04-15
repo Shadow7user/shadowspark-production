@@ -26,6 +26,9 @@ importers:
       '@mendable/firecrawl-js':
         specifier: ^4.18.2
         version: 4.18.2
+      '@prisma/client':
+        specifier: ^5.22.0
+        version: 5.22.0(prisma@5.22.0)
       '@radix-ui/react-slot':
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.2.14)(react@19.2.4)
@@ -62,6 +65,9 @@ importers:
       next-auth:
         specifier: ^5.0.0-beta.30
         version: 5.0.0-beta.30(next@16.2.0-canary.98(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      prisma:
+        specifier: ^5.22.0
+        version: 5.22.0
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -75,9 +81,6 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@prisma/client':
-        specifier: ^5.22.0
-        version: 5.22.0(prisma@5.22.0)
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.2.2
@@ -102,9 +105,6 @@ importers:
       eslint-config-next:
         specifier: 16.2.0-canary.98
         version: 16.2.0-canary.98(@typescript-eslint/parser@8.58.1(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
-      prisma:
-        specifier: ^5.22.0
-        version: 5.22.0
       tailwindcss:
         specifier: ^4
         version: 4.2.2
