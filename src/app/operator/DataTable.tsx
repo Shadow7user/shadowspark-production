@@ -74,19 +74,26 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody className="divide-y divide-zinc-900">
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-zinc-900/30 transition-colors"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-6 py-4">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const isApex = (row.original as any).leadScore >= 85;
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={`transition-colors ${
+                      isApex 
+                        ? 'bg-cyan-950/20 hover:bg-cyan-950/40 border-l-2 border-l-cyan-500' 
+                        : 'hover:bg-zinc-900/30'
+                    }`}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="px-6 py-4">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

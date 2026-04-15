@@ -9,6 +9,7 @@ import StatsRow from "./StatsRow";
 import GlassCard from "@/components/ui/GlassCard";
 import { BentoGrid, BentoGridItem } from "@/components/ui/templates/BentoGridPro";
 import OperatorLeadTable, { type OperatorLead } from "./OperatorLeadTable";
+import LiveTelemetryPanel from "./LiveTelemetryPanel";
 
 function normalizeStatus(lead: {
   status: string;
@@ -59,6 +60,8 @@ export default async function OperatorDashboard() {
       business,
       status: normalizeStatus(lead),
       demoSlug: lead.demo?.slug ?? null,
+      leadScore: lead.leadScore,
+      reasoning: (audit.reasoning as string) || null,
     };
   });
 
@@ -114,20 +117,7 @@ export default async function OperatorDashboard() {
           </div>
 
           <div className="space-y-8">
-            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80">
-              <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Quick Actions</p>
-              <div className="mt-5 space-y-3">
-                <Link href="/" className="block rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-4 text-sm text-zinc-200 transition hover:border-cyan-400/40 hover:text-cyan-300">
-                  View Demo Surface
-                </Link>
-                <Link href="/operator" className="block rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-4 text-sm text-zinc-200 transition hover:border-cyan-400/40 hover:text-cyan-300">
-                  Review Pending Leads
-                </Link>
-                <Link href="/dashboard" className="block rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-4 text-sm text-zinc-200 transition hover:border-cyan-400/40 hover:text-cyan-300">
-                  Open Main Dashboard
-                </Link>
-              </div>
-            </GlassCard>
+            <LiveTelemetryPanel />
 
             <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80 max-h-[500px] overflow-y-auto overflow-x-hidden relative">
               <div className="sticky top-0 bg-zinc-950/90 pb-4 z-10 flex items-center justify-between gap-4 border-b border-zinc-800/50 mb-4 backdrop-blur-md">

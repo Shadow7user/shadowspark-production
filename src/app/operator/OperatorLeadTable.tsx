@@ -20,6 +20,8 @@ export type OperatorLead = {
   business: string;
   status: "New" | "Paid" | "Demo Generated" | "Approved" | "Rejected";
   demoSlug: string | null;
+  leadScore: number | null;
+  reasoning: string | null;
 };
 
 function statusClasses(status: OperatorLead["status"]) {
@@ -71,6 +73,27 @@ export default function OperatorLeadTable({ data }: { data: OperatorLead[] }) {
       {
         accessorKey: "business",
         header: "Business",
+      },
+      {
+        accessorKey: "leadScore",
+        header: "Score",
+        cell: ({ row }) => {
+          const score = row.original.leadScore ?? 0;
+          return (
+            <div className="relative group inline-flex items-center gap-1 cursor-help">
+              <span className={`font-bold px-2 py-1 rounded-md text-xs ${
+                score > 85 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/50 shadow-[0_0_10px_rgba(34,211,238,0.2)]" : "text-zinc-300"
+              }`}>
+                {score} {score > 85 && '⚡'}
+              </span>
+              {row.original.reasoning && (
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-48 p-2 bg-zinc-800 text-zinc-300 text-[10px] rounded shadow-xl z-50 border border-zinc-700 pointer-events-none">
+                  {row.original.reasoning}
+                </div>
+              )}
+            </div>
+          );
+        },
       },
       {
         accessorKey: "status",
@@ -180,7 +203,11 @@ export default function OperatorLeadTable({ data }: { data: OperatorLead[] }) {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, delay: index * 0.03 }}
-                  className="border-b border-zinc-900 transition-colors hover:bg-zinc-900/40"
+                  className={`border-b border-zinc-900 transition-colors hover:bg-zinc-900/40 ${
+                    (row.original.leadScore ?? 0) > 85
+                      ? "animate-pulse border-cyan-500 shadow-[0_0_15px_cyan]"
+                      : ""
+                  }`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-6 py-5">

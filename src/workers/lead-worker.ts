@@ -7,11 +7,11 @@ const WORKER_NAME = "lead-sync-worker";
 const ANYTHING_LLM_URL = process.env.ANYTHING_LLM_URL || "http://localhost:3001/api/v1/workspace/shadowspark-w/chat";
 const LOCAL_LLM_KEY = process.env.LOCAL_LLM_KEY || "";
 
-async function analyzeLeadIntent(leadMessage: string): Promise<number> {
-  if (!leadMessage) return 50; // Default score if no message is provided
+async function analyzeLeadIntent(leadMessage: string): Promise<{ score: number, reasoning: string }> {
+  if (!leadMessage) return { score: 50, reasoning: "No message provided for analysis." };
 
   try {
-    const prompt = `Analyze this lead message: "${leadMessage}". \nScore it from 0-100 based on conversion intent. \nReturn ONLY the number.`;
+    const prompt = `Analyze this lead message: "${leadMessage}". \nScore it from 0-100 based on conversion intent. \nProvide a short 1-sentence reasoning, then output ONLY the number at the very end.`;
 
     const response = await fetch(ANYTHING_LLM_URL, {
       method: 'POST',
@@ -32,14 +32,17 @@ async function analyzeLeadIntent(leadMessage: string): Promise<number> {
     console.log(`[PIS] Raw AI Output: ${rawText.trim()}`);
     
     // Extract the numerical score from the response
-    const match = rawText.match(/\d+/);
-    const score = match ? parseInt(match[0], 10) : 50; 
+    const match = rawText.match(/\d+/g);
+    const score = match ? parseInt(match[match.length - 1], 10) : 50; 
     
-    return Math.min(Math.max(score, 0), 100);
+    return { 
+      score: Math.min(Math.max(score, 0), 100), 
+      reasoning: rawText.trim().replace(/\n/g, ' ').slice(0, 200) 
+    };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn(`[PIS] Scoring failed (Ensure AnythingLLM is running on port 3001). Error:`, message);
-    return 50;
+    return { score: 50, reasoning: `Scoring failed: ${message}` };
   }
 }
 
@@ -59,15 +62,15 @@ export const leadWorker = new Worker(
     console.log(`[SES] Processing lead: ${phone} from ${source}`);
 
     // 1. PIS (Predictive Intent Scoring) via Local AnythingLLM
-    const aiScore = await analyzeLeadIntent(leadMessage);
-    const finalScore = Math.max(aiScore, job.data.leadScore || 0); // Respect hardcoded score if higher
+    const analysis = await analyzeLeadIntent(leadMessage);
+    const finalScore = Math.max(analysis.score, job.data.leadScore || 0); // Respect hardcoded score if higher
 
     // 2. Perform Database Upsert
     const lead = await prisma.lead.upsert({
       where: { phoneNumber: phone },
       update: {
         lastMessage: `Sync from ${source || "external chatbot"}`,
-        miniAuditData: { name, businessType, goals, source, originalMessage: leadMessage },
+        miniAuditData: { name, businessType, goals, source, originalMessage: leadMessage, reasoning: analysis.reasoning },
         status: "QUALIFIED",
         leadScore: finalScore,
         intent: intent || undefined,
@@ -78,7 +81,7 @@ export const leadWorker = new Worker(
         intent: intent || "SYNC",
         leadScore: finalScore,
         lastMessage: `Initial sync from ${source || "external chatbot"}`,
-        miniAuditData: { name, businessType, goals, source, originalMessage: leadMessage },
+        miniAuditData: { name, businessType, goals, source, originalMessage: leadMessage, reasoning: analysis.reasoning },
       },
     });
 

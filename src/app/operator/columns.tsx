@@ -41,7 +41,20 @@ export const columns: ColumnDef<Lead>[] = [
   {
     accessorKey: "leadScore",
     header: "Score",
-    cell: ({ row }) => <span className="font-bold">{row.getValue("leadScore") || 0}</span>,
+    cell: ({ row }) => {
+      const score = (row.getValue("leadScore") as number) || 0;
+      const isApex = score >= 85;
+      
+      return (
+        <span className={`font-bold px-2 py-1 rounded-md ${
+          isApex 
+            ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/50 shadow-[0_0_10px_rgba(34,211,238,0.2)]' 
+            : 'text-zinc-300'
+        }`}>
+          {score} {isApex && '⚡'}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
