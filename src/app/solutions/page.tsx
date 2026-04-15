@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   ArrowRight,
   Bot,
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { AuroraBackground } from "@/components/ui/templates/AuroraBackground";
 import { GlassCard } from "@/components/ui/templates/GlassCard";
 import { SovereignHero } from "@/components/ui/templates/SovereignHero";
+import { AppleCardsCarousel } from "@/components/ui/apple-cards-carousel";
 
 const layers = [
   {

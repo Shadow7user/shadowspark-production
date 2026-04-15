@@ -1,27 +1,43 @@
-"use client";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import Link from "next/link";
+import ReactMarkdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import AssistantBubble from "@/components/ui/AssistantBubble";
+import { Spotlight } from "@/components/ui/Spotlight";
+import { TracingBeam } from "@/components/ui/tracing-beam";
+import { Vortex } from "@/components/ui/vortex-background";
+import { fetchLatestAuditMarkdown, fetchVaultInsights } from "@/lib/gcs/fetch-audit";
+import { prisma } from "@/lib/prisma";
+
 export const dynamic = "force-dynamic";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { motion } from "framer-motion";
-import MiniAudit from "@/components/MiniAudit";
-import AssistantBubble from "@/components/ui/AssistantBubble";
-import GlassCard from "@/components/ui/GlassCard";
-import { AuroraBackground } from "@/components/ui/templates/AuroraBackground";
-
-type DemoData = {
-  id: string;
-  businessName: string;
-  niche: string;
-  packageRecommendation: string;
-  createdAt: string;
+type DemoPageProps = {
+  params: Promise<{ slug: string }>;
 };
 
-function isExpired(createdAt: string) {
-  const createdTime = new Date(createdAt).getTime();
-  if (Number.isNaN(createdTime)) return false;
-  return Date.now() - createdTime > 48 * 60 * 60 * 1000;
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  return value as Record<string, unknown>;
+}
+
+function pickFirstString(
+  source: Record<string, unknown> | null,
+  keys: string[],
+  fallback: string
+) {
+  if (!source) return fallback;
+
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  return fallback;
 }
 
 function normalizeTier(tier: string): "launch" | "growth" | "automation" {
@@ -37,217 +53,292 @@ function displayTier(tier: "launch" | "growth" | "automation") {
   return "Launch";
 }
 
-export default function DemoPreviewPage() {
-  const params = useParams<{ slug: string }>();
-  const slug = params?.slug ?? "";
-  const [demo, setDemo] = useState<DemoData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+function prettifySlug(slug: string) {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+}
 
-  useEffect(() => {
-    let active = true;
+function getRecommendation(
+  config: Record<string, unknown> | null,
+  audit: Record<string, unknown> | null
+) {
+  return normalizeTier(
+    pickFirstString(
+      config ?? audit,
+      ["packageRecommendation", "recommendedPackage", "tier", "plan"],
+      "automation"
+    )
+  );
+}
 
-    async function loadDemo() {
-      try {
-        setLoading(true);
-        setError("");
+function MarkdownShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.84)_0%,rgba(2,6,23,0.92)_100%)] shadow-[0_0_50px_rgba(14,165,233,0.1)]">
+      <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.03] px-5 py-4">
+        <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-amber-300/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-cyan-300/70" />
+        <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-200/80">
+          Intelligence Stream
+        </span>
+      </div>
+      <div className="px-6 py-8 sm:px-8 sm:py-10">{children}</div>
+    </div>
+  );
+}
 
-        const response = await fetch(`/api/demo/${encodeURIComponent(slug)}`);
-        const result = await response.json().catch(() => null);
-
-        if (!response.ok || !result) {
-          throw new Error(result?.error || "Unable to load demo preview.");
-        }
-
-        if (active) setDemo(result);
-      } catch (err) {
-        if (active) {
-          setError(err instanceof Error ? err.message : "Unable to load demo preview.");
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
+const markdownComponents: Components = {
+  h1: ({ children }) => (
+    <h1 className="mt-2 text-4xl font-black tracking-tight text-white sm:text-5xl">{children}</h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="mt-12 border-t border-white/10 pt-10 text-2xl font-black tracking-tight text-cyan-100 sm:text-3xl">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="mt-8 text-xl font-bold tracking-tight text-white">{children}</h3>
+  ),
+  p: ({ children }) => (
+    <p className="mt-5 text-base leading-8 text-slate-300 sm:text-[1.05rem]">{children}</p>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="mt-6 rounded-r-2xl border-l-2 border-cyan-300/50 bg-cyan-300/[0.06] px-5 py-4 text-sm leading-7 text-cyan-50">
+      {children}
+    </blockquote>
+  ),
+  ul: ({ children }) => <ul className="mt-5 space-y-3 text-slate-300">{children}</ul>,
+  ol: ({ children }) => <ol className="mt-5 list-decimal space-y-3 pl-6 text-slate-300">{children}</ol>,
+  li: ({ children }) => <li className="ml-5 list-disc pl-2 leading-7 marker:text-cyan-300">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="font-medium text-cyan-300 underline decoration-cyan-300/40 underline-offset-4"
+    >
+      {children}
+    </a>
+  ),
+  hr: () => <hr className="my-10 border-white/10" />,
+  code: ({
+    inline,
+    children,
+    className,
+  }: ComponentPropsWithoutRef<"code"> & { inline?: boolean }) => {
+    if (inline) {
+      return (
+        <code className="rounded-md border border-white/10 bg-slate-900/80 px-1.5 py-1 font-mono text-[0.9em] text-cyan-200">
+          {children}
+        </code>
+      );
     }
 
-    if (slug) loadDemo();
-
-    return () => {
-      active = false;
-    };
-  }, [slug]);
-
-  const recommendedTier = useMemo(
-    () => normalizeTier(demo?.packageRecommendation ?? "launch"),
-    [demo?.packageRecommendation]
-  );
-  const expiresSoon = useMemo(
-    () => (demo ? isExpired(demo.createdAt) : false),
-    [demo]
-  );
-
-  if (loading) {
     return (
-      <AuroraBackground className="flex min-h-screen items-center justify-center px-6">
-        <div className="rounded-[2rem] border border-zinc-800 bg-zinc-950/90 px-8 py-10 text-center shadow-[0_0_60px_rgba(0,229,255,0.08)]">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-cyan-300" />
-          <p className="mt-4 font-mono text-xs uppercase tracking-[0.24em] text-cyan-300">
-            Synchronizing Preview Environment
-          </p>
-        </div>
-      </AuroraBackground>
+      <code
+        className={[
+          "block overflow-x-auto rounded-[1.4rem] border border-slate-700/60 bg-[#161b22] px-5 py-4 font-mono text-sm leading-7 text-slate-100",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_18px_60px_rgba(2,6,23,0.35)]",
+          className ?? "",
+        ].join(" ")}
+      >
+        {children}
+      </code>
     );
-  }
+  },
+  pre: ({ children }) => <pre className="mt-6 overflow-x-auto">{children}</pre>,
+};
 
-  if (error || !demo) {
-    return (
-      <AuroraBackground className="flex min-h-screen items-center justify-center px-6">
-        <div className="max-w-lg rounded-[2rem] border border-zinc-800 bg-zinc-950/90 p-8 text-center">
-          <p className="text-xs font-mono uppercase tracking-[0.22em] text-red-400">Preview Unavailable</p>
-          <h1 className="mt-4 text-3xl font-black text-white">Preview access could not be established</h1>
-          <p className="mt-4 text-zinc-400">
-            {error || "The requested autonomous system preview is unavailable."}
-          </p>
-          <Link
-            href="/"
-            className="mt-6 inline-flex rounded-full bg-cyan-400 px-6 py-3 text-sm font-bold text-black transition hover:bg-cyan-300"
-          >
-            Return to Homepage
-          </Link>
-        </div>
-      </AuroraBackground>
-    );
-  }
+export default async function DemoPreviewPage({ params }: DemoPageProps) {
+  const { slug } = await params;
+
+  const demo = await prisma.demo.findUnique({
+    where: { slug },
+    include: { lead: true },
+  });
+
+  const miniAuditData = asRecord(demo?.lead.miniAuditData);
+  const config = asRecord(demo?.config);
+  const recommendedTier = getRecommendation(config, miniAuditData);
+  const businessName = pickFirstString(
+    miniAuditData,
+    ["companyName", "businessName", "name", "businessType"],
+    prettifySlug(slug) || "ShadowSpark Prospect"
+  );
+  const niche = pickFirstString(
+    miniAuditData,
+    ["niche", "businessType", "goals"],
+    "Revenue intelligence and conversion infrastructure"
+  );
+  const createdAt = demo?.createdAt
+    ? new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(demo.createdAt)
+    : "Awaiting first live session";
+  const [auditMarkdown, indexedInsights] = await Promise.all([
+    fetchLatestAuditMarkdown(slug),
+    fetchVaultInsights({
+      slug,
+      businessName,
+      niche,
+      k: 4,
+    }),
+  ]);
 
   return (
-    <AuroraBackground className="min-h-screen selection:bg-cyan-500/30">
-      <main className="mx-auto max-w-7xl px-6 py-10 relative z-10">
-        <div className="pointer-events-none absolute inset-0 -z-10 flex justify-center overflow-hidden [mask-image:radial-gradient(ellipse_at_top,white,transparent)]">
-          <div className="absolute top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-[100px]" />
-          <div className="absolute top-0 h-[400px] w-[400px] translate-x-1/3 rounded-full bg-blue-500/10 blur-[80px]" />
-        </div>
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-        >
-          <GlassCard className="px-6 py-8">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-3xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-[11px] font-mono uppercase tracking-[0.24em] text-cyan-300">
-                  <span className="h-2 w-2 rounded-full bg-cyan-300" />
-                  System Status: Preview Mode
-                </div>
-                <h1 className="mt-6 text-4xl font-black tracking-tight text-white sm:text-5xl">
-                  Your Autonomous System Preview
-                </h1>
-                <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-300">
-                  This live simulation demonstrates how ShadowSpark infrastructure captures and
-                  qualifies your traffic.
-                </p>
+    <Vortex className="min-h-screen selection:bg-cyan-500/30">
+      <main className="relative mx-auto max-w-7xl px-6 py-10 sm:py-14">
+        <Spotlight
+          className="-top-36 left-0 md:left-60 md:-top-20"
+          fill="rgba(34,211,238,0.16)"
+        />
+
+        <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/70 px-6 py-8 shadow-[0_0_80px_rgba(14,165,233,0.08)] backdrop-blur-xl sm:px-8 sm:py-10">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent" />
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.26em] text-cyan-200">
+                <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.9)]" />
+                Live GCS Intelligence Feed
               </div>
-
-              <GlassCard className="border-cyan-400/30 bg-cyan-400/5 p-5">
-                <p className="text-xs font-mono uppercase tracking-[0.2em] text-cyan-200">
-                  Recommended System Tier
-                </p>
-                <p className="mt-3 text-3xl font-black text-white">{displayTier(recommendedTier)}</p>
-                <Link
-                  href={`/checkout/new?tier=${encodeURIComponent(recommendedTier)}`}
-                  className="mt-5 inline-flex rounded-full bg-[#00E5FF] px-5 py-3 text-sm font-bold text-black transition hover:brightness-110 shadow-[0_0_20px_rgba(0,229,255,0.3)]"
-                >
-                  Deploy This System
-                </Link>
-              </GlassCard>
-            </div>
-          </GlassCard>
-        </motion.header>
-
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <motion.section
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-          >
-            <GlassCard className="p-6">
-              <div className="flex items-start justify-between gap-4 border-b border-zinc-800 pb-5">
-                <div>
-                  <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">
-                    System Context
-                  </p>
-                  <h2 className="mt-3 text-3xl font-black text-white">{demo.businessName}</h2>
-                  <p className="mt-2 text-zinc-400">{demo.niche}</p>
-                </div>
-                <div className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-mono uppercase tracking-[0.16em] text-cyan-200">
-                  {displayTier(recommendedTier)}
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                {[
-                  { label: "Capture Layer", value: "Website + WhatsApp" },
-                  { label: "Qualification Logic", value: "AI Guided" },
-                  { label: "Sales Handoff", value: "Operator Ready" },
-                ].map((item) => (
-                  <GlassCard
-                    key={item.label}
-                    className="border-white/10 bg-white/5 p-4"
-                  >
-                    <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">{item.label}</p>
-                    <p className="mt-2 text-lg font-bold text-white">{item.value}</p>
-                  </GlassCard>
-                ))}
-              </div>
-
-              <div className="mt-6 rounded-[1.5rem] border border-zinc-800 bg-zinc-950/70 p-6">
-                <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">
-                  Simulation Summary
-                </p>
-                <p className="mt-4 text-base leading-7 text-zinc-300">
-                  ShadowSpark has modeled a revenue path for {demo.businessName} that routes traffic
-                  through a controlled website experience, pushes high-intent prospects into WhatsApp,
-                  and qualifies them before a human handoff. This preview represents the operating
-                  state after deployment, not a static mockup.
-                </p>
-              </div>
-            </GlassCard>
-          </motion.section>
-
-          <motion.aside
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.16 }}
-            className="space-y-6"
-          >
-            <GlassCard className="p-6">
-              <MiniAudit
-                businessType={demo.niche}
-                goals="capture, qualify, and route traffic into a controlled sales system"
-                features={["Website", "WhatsApp AI", "Operator Dashboard"]}
-                recommendedPackage={recommendedTier}
-                showCta={false}
-              />
-            </GlassCard>
-
-            <GlassCard className="border-zinc-800 bg-zinc-950/80 p-6">
-              <p className="text-xs font-mono uppercase tracking-[0.2em] text-cyan-300">
-                Deployment Path
+              <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl">
+                {businessName}
+                <span className="mt-3 block text-balance text-cyan-200/85">
+                  Revenue audit rendered from the latest cloud markdown snapshot.
+                </span>
+              </h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+                The crawl worker writes markdown into the Genesis vault. This page reads the most
+                recent report for <span className="text-white">{slug}</span> and streams it into a
+                guided intelligence surface instead of a flat file dump.
               </p>
-              <ul className="mt-4 space-y-3 text-sm text-zinc-300">
-                <li>System preview reviewed and approved by your team.</li>
-                <li>Selected tier moved into managed deployment.</li>
-                <li>Tracking, qualification logic, and handoff activated.</li>
-              </ul>
-            </GlassCard>
-          </motion.aside>
-        </div>
+            </div>
 
-        <footer className="mt-8 flex flex-col gap-3 rounded-[1.5rem] border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-amber-100 sm:flex-row sm:items-center sm:justify-between">
-          <span>Preview expires in 48 hours.</span>
-          <span>{expiresSoon ? "This preview is already nearing expiry." : "Deployment window is active."}</span>
-        </footer>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {[
+                { label: "Recommended Tier", value: displayTier(recommendedTier) },
+                { label: "Active Niche", value: niche },
+                { label: "Latest Session", value: createdAt },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                >
+                  <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/70">
+                    {item.label}
+                  </p>
+                  <p className="mt-3 text-lg font-semibold leading-7 text-white">{item.value}</p>
+                </div>
+              ))}
+              <Link
+                href={`/checkout/new?tier=${encodeURIComponent(recommendedTier)}`}
+                className="inline-flex items-center justify-center rounded-[1.5rem] bg-cyan-300 px-5 py-4 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-cyan-200"
+              >
+                Deploy Recommended Stack
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <TracingBeam className="lg:pr-8">
+            <MarkdownShell>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {auditMarkdown}
+              </ReactMarkdown>
+            </MarkdownShell>
+          </TracingBeam>
+
+          <aside className="space-y-6">
+            <div className="rounded-[2rem] border border-white/10 bg-slate-950/75 p-6 shadow-[0_0_50px_rgba(15,23,42,0.4)]">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                Beam Interpretation
+              </p>
+              <h2 className="mt-4 text-2xl font-black tracking-tight text-white">
+                Guided through infrastructure, leaks, and AI proposals.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                The beam emphasizes the sequence of the audit so the client reads it as an
+                escalation path: what is broken, what it costs, and what ShadowSpark deploys next.
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border border-cyan-300/10 bg-slate-950/80 p-6 shadow-[0_0_40px_rgba(8,145,178,0.12)]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                    Indexed Signals
+                  </p>
+                  <h2 className="mt-3 text-2xl font-black tracking-tight text-white">
+                    Vault-ranked excerpts for this demo.
+                  </h2>
+                </div>
+                <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-cyan-200">
+                  {indexedInsights.length > 0 ? `${indexedInsights.length} hits` : "awaiting index"}
+                </div>
+              </div>
+
+              {indexedInsights.length > 0 ? (
+                <div className="mt-6 space-y-4">
+                  {indexedInsights.map((insight) => (
+                    <div
+                      key={insight.id}
+                      className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-5"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-sm font-semibold text-white">{insight.title}</p>
+                        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-cyan-200/70">
+                          score {insight.score}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-slate-300">{insight.excerpt}</p>
+                      {insight.url ? (
+                        <a
+                          href={insight.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-3 inline-flex text-xs font-medium uppercase tracking-[0.16em] text-cyan-300"
+                        >
+                          Source URL
+                        </a>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-5 text-sm leading-7 text-slate-300">
+                  The demo page is ready to read `indexes/latest.json` from the vault as soon as the
+                  crawl pipeline publishes one. Until then, the markdown stream remains the source of truth.
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-[2rem] border border-cyan-300/10 bg-cyan-300/[0.05] p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                GCS Bridge
+              </p>
+              <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <li className="list-inside list-disc marker:text-cyan-300">
+                  Reads from <code>shadowspark-genesis-backups-2026</code> by slug-aware prefix.
+                </li>
+                <li className="list-inside list-disc marker:text-cyan-300">
+                  Falls back to a structured markdown shell if a fresh audit has not landed yet.
+                </li>
+                <li className="list-inside list-disc marker:text-cyan-300">
+                  Keeps the assistant bubble available for live follow-up questions while reviewing.
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </section>
       </main>
 
       <AssistantBubble />
-    </AuroraBackground>
+    </Vortex>
   );
 }
