@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -35,15 +36,38 @@ jobs:
           RAG_CRAWL_LIMIT: "25"
         run: pnpm rag:sync
 
-      - name: Commit updated embeddings (if changed)
+      - id: diff
+        name: Check for changes
         run: |
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
+          if git diff --quiet -- data/rag/index.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/rag/index.json
-          git commit -m "chore(rag): nightly sync"
-          git push
 
+      - name: Guard diff size (added lines <= 800)
+        if: ${{ steps.diff.outputs.changed == 'true' }}
+        run: |
+          added="$(git diff --numstat -- data/rag/index.json | awk '{print $1}')"
+          if ! [[ "$added" =~ ^[0-9]+$ ]]; then
+            added="0"
+          fi
+          echo "Added lines: $added"
+          if [ "$added" -gt 800 ]; then
+            echo "Diff too large (> 800 added lines)."
+            exit 1
+          fi
+
+      - name: Create PR for updated embeddings
+        if: ${{ steps.diff.outputs.changed == 'true' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || github.token }}
+          branch: automation/firecrawl-nightly
+          delete-branch: true
+          commit-message: "chore(rag): nightly sync"
+          title: "chore(rag): nightly sync"
+          body: |
+            Automated nightly RAG sync (Firecrawl crawl -> embed -> update `data/rag/index.json`).
+          add-paths: |
+            data/rag/index.json
