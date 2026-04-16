@@ -23,7 +23,14 @@ export const crawlWorker = new Worker<CrawlJobData>(
 
     return { ok: true, ...res };
   },
-  { connection: redis }
+  { 
+    connection: redis,
+    concurrency: 3,
+    limiter: {
+      max: 5,
+      duration: 1000,
+    }
+  }
 );
 
 crawlWorker.on("completed", (job) => {
