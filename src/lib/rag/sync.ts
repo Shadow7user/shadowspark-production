@@ -69,15 +69,22 @@ async function uploadVaultArtifacts(args: {
   bucketName: string;
   runId: string;
   rootUrl: string;
+  slug?: string;
   docs: Array<{ url?: string; title?: string; markdown: string }>;
   index: RagEmbeddingIndex;
 }) {
   const bucket = storage.bucket(args.bucketName);
+  const normalizedSlug = args.slug?.trim().toLowerCase();
 
   await Promise.all(
     args.docs.map(async (doc, index) => {
       const baseName = slugifySegment(doc.url || doc.title || `document-${index + 1}`) || `document-${index + 1}`;
-      const objectName = `raw/${args.runId}/${String(index + 1).padStart(3, "0")}-${baseName}.md`;
+      
+      // If we have a slug, we prefer putting it in a dedicated directory
+      const objectName = normalizedSlug 
+        ? `audits/${normalizedSlug}/${args.runId}/${baseName}.md`
+        : `raw/${args.runId}/${String(index + 1).padStart(3, "0")}-${baseName}.md`;
+
       await bucket.file(objectName).save(doc.markdown, {
         contentType: "text/markdown; charset=utf-8",
         resumable: false,
@@ -86,6 +93,7 @@ async function uploadVaultArtifacts(args: {
             rootUrl: args.rootUrl,
             sourceUrl: doc.url || "",
             title: doc.title || "",
+            slug: normalizedSlug || "",
           },
         },
       });
@@ -93,23 +101,35 @@ async function uploadVaultArtifacts(args: {
   );
 
   const indexPayload = JSON.stringify(args.index, null, 2) + "\n";
-  await bucket.file(`indexes/${args.runId}/index.json`).save(indexPayload, {
+  
+  // Index pathing: prefer slug-based indexes
+  const runIndexName = normalizedSlug
+    ? `indexes/${normalizedSlug}/${args.runId}.json`
+    : `indexes/${args.runId}/index.json`;
+  
+  const latestIndexName = normalizedSlug
+    ? `indexes/${normalizedSlug}/latest.json`
+    : `indexes/latest.json`;
+
+  await bucket.file(runIndexName).save(indexPayload, {
     contentType: "application/json; charset=utf-8",
     resumable: false,
     metadata: {
       metadata: {
         rootUrl: args.rootUrl,
+        slug: normalizedSlug || "",
       },
     },
   });
 
-  await bucket.file("indexes/latest.json").save(indexPayload, {
+  await bucket.file(latestIndexName).save(indexPayload, {
     contentType: "application/json; charset=utf-8",
     resumable: false,
     metadata: {
       metadata: {
         rootUrl: args.rootUrl,
         runId: args.runId,
+        slug: normalizedSlug || "",
       },
     },
   });
@@ -117,6 +137,7 @@ async function uploadVaultArtifacts(args: {
 
 export async function runRagSync(args: {
   rootUrl: string;
+  slug?: string;
   limit: number;
   maxChunkChars: number;
 }): Promise<{ outPath: string; chunks: number; documents: number; bucketName?: string; runId: string }> {
@@ -191,6 +212,7 @@ export async function runRagSync(args: {
       bucketName,
       runId,
       rootUrl: args.rootUrl,
+      slug: args.slug,
       docs,
       index,
     });

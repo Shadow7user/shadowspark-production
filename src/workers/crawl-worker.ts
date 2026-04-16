@@ -9,12 +9,14 @@ export const crawlWorker = new Worker<CrawlJobData>(
   CRAWL_QUEUE,
   async (job) => {
     const rootUrl = job.data.rootUrl;
+    const slug = job.data.slug;
     const limit = job.data.limit ?? 25;
 
-    console.log(`[crawl-worker] received job ${job.id} rootUrl=${rootUrl} limit=${limit}`);
+    console.log(`[crawl-worker] received job ${job.id} rootUrl=${rootUrl} slug=${slug || "none"} limit=${limit}`);
 
     const res = await runRagSync({
       rootUrl,
+      slug,
       limit,
       maxChunkChars: Number(process.env.RAG_CHUNK_MAX_CHARS || "1800"),
     });
