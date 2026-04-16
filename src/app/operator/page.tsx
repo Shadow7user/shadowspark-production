@@ -56,6 +56,15 @@ export default async function OperatorDashboard() {
       typeof audit.businessType === "string" && audit.businessType
         ? audit.businessType
         : lead.intent ?? "Uncategorized";
+    
+    // Extract rootUrl from demo config or miniAuditData
+    let rootUrl = undefined;
+    if (lead.demo?.config && typeof lead.demo.config === 'object') {
+      const config = lead.demo.config as Record<string, unknown>;
+      if (typeof config.rootUrl === 'string') rootUrl = config.rootUrl;
+    }
+    if (!rootUrl && typeof audit.website === 'string') rootUrl = audit.website;
+    if (!rootUrl && typeof audit.url === 'string') rootUrl = audit.url;
 
     return {
       id: lead.id,
@@ -63,8 +72,10 @@ export default async function OperatorDashboard() {
       business,
       status: normalizeStatus(lead),
       demoSlug: lead.demo?.slug ?? null,
+      rootUrl,
     };
   });
+
 
   const recentActivity = recentDemos.map((demo: DemoWithLead) => ({
     id: demo.id,
