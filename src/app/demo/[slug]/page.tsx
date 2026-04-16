@@ -203,6 +203,18 @@ function layoutTone(layout: VaultLayoutMode) {
   };
 }
 
+function confidenceTone(confidence: "high" | "medium" | "low") {
+  if (confidence === "high") {
+    return "border-cyan-300/25 bg-cyan-300/10 text-cyan-100";
+  }
+
+  if (confidence === "medium") {
+    return "border-amber-300/25 bg-amber-300/10 text-amber-100";
+  }
+
+  return "border-white/10 bg-white/[0.04] text-slate-200";
+}
+
 const markdownComponents: Components = {
   h1: ({ children }) => (
     <h1 className="mt-2 text-4xl font-black tracking-tight text-white sm:text-5xl">{children}</h1>
@@ -356,6 +368,14 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                 <span className="h-2 w-2 rounded-full bg-cyan-300" />
                 {layoutBrief.badge}
               </div>
+              <div
+                className={[
+                  "mt-3 inline-flex items-center gap-2 rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em]",
+                  confidenceTone(signalBrief.confidence),
+                ].join(" ")}
+              >
+                Confidence {signalBrief.confidence}
+              </div>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">{heroSupportLine}</p>
               <div className="mt-6 rounded-[1.4rem] border border-white/10 bg-white/[0.04] px-5 py-4 text-sm leading-7 text-slate-300">
                 <span className="font-semibold text-white">Proof line:</span> {proofLine}
@@ -456,6 +476,11 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                   Recommended framing
                 </p>
                 <p className="mt-2 text-sm leading-7 text-slate-300">{layoutBrief.summary}</p>
+                {signalBrief.confidence === "low" ? (
+                  <p className="mt-3 text-sm leading-7 text-slate-400">
+                    Low-confidence crawls stay in summary mode and avoid aggressive proof or CTA claims until a denser audit lands.
+                  </p>
+                ) : null}
               </div>
             </div>
 

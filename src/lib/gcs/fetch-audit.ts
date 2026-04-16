@@ -41,6 +41,7 @@ export type VaultLayoutMode =
 
 export type VaultSignalBrief = {
   layout: VaultLayoutMode;
+  confidence: "high" | "medium" | "low";
   proofLine: string | null;
   objectionLine: string | null;
   ctaLine: string | null;
@@ -55,6 +56,12 @@ export function cleanSignalText(text: string) {
     .replace(/https?:\/\/\S+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function deriveSignalConfidence(signalCount: number, topScore?: number): "high" | "medium" | "low" {
+  if (signalCount >= 5 && (topScore ?? 0) >= 12) return "high";
+  if (signalCount >= 3 && (topScore ?? 0) >= 7) return "medium";
+  return "low";
 }
 
 function normalizeSlug(slug: string) {
@@ -221,9 +228,12 @@ export function deriveVaultSignalBrief(
     (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, strongCtaKeywords),
     0
   );
+  const confidence = deriveSignalConfidence(insights.length, insights[0]?.score);
 
   const layout: VaultLayoutMode =
-    strongCtaScore > 0 && ctaScore >= proofScore && ctaScore >= objectionScore
+    confidence === "low"
+      ? "audit-summary"
+      : strongCtaScore > 0 && ctaScore >= proofScore && ctaScore >= objectionScore
       ? "cta-comparison"
       : proofScore >= objectionScore && proofScore >= 2
       ? "proof-heavy"
@@ -231,23 +241,36 @@ export function deriveVaultSignalBrief(
         ? "objection-handling"
         : "audit-summary";
 
-  const proofLine = strongestLine(insights, proofKeywords, (insight) =>
-    `${businessName} has a clear proof angle: ${buildExcerpt(insight.excerpt)}`
-  );
-  const objectionLine = strongestLine(insights, objectionKeywords, (insight) =>
-    `Main objection to neutralize: ${buildExcerpt(insight.excerpt)}`
-  );
-  const ctaLine = strongestLine(insights, ctaKeywords, (insight) =>
-    `Best close path: use ${tierLabel.toLowerCase()} as the next step because ${buildExcerpt(insight.excerpt)}`
-  );
-  const heroSupportLine = strongestLine(
-    insights,
-    [...proofKeywords, ...objectionKeywords],
-    (insight) => `The strongest live signal for ${businessName} is ${buildExcerpt(insight.excerpt).toLowerCase()}`
-  );
+  const proofLine =
+    confidence === "low"
+      ? `Live crawl confidence is still low, so proof should stay conservative until a denser audit lands for ${businessName}.`
+      : strongestLine(insights, proofKeywords, (insight) =>
+          `${businessName} has a clear proof angle: ${buildExcerpt(insight.excerpt)}`
+        );
+  const objectionLine =
+    confidence === "low"
+      ? `Keep the objection framing broad: follow-up drag, unclear CTA paths, and limited proof density still need confirmation.`
+      : strongestLine(insights, objectionKeywords, (insight) =>
+          `Main objection to neutralize: ${buildExcerpt(insight.excerpt)}`
+        );
+  const ctaLine =
+    confidence === "low"
+      ? `Use a conservative next step: book a ${tierLabel.toLowerCase()} walkthrough before making stronger CTA claims.`
+      : strongestLine(insights, ctaKeywords, (insight) =>
+          `Best close path: use ${tierLabel.toLowerCase()} as the next step because ${buildExcerpt(insight.excerpt)}`
+        );
+  const heroSupportLine =
+    confidence === "low"
+      ? `The current crawl gives a partial read on ${businessName}, so this page stays in audit-summary mode until stronger signal density lands.`
+      : strongestLine(
+          insights,
+          [...proofKeywords, ...objectionKeywords],
+          (insight) => `The strongest live signal for ${businessName} is ${buildExcerpt(insight.excerpt).toLowerCase()}`
+        );
 
   return {
     layout,
+    confidence,
     proofLine,
     objectionLine,
     ctaLine,
@@ -276,6 +299,15 @@ export function buildNextBullets(args: {
   businessName: string;
   tierLabel: string;
 }): string[] {
+  const confidence = deriveSignalConfidence(args.insights.length, args.insights[0]?.score);
+  if (confidence === "low") {
+    return [
+      `Keep the audit for ${args.businessName} in summary mode until a stronger crawl produces denser proof and CTA signals.`,
+      "Use the next conversation to verify objection patterns instead of overstating them in-page.",
+      `Offer a ${args.tierLabel.toLowerCase()} walkthrough as the next step rather than a hard sell.`,
+    ];
+  }
+
   const proof = strongestLine(args.insights, ["result", "client", "growth", "conversion"]);
   const objection = strongestLine(args.insights, ["slow", "manual", "delay", "friction", "leak"]);
   const cta = strongestLine(args.insights, ["book", "call", "demo", "contact", "quote"]);

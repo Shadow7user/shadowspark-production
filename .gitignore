@@ -43,3 +43,6 @@ templates/original/
 
 # Local-only Codex tooling (not required for build/deploy)
 codex/
+
+# Internal preview artifacts
+reports/firecrawl-preview/*.json

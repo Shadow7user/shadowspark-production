@@ -6,11 +6,14 @@ import { getFirecrawlClient } from "@/lib/firecrawl";
 import {
   buildNextBullets,
   cleanSignalText,
+  deriveSignalConfidence,
   deriveVaultSignalBrief,
   rankSignalChunks,
   recommendBlocksForLayout,
   type SignalSourceChunk,
 } from "@/lib/gcs/fetch-audit";
+
+// Internal operator/dev-only evaluation tool. Do not expose this path publicly.
 
 type PreviewCase = {
   url: string;
@@ -173,12 +176,6 @@ function splitMarkdownIntoChunks(document: FirecrawlDocument, docIndex: number):
   });
 }
 
-function deriveConfidence(signalCount: number, topScore?: number): PreviewResult["confidence"] {
-  if (signalCount >= 5 && (topScore ?? 0) >= 12) return "high";
-  if (signalCount >= 3 && (topScore ?? 0) >= 7) return "medium";
-  return "low";
-}
-
 async function runPreview(testCase: PreviewCase): Promise<PreviewResult> {
   const client = getFirecrawlClient();
   const slug = testCase.slug ?? slugify(testCase.businessName ?? testCase.url);
@@ -245,7 +242,7 @@ async function runPreview(testCase: PreviewCase): Promise<PreviewResult> {
     proofLine: signalBrief.proofLine,
     ctaSupportLine: signalBrief.ctaLine,
     buildNextBullets: buildBullets,
-    confidence: deriveConfidence(insights.length, insights[0]?.score),
+    confidence: deriveSignalConfidence(insights.length, insights[0]?.score),
     notes,
   };
 }
@@ -295,23 +292,46 @@ async function main() {
     }
   }
 
-  const outputDir = path.join(process.cwd(), "reports");
+  const outputDir = path.join(process.cwd(), "reports", "firecrawl-preview");
   await mkdir(outputDir, { recursive: true });
-  const outputPath = path.join(outputDir, "firecrawl-preview-report.json");
-  await writeFile(
-    outputPath,
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        cases: results,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    internalOnly: true,
+    cases: results,
+  };
+  const latestPath = path.join(outputDir, "latest.json");
+  const timestampedPath = path.join(outputDir, `${timestamp}.json`);
+  for (const outputPath of [latestPath, timestampedPath]) {
+    await writeFile(
+      outputPath,
+      `${JSON.stringify(payload, null, 2)}\n`,
+      "utf8"
+    );
+  }
 
-  console.log(`Saved preview report to ${outputPath}`);
+  const markdownSummaryPath = path.join(outputDir, "README.md");
+  const markdownSummary = [
+    "# Firecrawl Preview Reports",
+    "",
+    "Internal operator/dev-only evaluation artifacts.",
+    "",
+    `Latest run: \`${path.basename(timestampedPath)}\``,
+    "",
+    "Each JSON file contains:",
+    "- URL",
+    "- timestamp",
+    "- top ranked signals",
+    "- selected layout",
+    "- confidence band",
+    "- hero / proof / CTA support lines",
+    "- build-next bullets",
+    "",
+  ].join("\n");
+  await writeFile(markdownSummaryPath, `${markdownSummary}\n`, "utf8");
+
+  console.log(`Saved preview report to ${latestPath}`);
+  console.log(`Saved timestamped preview report to ${timestampedPath}`);
 }
 
 void main();
