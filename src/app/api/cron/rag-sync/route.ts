@@ -5,6 +5,14 @@ import { enqueueCrawl } from "@/lib/crawl/queue";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
+  return handleRequest(req);
+}
+
+export async function POST(req: Request) {
+  return handleRequest(req);
+}
+
+async function handleRequest(req: Request) {
   const authHeader = (req.headers.get("authorization") || "").trim();
   const secret = (process.env.CRON_SECRET || "").trim();
   if (!secret || authHeader !== "Bearer " + secret) {
