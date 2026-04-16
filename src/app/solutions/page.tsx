@@ -106,17 +106,35 @@ const trustStats = [
   {
     label: "Response Window",
     value: "< 60s",
-    detail: "For first-touch AI qualification on inbound leads.",
+    detail: "First-touch AI qualification cuts the dead time between interest and response.",
   },
   {
     label: "Conversion Path",
     value: "4 layers",
-    detail: "Presence, conversation, automation, and operator visibility.",
+    detail: "One coordinated path from page view to booked conversation and payment-ready follow-up.",
   },
   {
     label: "Control Model",
     value: "AI + Human",
-    detail: "Automation handles speed, operators handle judgment.",
+    detail: "Automation handles speed; operators only step in where trust and pricing nuance matter.",
+  },
+];
+
+const proofBand = [
+  {
+    title: "Response-time lift",
+    value: "Faster first touch",
+    detail: "AI qualification keeps high-intent leads from cooling off while the team is offline.",
+  },
+  {
+    title: "Use-case fit",
+    value: "WhatsApp + web",
+    detail: "Designed for businesses where leads arrive through chat, forms, and follow-up friction.",
+  },
+  {
+    title: "Commercial outcome",
+    value: "Cleaner close path",
+    detail: "Better CTA routing, less manual delay, and tighter operator handoffs when the lead is ready.",
   },
 ];
 
@@ -204,14 +222,29 @@ export default function SolutionsPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[
               "Designed for high-intent WhatsApp and web lead flows.",
-              "Built to remove lag between interest, qualification, and close.",
-              "Premium surface backed by measurable operator control.",
+              "Built to reduce dead time between inquiry, qualification, and booked action.",
+              "Premium surface backed by measurable operator control and AI response discipline.",
             ].map((line) => (
               <div
                 key={line}
                 className="rounded-[1.6rem] border border-white/8 bg-black/20 px-5 py-4 text-sm leading-6 text-slate-300"
               >
                 {line}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {proofBand.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-[1.7rem] border border-cyan-300/10 bg-[linear-gradient(180deg,rgba(8,12,20,0.72),rgba(4,8,16,0.78))] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+              >
+                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-100/70">
+                  {item.title}
+                </p>
+                <p className="mt-3 text-xl font-semibold tracking-tight text-white">{item.value}</p>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{item.detail}</p>
               </div>
             ))}
           </div>
@@ -348,16 +381,20 @@ export default function SolutionsPage() {
             <p className="text-xs font-mono uppercase tracking-[0.28em] text-cyan-400/80">
               Operating Model
             </p>
-            <h2 className="mt-4 text-3xl font-bold text-white md:text-5xl">
-              AI when you need speed. Humans when you need empathy.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-zinc-300">
-              Our systems aren't designed to replace your sales team; they are designed
-              to protect their time. The system handles the 80% of repetitive, low-value
-              interactions, seamlessly handing off the qualified 20% to your operators
-              with full context.
-            </p>
-          </motion.div>
+              <h2 className="mt-4 text-3xl font-bold text-white md:text-5xl">
+                AI when you need speed. Humans when you need empathy.
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-zinc-300">
+                Our systems aren't designed to replace your sales team; they are designed
+                to protect their time. The system handles the 80% of repetitive, low-value
+                interactions, seamlessly handing off the qualified 20% to your operators
+                with full context.
+              </p>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-400">
+                The business outcome is simple: your team spends less time chasing cold leads
+                and more time closing the people already showing intent.
+              </p>
+            </motion.div>
 
           <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(10,14,24,0.9),rgba(6,10,19,0.88))] p-6 shadow-[0_24px_80px_rgba(2,6,23,0.3)]">
             <div className="flex items-center gap-3">

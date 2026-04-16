@@ -6,7 +6,12 @@ import AssistantBubble from "@/components/ui/AssistantBubble";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Vortex } from "@/components/ui/vortex-background";
-import { fetchLatestAuditMarkdown, fetchVaultInsights } from "@/lib/gcs/fetch-audit";
+import {
+  deriveVaultSignalBrief,
+  fetchLatestAuditMarkdown,
+  fetchVaultInsights,
+  type VaultLayoutMode,
+} from "@/lib/gcs/fetch-audit";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -170,6 +175,34 @@ function signalLabel(title: string, excerpt: string) {
   return "Signal";
 }
 
+function layoutTone(layout: VaultLayoutMode) {
+  if (layout === "proof-heavy") {
+    return {
+      badge: "Proof-heavy layout",
+      summary: "Lead with evidence and outcomes before discussing the system build.",
+    };
+  }
+
+  if (layout === "objection-handling") {
+    return {
+      badge: "Objection-handling layout",
+      summary: "Surface friction and cost of delay first, then convert into a build recommendation.",
+    };
+  }
+
+  if (layout === "cta-comparison") {
+    return {
+      badge: "CTA-comparison layout",
+      summary: "Frame the decision around the cleanest next step and reduce ambiguity around action.",
+    };
+  }
+
+  return {
+    badge: "Audit-summary layout",
+    summary: "Use a balanced narrative: diagnosis, ranked signals, then a direct booking step.",
+  };
+}
+
 const markdownComponents: Components = {
   h1: ({ children }) => (
     <h1 className="mt-2 text-4xl font-black tracking-tight text-white sm:text-5xl">{children}</h1>
@@ -269,13 +302,28 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
       k: 4,
     }),
   ]);
+  const signalBrief = deriveVaultSignalBrief(
+    indexedInsights,
+    businessName,
+    displayTier(recommendedTier)
+  );
   const intelligenceNotes = deriveIntelligenceNotes(indexedInsights, businessName);
+  const layoutBrief = layoutTone(signalBrief.layout);
+  const heroSupportLine =
+    signalBrief.heroSupportLine ??
+    `The current intelligence stream suggests ${businessName} is leaking momentum between first interest and the booked conversation.`;
   const ctaSupportLine =
+    signalBrief.ctaLine ??
     intelligenceNotes.find((note) => note.kind === "cta")?.body ??
     `Book the ${displayTier(recommendedTier)} walkthrough and review the highest-friction revenue gaps for ${businessName}.`;
   const proofLine =
+    signalBrief.proofLine ??
     intelligenceNotes.find((note) => note.kind === "proof")?.body ??
     "Fresh crawl and vault signals are ranked here so recommendations stay tied to current site evidence.";
+  const objectionLine =
+    signalBrief.objectionLine ??
+    intelligenceNotes.find((note) => note.kind === "objection")?.body ??
+    "The default friction pattern is slow follow-up, unclear CTA pathways, and operator lag.";
 
   return (
     <Vortex className="min-h-screen selection:bg-cyan-500/30">
@@ -304,6 +352,11 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                 sales surface for <span className="text-white">{slug}</span>, so the client sees
                 what is broken, why it matters, and which action to take next.
               </p>
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-200">
+                <span className="h-2 w-2 rounded-full bg-cyan-300" />
+                {layoutBrief.badge}
+              </div>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">{heroSupportLine}</p>
               <div className="mt-6 rounded-[1.4rem] border border-white/10 bg-white/[0.04] px-5 py-4 text-sm leading-7 text-slate-300">
                 <span className="font-semibold text-white">Proof line:</span> {proofLine}
               </div>
@@ -398,6 +451,12 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                 Keep the business relevance explicit: the left column proves the diagnosis, and
                 this right rail turns those signals into proof, objections, and close-ready next steps.
               </p>
+              <div className="mt-5 rounded-[1.4rem] border border-white/10 bg-white/[0.03] px-4 py-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200/75">
+                  Recommended framing
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-300">{layoutBrief.summary}</p>
+              </div>
             </div>
 
             <div className="rounded-[2rem] border border-cyan-300/10 bg-slate-950/80 p-6 shadow-[0_0_40px_rgba(8,145,178,0.12)]">
@@ -483,6 +542,43 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                     proof, objection handling, and CTA guidance.
                   </p>
                 )}
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-cyan-300/10 bg-cyan-300/[0.05] p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                What We Would Build Next
+              </p>
+              <div className="mt-5 space-y-4">
+                <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-sm font-semibold text-white">Why this matters</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">{objectionLine}</p>
+                </div>
+                <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-sm font-semibold text-white">What gets deployed</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                    We would package the {displayTier(recommendedTier).toLowerCase()} layer set around
+                    qualification speed, cleaner CTA routing, and a tighter operator handoff for {businessName}.
+                  </p>
+                </div>
+                <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-sm font-semibold text-white">Next commercial step</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">{ctaSupportLine}</p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col gap-3">
+                <Link
+                  href={`/checkout/new?tier=${encodeURIComponent(recommendedTier)}`}
+                  className="inline-flex items-center justify-center rounded-[1.2rem] bg-cyan-300 px-5 py-4 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-cyan-200"
+                >
+                  Book Demo
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-5 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-white/[0.05]"
+                >
+                  Chat on WhatsApp
+                </Link>
               </div>
             </div>
 

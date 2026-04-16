@@ -26,6 +26,20 @@ export type VaultInsight = {
   score: number;
 };
 
+export type VaultLayoutMode =
+  | "proof-heavy"
+  | "objection-handling"
+  | "cta-comparison"
+  | "audit-summary";
+
+export type VaultSignalBrief = {
+  layout: VaultLayoutMode;
+  proofLine: string | null;
+  objectionLine: string | null;
+  ctaLine: string | null;
+  heroSupportLine: string | null;
+};
+
 function normalizeSlug(slug: string) {
   return slug.trim().toLowerCase();
 }
@@ -139,6 +153,84 @@ function scoreChunk(text: string, tokens: string[], slug: string) {
 function buildExcerpt(text: string) {
   const normalized = text.replace(/\s+/g, " ").trim();
   return normalized.length > 220 ? `${normalized.slice(0, 217)}...` : normalized;
+}
+
+function countMatches(text: string, keywords: readonly string[]) {
+  const normalized = text.toLowerCase();
+  return keywords.reduce((sum, keyword) => sum + (normalized.includes(keyword) ? 1 : 0), 0);
+}
+
+function strongestLine(
+  insights: VaultInsight[],
+  keywords: readonly string[],
+  fallback: ((insight: VaultInsight) => string) | null = null
+) {
+  const ranked = insights
+    .map((insight) => ({
+      insight,
+      weight: insight.score + countMatches(`${insight.title} ${insight.excerpt}`, keywords) * 4,
+    }))
+    .sort((left, right) => right.weight - left.weight);
+
+  const winner = ranked[0]?.insight;
+  if (!winner) return null;
+
+  return fallback ? fallback(winner) : winner.excerpt;
+}
+
+export function deriveVaultSignalBrief(
+  insights: VaultInsight[],
+  businessName: string,
+  tierLabel: string
+): VaultSignalBrief {
+  const proofKeywords = ["result", "client", "revenue", "growth", "conversion", "proof", "trusted"];
+  const objectionKeywords = ["slow", "manual", "friction", "delay", "drop", "leak", "bottleneck"];
+  const ctaKeywords = ["book", "call", "demo", "contact", "whatsapp", "quote", "start"];
+
+  const proofScore = insights.reduce(
+    (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, proofKeywords),
+    0
+  );
+  const objectionScore = insights.reduce(
+    (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, objectionKeywords),
+    0
+  );
+  const ctaScore = insights.reduce(
+    (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, ctaKeywords),
+    0
+  );
+
+  const layout: VaultLayoutMode =
+    proofScore >= objectionScore && proofScore >= ctaScore && proofScore > 0
+      ? "proof-heavy"
+      : objectionScore >= ctaScore && objectionScore > 0
+        ? "objection-handling"
+        : ctaScore > 0
+          ? "cta-comparison"
+          : "audit-summary";
+
+  const proofLine = strongestLine(insights, proofKeywords, (insight) =>
+    `${businessName} has a clear proof angle: ${buildExcerpt(insight.excerpt)}`
+  );
+  const objectionLine = strongestLine(insights, objectionKeywords, (insight) =>
+    `Main objection to neutralize: ${buildExcerpt(insight.excerpt)}`
+  );
+  const ctaLine = strongestLine(insights, ctaKeywords, (insight) =>
+    `Best close path: use ${tierLabel.toLowerCase()} as the next step because ${buildExcerpt(insight.excerpt)}`
+  );
+  const heroSupportLine = strongestLine(
+    insights,
+    [...proofKeywords, ...objectionKeywords],
+    (insight) => `The strongest live signal for ${businessName} is ${buildExcerpt(insight.excerpt).toLowerCase()}`
+  );
+
+  return {
+    layout,
+    proofLine,
+    objectionLine,
+    ctaLine,
+    heroSupportLine,
+  };
 }
 
 export async function fetchVaultInsights(args: {
