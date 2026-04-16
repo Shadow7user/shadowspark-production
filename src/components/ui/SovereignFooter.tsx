@@ -18,5 +18,3 @@ export const SovereignFooter = () => (
     </div>
   </footer>
 );
-
-export default SovereignFooter;

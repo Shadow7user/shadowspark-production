@@ -53,6 +53,12 @@ function displayTier(tier: "launch" | "growth" | "automation") {
   return "Launch";
 }
 
+function tierBadgeTone(tier: "launch" | "growth" | "automation") {
+  if (tier === "automation") return "border-cyan-300/25 bg-cyan-300/10 text-cyan-100";
+  if (tier === "growth") return "border-amber-300/25 bg-amber-300/10 text-amber-100";
+  return "border-emerald-300/25 bg-emerald-300/10 text-emerald-100";
+}
+
 function prettifySlug(slug: string) {
   return slug
     .split("-")
@@ -88,6 +94,80 @@ function MarkdownShell({ children }: { children: ReactNode }) {
       <div className="px-6 py-8 sm:px-8 sm:py-10">{children}</div>
     </div>
   );
+}
+
+function scoreBadgeTone(score: number) {
+  if (score >= 14) return "border-cyan-300/25 bg-cyan-300/12 text-cyan-100";
+  if (score >= 10) return "border-amber-300/20 bg-amber-300/10 text-amber-100";
+  return "border-white/10 bg-white/[0.04] text-slate-200";
+}
+
+function shrinkExcerpt(text: string) {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  return normalized.length > 190 ? `${normalized.slice(0, 187)}...` : normalized;
+}
+
+type IntelligenceNote = {
+  title: string;
+  body: string;
+  kind: "proof" | "objection" | "cta";
+};
+
+function toSentenceCase(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function deriveIntelligenceNotes(
+  insights: Awaited<ReturnType<typeof fetchVaultInsights>>,
+  businessName: string
+): IntelligenceNote[] {
+  const keywordMap = {
+    proof: ["results", "clients", "case study", "trusted", "revenue", "faster", "growth"],
+    objection: ["slow", "manual", "delay", "drop", "friction", "leak", "bottleneck"],
+    cta: ["book", "contact", "demo", "call", "whatsapp", "quote"],
+  } as const;
+
+  const pickInsight = (kind: IntelligenceNote["kind"]) =>
+    insights.find((insight) =>
+      keywordMap[kind].some((keyword) => insight.excerpt.toLowerCase().includes(keyword))
+    ) ?? insights[0];
+
+  return (["proof", "objection", "cta"] as const)
+    .map((kind) => {
+      const source = pickInsight(kind);
+      if (!source) return null;
+
+      if (kind === "proof") {
+        return {
+          kind,
+          title: "Proof anchor",
+          body: `Use "${shrinkExcerpt(source.excerpt)}" as the credibility line when framing the ${businessName} audit.`,
+        };
+      }
+
+      if (kind === "objection") {
+        return {
+          kind,
+          title: "Likely objection",
+          body: `The strongest hesitation signal is operational drag: ${shrinkExcerpt(source.excerpt).toLowerCase()}`,
+        };
+      }
+
+      return {
+        kind,
+        title: "CTA support line",
+        body: `Guide the close with a direct next step tied to this signal: "${shrinkExcerpt(source.excerpt)}"`,
+      };
+    })
+    .filter((note): note is IntelligenceNote => note !== null);
+}
+
+function signalLabel(title: string, excerpt: string) {
+  const text = `${title} ${excerpt}`.toLowerCase();
+  if (text.includes("cta") || text.includes("book") || text.includes("contact")) return "CTA";
+  if (text.includes("proof") || text.includes("result") || text.includes("client")) return "Proof";
+  if (text.includes("leak") || text.includes("problem") || text.includes("slow")) return "Leak";
+  return "Signal";
 }
 
 const markdownComponents: Components = {
@@ -189,14 +269,21 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
       k: 4,
     }),
   ]);
+  const intelligenceNotes = deriveIntelligenceNotes(indexedInsights, businessName);
+  const ctaSupportLine =
+    intelligenceNotes.find((note) => note.kind === "cta")?.body ??
+    `Book the ${displayTier(recommendedTier)} walkthrough and review the highest-friction revenue gaps for ${businessName}.`;
+  const proofLine =
+    intelligenceNotes.find((note) => note.kind === "proof")?.body ??
+    "Fresh crawl and vault signals are ranked here so recommendations stay tied to current site evidence.";
 
   return (
     <Vortex className="min-h-screen selection:bg-cyan-500/30">
       <main className="relative mx-auto max-w-7xl px-6 py-10 sm:py-14">
         <Spotlight
-          className="-top-36 left-0 md:left-60 md:-top-20"
-          fill="rgba(34,211,238,0.16)"
-        />
+            className="-top-36 left-0 md:left-60 md:-top-20"
+            fill="rgba(34,211,238,0.16)"
+          />
 
         <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/70 px-6 py-8 shadow-[0_0_80px_rgba(14,165,233,0.08)] backdrop-blur-xl sm:px-8 sm:py-10">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent" />
@@ -209,14 +296,17 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
               <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl">
                 {businessName}
                 <span className="mt-3 block text-balance text-cyan-200/85">
-                  Revenue audit rendered from the latest cloud markdown snapshot.
+                  Decision-grade audit rendered from the latest cloud intelligence snapshot.
                 </span>
               </h1>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                The crawl worker writes markdown into the Genesis vault. This page reads the most
-                recent report for <span className="text-white">{slug}</span> and streams it into a
-                guided intelligence surface instead of a flat file dump.
+                This page turns the latest markdown audit and ranked vault signals into a guided
+                sales surface for <span className="text-white">{slug}</span>, so the client sees
+                what is broken, why it matters, and which action to take next.
               </p>
+              <div className="mt-6 rounded-[1.4rem] border border-white/10 bg-white/[0.04] px-5 py-4 text-sm leading-7 text-slate-300">
+                <span className="font-semibold text-white">Proof line:</span> {proofLine}
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
@@ -232,39 +322,81 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                   <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/70">
                     {item.label}
                   </p>
-                  <p className="mt-3 text-lg font-semibold leading-7 text-white">{item.value}</p>
+                  <div className="mt-3 flex items-center gap-3">
+                    <p className="text-lg font-semibold leading-7 text-white">{item.value}</p>
+                    {item.label === "Recommended Tier" ? (
+                      <span
+                        className={[
+                          "rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em]",
+                          tierBadgeTone(recommendedTier),
+                        ].join(" ")}
+                      >
+                        {displayTier(recommendedTier)}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               ))}
-              <Link
-                href={`/checkout/new?tier=${encodeURIComponent(recommendedTier)}`}
-                className="inline-flex items-center justify-center rounded-[1.5rem] bg-cyan-300 px-5 py-4 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-cyan-200"
-              >
-                Deploy Recommended Stack
-              </Link>
+              <div className="rounded-[1.5rem] border border-cyan-300/15 bg-cyan-300/[0.06] p-5">
+                <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-100/80">
+                  Next Move
+                </p>
+                <p className="mt-3 text-sm leading-7 text-slate-200">{ctaSupportLine}</p>
+                <div className="mt-5 flex flex-col gap-3">
+                  <Link
+                    href={`/checkout/new?tier=${encodeURIComponent(recommendedTier)}`}
+                    className="inline-flex items-center justify-center rounded-[1.2rem] bg-cyan-300 px-5 py-4 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-cyan-200"
+                  >
+                    Book Demo
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center rounded-[1.2rem] border border-white/10 bg-white/[0.03] px-5 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-white/[0.05]"
+                  >
+                    Chat on WhatsApp
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <TracingBeam className="lg:pr-8">
-            <MarkdownShell>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                {auditMarkdown}
-              </ReactMarkdown>
-            </MarkdownShell>
-          </TracingBeam>
+        <section className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_360px]">
+          <div className="min-w-0">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/75">
+                  Audit Stream
+                </p>
+                <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
+                  Infrastructure audit, leakage analysis, and AI proposals.
+                </h2>
+              </div>
+              <div className="hidden rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-slate-300 sm:block">
+                Source: vault markdown
+              </div>
+            </div>
 
-          <aside className="space-y-6">
+            <TracingBeam className="xl:pr-10">
+              <MarkdownShell>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {auditMarkdown}
+                </ReactMarkdown>
+              </MarkdownShell>
+            </TracingBeam>
+          </div>
+
+          <aside className="space-y-6 xl:sticky xl:top-8 xl:self-start">
             <div className="rounded-[2rem] border border-white/10 bg-slate-950/75 p-6 shadow-[0_0_50px_rgba(15,23,42,0.4)]">
               <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
-                Beam Interpretation
+                Intelligence Summary
               </p>
               <h2 className="mt-4 text-2xl font-black tracking-tight text-white">
-                Guided through infrastructure, leaks, and AI proposals.
+                What this audit should push the buyer to decide.
               </h2>
               <p className="mt-4 text-sm leading-7 text-slate-300">
-                The beam emphasizes the sequence of the audit so the client reads it as an
-                escalation path: what is broken, what it costs, and what ShadowSpark deploys next.
+                Keep the business relevance explicit: the left column proves the diagnosis, and
+                this right rail turns those signals into proof, objections, and close-ready next steps.
               </p>
             </div>
 
@@ -275,7 +407,7 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                     Indexed Signals
                   </p>
                   <h2 className="mt-3 text-2xl font-black tracking-tight text-white">
-                    Vault-ranked excerpts for this demo.
+                    Ranked evidence from the vault.
                   </h2>
                 </div>
                 <div className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-cyan-200">
@@ -290,9 +422,19 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                       key={insight.id}
                       className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-5"
                     >
-                      <div className="flex items-center justify-between gap-4">
-                        <p className="text-sm font-semibold text-white">{insight.title}</p>
-                        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-cyan-200/70">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-slate-300">
+                            {signalLabel(insight.title, insight.excerpt)}
+                          </span>
+                          <p className="text-sm font-semibold text-white">{insight.title}</p>
+                        </div>
+                        <span
+                          className={[
+                            "rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em]",
+                            scoreBadgeTone(insight.score),
+                          ].join(" ")}
+                        >
                           score {insight.score}
                         </span>
                       </div>
@@ -318,13 +460,39 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
               )}
             </div>
 
+            <div className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                Recommendation Blocks
+              </p>
+              <div className="mt-5 space-y-4">
+                {intelligenceNotes.length > 0 ? (
+                  intelligenceNotes.map((note) => (
+                    <div key={note.title} className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-4">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-slate-300">
+                          {toSentenceCase(note.kind)}
+                        </span>
+                        <p className="text-sm font-semibold text-white">{note.title}</p>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-slate-300">{note.body}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm leading-7 text-slate-300">
+                    As soon as indexed signals are available, this rail will turn them into close-ready
+                    proof, objection handling, and CTA guidance.
+                  </p>
+                )}
+              </div>
+            </div>
+
             <div className="rounded-[2rem] border border-cyan-300/10 bg-cyan-300/[0.05] p-6">
               <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
                 GCS Bridge
               </p>
               <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
                 <li className="list-inside list-disc marker:text-cyan-300">
-                  Reads from <code>shadowspark-genesis-backups-2026</code> by slug-aware prefix.
+                  Reads from <code>shadowspark-vault</code> by slug-aware prefix.
                 </li>
                 <li className="list-inside list-disc marker:text-cyan-300">
                   Falls back to a structured markdown shell if a fresh audit has not landed yet.
