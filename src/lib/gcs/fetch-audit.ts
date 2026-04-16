@@ -26,6 +26,13 @@ export type VaultInsight = {
   score: number;
 };
 
+export type SignalSourceChunk = {
+  id: string;
+  title?: string;
+  url?: string;
+  text: string;
+};
+
 export type VaultLayoutMode =
   | "proof-heavy"
   | "objection-handling"
@@ -233,6 +240,77 @@ export function deriveVaultSignalBrief(
   };
 }
 
+export function recommendBlocksForLayout(layout: VaultLayoutMode): string[] {
+  if (layout === "proof-heavy") {
+    return ["hero-proof-strip", "ranked-signals", "conversion-bridge"];
+  }
+
+  if (layout === "objection-handling") {
+    return ["pain-summary", "objection-blocks", "build-next-cta"];
+  }
+
+  if (layout === "cta-comparison") {
+    return ["decision-strip", "cta-support", "build-next-cta"];
+  }
+
+  return ["audit-summary", "ranked-signals", "build-next-cta"];
+}
+
+export function buildNextBullets(args: {
+  insights: VaultInsight[];
+  businessName: string;
+  tierLabel: string;
+}): string[] {
+  const proof = strongestLine(args.insights, ["result", "client", "growth", "conversion"]);
+  const objection = strongestLine(args.insights, ["slow", "manual", "delay", "friction", "leak"]);
+  const cta = strongestLine(args.insights, ["book", "call", "demo", "contact", "quote"]);
+
+  return [
+    proof
+      ? `Lead with proof for ${args.businessName}: ${buildExcerpt(proof)}`
+      : `Anchor the presentation around visible conversion and trust wins for ${args.businessName}.`,
+    objection
+      ? `Neutralize the main friction point: ${buildExcerpt(objection)}`
+      : "Reduce operator drag by tightening response speed and CTA routing.",
+    cta
+      ? `Use the ${args.tierLabel.toLowerCase()} path as the close because ${buildExcerpt(cta)}`
+      : `Close with a ${args.tierLabel.toLowerCase()} walkthrough and a clear next-step CTA.`,
+  ];
+}
+
+export function rankSignalChunks(args: {
+  slug: string;
+  businessName?: string;
+  niche?: string;
+  chunks: SignalSourceChunk[];
+  k?: number;
+}): VaultInsight[] {
+  const slug = normalizeSlug(args.slug);
+  const queryTokens = Array.from(
+    new Set(
+      tokenize([args.slug, args.businessName, args.niche, "revenue leak infrastructure ai proposal"]
+        .filter(Boolean)
+        .join(" "))
+    )
+  );
+
+  return args.chunks
+    .map((chunk) => ({
+      chunk,
+      score: scoreChunk(`${chunk.title ?? ""}\n${chunk.text}`, queryTokens, slug),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score)
+    .slice(0, args.k ?? 4)
+    .map((entry) => ({
+      id: entry.chunk.id,
+      title: entry.chunk.title ?? "Indexed audit signal",
+      url: entry.chunk.url,
+      excerpt: buildExcerpt(entry.chunk.text),
+      score: entry.score,
+    }));
+}
+
 export async function fetchVaultInsights(args: {
   slug: string;
   businessName?: string;
@@ -253,22 +331,21 @@ export async function fetchVaultInsights(args: {
           .join(" "))
       )
     );
+    void queryTokens;
+    void slug;
 
-    return index.chunks
-      .map((chunk) => ({
-        chunk,
-        score: scoreChunk(`${chunk.title ?? ""}\n${chunk.text}`, queryTokens, slug),
-      }))
-      .filter((entry) => entry.score > 0)
-      .sort((left, right) => right.score - left.score)
-      .slice(0, args.k ?? 4)
-      .map((entry) => ({
-        id: entry.chunk.id,
-        title: entry.chunk.title ?? "Indexed audit signal",
-        url: entry.chunk.url,
-        excerpt: buildExcerpt(entry.chunk.text),
-        score: entry.score,
-      }));
+    return rankSignalChunks({
+      slug: args.slug,
+      businessName: args.businessName,
+      niche: args.niche,
+      chunks: index.chunks.map((chunk) => ({
+        id: chunk.id,
+        title: chunk.title,
+        url: chunk.url,
+        text: chunk.text,
+      })),
+      k: args.k,
+    });
   } catch (error) {
     console.error("[gcs] failed to fetch vault insights", {
       bucket: getBucketName(),
