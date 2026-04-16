@@ -48,6 +48,15 @@ export async function POST(req: Request) {
     }
 
     try {
+      // Idempotency check: if payment is already successful, ignore retry to prevent duplicate Slack pings
+      const existingPayment = await prisma.payment.findUnique({
+        where: { reference },
+      });
+      if (existingPayment?.status === "success") {
+        console.log(`[Paystack Webhook] Duplicate success event ignored for ${reference}`);
+        return NextResponse.json({ status: "ok", note: "already processed" });
+      }
+
       const [payment, lead, demo] = await prisma.$transaction([
         prisma.payment.upsert({
           where: { reference },
@@ -61,6 +70,7 @@ export async function POST(req: Request) {
             leadId,
           },
         }),
+
         prisma.lead.update({
           where: { id: leadId },
           data: { demoApproved: true, status: "PAID" },
