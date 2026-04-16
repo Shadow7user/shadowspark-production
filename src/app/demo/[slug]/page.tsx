@@ -557,7 +557,7 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
         </section>
       </main>
 
-      <AssistantBubble />
+      <AssistantBubble slug={slug} />
     </Vortex>
   );
 }

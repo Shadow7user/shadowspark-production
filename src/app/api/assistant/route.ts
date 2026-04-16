@@ -12,15 +12,16 @@ const google = createGoogleGenerativeAI({
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, slug } = await req.json();
 
   const lastUserMessage =
     Array.isArray(messages) ? [...messages].reverse().find((m) => m?.role === "user")?.content : undefined;
   const query = typeof lastUserMessage === "string" ? lastUserMessage : "";
 
   const rag = query
-    ? await retrieveRagContext({ query }).catch(() => null)
+    ? await retrieveRagContext({ query, slug }).catch(() => null)
     : null;
+
 
   const result = await streamText({
     // @ts-ignore

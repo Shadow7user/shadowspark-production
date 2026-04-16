@@ -157,7 +157,7 @@ async function readBucketFile(filePath: string) {
   return contents.toString("utf8");
 }
 
-async function loadLatestVaultIndex(slug?: string) {
+export async function loadLatestVaultIndex(slug?: string) {
   const normalizedSlug = slug ? normalizeSlug(slug) : null;
   
   if (normalizedSlug) {
