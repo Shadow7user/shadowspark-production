@@ -33,7 +33,7 @@ export default async function OperatorDashboard() {
     redirect("/dashboard");
   }
 
-  const [leads, recentDemos] = await Promise.all([
+  const [leads, recentDemos, systemErrors] = await Promise.all([
     prisma.lead.findMany({
       include: { demo: true },
       orderBy: { createdAt: "desc" },
@@ -44,6 +44,11 @@ export default async function OperatorDashboard() {
       orderBy: { updatedAt: "desc" },
       take: 5,
     }),
+    prisma.systemEvent.findMany({
+      where: { type: "error" },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }).catch(() => []), // Fallback to empty array if SystemEvent model is not yet accessible
   ]);
 
   const tableData: OperatorLead[] = leads.map((lead: LeadWithDemo) => {
@@ -129,6 +134,28 @@ export default async function OperatorDashboard() {
           </div>
 
           <div className="space-y-8">
+            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80 max-h-[400px] overflow-y-auto overflow-x-hidden relative">
+              <div className="sticky top-0 bg-zinc-950/90 pb-4 z-10 flex items-center justify-between gap-4 border-b border-zinc-800/50 mb-4 backdrop-blur-md">
+                <p className="text-xs font-mono uppercase tracking-[0.22em] text-rose-400">System Telemetry (Digests)</p>
+                <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-rose-300">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
+                  Tripwires
+                </span>
+              </div>
+              <div className="space-y-4">
+                {systemErrors.length ? systemErrors.map((err: any) => (
+                  <div key={err.id} className="group relative rounded-2xl border border-rose-500/20 bg-rose-500/[0.03] p-4 transition-colors hover:border-rose-500/40">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-rose-500 to-transparent rounded-l-2xl opacity-50 group-hover:opacity-100" />
+                    <p className="font-mono text-xs text-rose-300 break-all">{err.digest || "ERR_UNKNOWN_DIGEST"}</p>
+                    <p className="mt-2 text-sm text-zinc-300 line-clamp-2">{err.message}</p>
+                    <p className="mt-2 text-[10px] uppercase tracking-[0.14em] text-zinc-500">{err.createdAt.toLocaleString()}</p>
+                  </div>
+                )) : (
+                  <p className="text-sm text-zinc-500 text-center py-10">No recent tripwires.</p>
+                )}
+              </div>
+            </GlassCard>
+
             <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80">
               <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Quick Actions</p>
               <div className="mt-5 space-y-3">
@@ -144,7 +171,7 @@ export default async function OperatorDashboard() {
               </div>
             </GlassCard>
 
-            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80 max-h-[500px] overflow-y-auto overflow-x-hidden relative">
+            <GlassCard className="p-6 border-zinc-800 bg-zinc-950/80 max-h-[300px] overflow-y-auto overflow-x-hidden relative">
               <div className="sticky top-0 bg-zinc-950/90 pb-4 z-10 flex items-center justify-between gap-4 border-b border-zinc-800/50 mb-4 backdrop-blur-md">
                 <p className="text-xs font-mono uppercase tracking-[0.22em] text-cyan-300">Live Activity Feed</p>
                 <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-green-300">
@@ -170,3 +197,4 @@ export default async function OperatorDashboard() {
     </div>
   );
 }
+
