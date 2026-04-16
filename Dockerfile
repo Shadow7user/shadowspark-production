@@ -1,45 +1,49 @@
 # ---------- Base ----------
 FROM node:20-alpine AS base
 
+# Install necessary system libraries for Node and Prisma (though we skip prisma, openssl is good to have)
 RUN apk add --no-cache libc6-compat openssl
 
 WORKDIR /app
 
-# IMPORTANT: disable Prisma completely for worker globally
+# Disable Prisma generation globally in the build process
 ENV SKIP_PRISMA=true
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # ---------- Dependencies ----------
 FROM base AS deps
 
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy dependency manifests
 COPY package.json pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
-
-# ---------- Builder ----------
-FROM base AS builder
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# IMPORTANT: disable Prisma completely for worker
-ENV SKIP_PRISMA=true
-
-# build if needed (only if your worker has TS/compiled code)
-RUN npm install -g pnpm && pnpm build || echo "No build step"
+# Install ALL dependencies (including devDeps like tsx)
+RUN pnpm install --frozen-lockfile
 
 # ---------- Runner ----------
-FROM node:20-alpine AS runner
+FROM base AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV SKIP_PRISMA=true
 
-# copy only what is needed
-COPY --from=builder /app ./
+# Copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
 
-# optional: prune dev deps (faster runtime)
-RUN npm install -g pnpm && pnpm prune --prod
+# Copy source and configuration
+# We copy src, tsconfig.json, and package.json to run via tsx
+COPY src ./src
+COPY tsconfig.json ./
+COPY package.json ./
 
-# 👇 IMPORTANT: set your worker entry point
+# Create data directory for RAG artifacts (matches runRagSync output path)
+RUN mkdir -p data/rag
+
+# The entry point for the Cloud Run job (one-off execution)
+# Using tsx to run the source directly to keep the image simple and avoid a complex build step
 CMD ["npx", "tsx", "src/cli/rag-sync.ts"]
