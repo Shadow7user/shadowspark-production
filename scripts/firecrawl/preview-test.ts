@@ -5,6 +5,7 @@ import type { FirecrawlDocument } from "@/lib/firecrawl";
 import { getFirecrawlClient } from "@/lib/firecrawl";
 import {
   buildNextBullets,
+  cleanSignalText,
   deriveVaultSignalBrief,
   rankSignalChunks,
   recommendBlocksForLayout,
@@ -145,7 +146,7 @@ function splitMarkdownIntoChunks(document: FirecrawlDocument, docIndex: number):
   const url = document.metadata?.url ?? document.metadata?.ogUrl;
   const sections = markdown
     .split(/\n(?=#{1,3}\s)/g)
-    .map((section) => section.trim())
+    .map((section) => cleanSignalText(section))
     .filter((section) => section.length > 120);
 
   if (sections.length === 0) {
@@ -154,15 +155,14 @@ function splitMarkdownIntoChunks(document: FirecrawlDocument, docIndex: number):
         id: `doc-${docIndex}-0`,
         title: baseTitle,
         url,
-        text: markdown.slice(0, 1600),
+        text: cleanSignalText(markdown).slice(0, 1600),
       },
     ];
   }
 
   return sections.map((section, sectionIndex) => {
-    const lines = section.split("\n").map((line) => line.trim()).filter(Boolean);
-    const headingLine = lines.find((line) => /^#{1,3}\s/.test(line));
-    const title = headingLine ? headingLine.replace(/^#{1,3}\s*/, "") : `${baseTitle} section ${sectionIndex + 1}`;
+    const lines = section.split(". ").map((line) => line.trim()).filter(Boolean);
+    const title = lines[0]?.slice(0, 80) || `${baseTitle} section ${sectionIndex + 1}`;
 
     return {
       id: `doc-${docIndex}-${sectionIndex}`,

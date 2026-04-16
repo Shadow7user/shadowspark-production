@@ -47,6 +47,16 @@ export type VaultSignalBrief = {
   heroSupportLine: string | null;
 };
 
+export function cleanSignalText(text: string) {
+  return text
+    .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_#>`~-]+/g, " ")
+    .replace(/https?:\/\/\S+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function normalizeSlug(slug: string) {
   return slug.trim().toLowerCase();
 }
@@ -141,7 +151,7 @@ async function loadLatestVaultIndex() {
 }
 
 function scoreChunk(text: string, tokens: string[], slug: string) {
-  const normalizedText = text.toLowerCase();
+  const normalizedText = cleanSignalText(text).toLowerCase();
   let score = 0;
 
   for (const token of tokens) {
@@ -158,12 +168,12 @@ function scoreChunk(text: string, tokens: string[], slug: string) {
 }
 
 function buildExcerpt(text: string) {
-  const normalized = text.replace(/\s+/g, " ").trim();
+  const normalized = cleanSignalText(text);
   return normalized.length > 220 ? `${normalized.slice(0, 217)}...` : normalized;
 }
 
 function countMatches(text: string, keywords: readonly string[]) {
-  const normalized = text.toLowerCase();
+  const normalized = cleanSignalText(text).toLowerCase();
   return keywords.reduce((sum, keyword) => sum + (normalized.includes(keyword) ? 1 : 0), 0);
 }
 
@@ -192,7 +202,8 @@ export function deriveVaultSignalBrief(
 ): VaultSignalBrief {
   const proofKeywords = ["result", "client", "revenue", "growth", "conversion", "proof", "trusted"];
   const objectionKeywords = ["slow", "manual", "friction", "delay", "drop", "leak", "bottleneck"];
-  const ctaKeywords = ["book", "call", "demo", "contact", "whatsapp", "quote", "start"];
+  const ctaKeywords = ["book", "call", "demo", "contact", "whatsapp", "quote", "pricing", "get started"];
+  const strongCtaKeywords = ["book", "demo", "contact", "quote", "pricing", "get started"];
 
   const proofScore = insights.reduce(
     (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, proofKeywords),
@@ -206,15 +217,19 @@ export function deriveVaultSignalBrief(
     (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, ctaKeywords),
     0
   );
+  const strongCtaScore = insights.reduce(
+    (sum, insight) => sum + countMatches(`${insight.title} ${insight.excerpt}`, strongCtaKeywords),
+    0
+  );
 
   const layout: VaultLayoutMode =
-    proofScore >= objectionScore && proofScore >= ctaScore && proofScore > 0
+    strongCtaScore > 0 && ctaScore >= proofScore && ctaScore >= objectionScore
+      ? "cta-comparison"
+      : proofScore >= objectionScore && proofScore >= 2
       ? "proof-heavy"
-      : objectionScore >= ctaScore && objectionScore > 0
+      : objectionScore >= 2
         ? "objection-handling"
-        : ctaScore > 0
-          ? "cta-comparison"
-          : "audit-summary";
+        : "audit-summary";
 
   const proofLine = strongestLine(insights, proofKeywords, (insight) =>
     `${businessName} has a clear proof angle: ${buildExcerpt(insight.excerpt)}`
@@ -296,10 +311,14 @@ export function rankSignalChunks(args: {
 
   return args.chunks
     .map((chunk) => ({
-      chunk,
+      chunk: {
+        ...chunk,
+        title: chunk.title ? cleanSignalText(chunk.title) : undefined,
+        text: cleanSignalText(chunk.text),
+      },
       score: scoreChunk(`${chunk.title ?? ""}\n${chunk.text}`, queryTokens, slug),
     }))
-    .filter((entry) => entry.score > 0)
+    .filter((entry) => entry.score > 0 && entry.chunk.text.length > 80)
     .sort((left, right) => right.score - left.score)
     .slice(0, args.k ?? 4)
     .map((entry) => ({
