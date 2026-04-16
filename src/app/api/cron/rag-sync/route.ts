@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { auth } from "@/auth";
 import { enqueueCrawl } from "@/lib/crawl/queue";
 
 export const runtime = "nodejs";
@@ -15,7 +16,11 @@ export async function POST(req: Request) {
 async function handleRequest(req: Request) {
   const authHeader = (req.headers.get("authorization") || "").trim();
   const secret = (process.env.CRON_SECRET || "").trim();
-  if (!secret || authHeader !== "Bearer " + secret) {
+  const session = await auth();
+  const isAdmin = session?.user?.role === "admin";
+  const hasCronSecret = Boolean(secret) && authHeader === `Bearer ${secret}`;
+
+  if (!hasCronSecret && !isAdmin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -43,4 +48,3 @@ async function handleRequest(req: Request) {
   
   return NextResponse.json({ success: true, jobId: job.id, rootUrl, slug });
 }
-

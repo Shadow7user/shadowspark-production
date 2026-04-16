@@ -460,6 +460,11 @@ export async function fetchLatestAuditMarkdown(slug: string): Promise<string> {
   const bucket = storage.bucket(getBucketName());
 
   try {
+    const canonicalLatest = await readBucketFile(`audits/${normalizedSlug}/latest.md`);
+    if (canonicalLatest) {
+      return canonicalLatest;
+    }
+
     const candidateFiles = await Promise.all(
       PREFIX_CANDIDATES.map(async (rootPrefix) => {
         const slugPrefix = rootPrefix ? `${rootPrefix}/${normalizedSlug}` : normalizedSlug;

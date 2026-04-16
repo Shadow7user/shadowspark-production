@@ -467,7 +467,7 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                 </div>
               ) : (
                 <p className="mt-5 text-sm leading-7 text-slate-300">
-                  The demo page is ready to read `indexes/latest.json` from the vault as soon as the
+                  The demo page is ready to read `indexes/${slug}/latest.json` from the vault as soon as the
                   crawl pipeline publishes one. Until then, the markdown stream remains the source of truth.
                 </p>
               )}
@@ -543,10 +543,10 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
               </p>
               <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
                 <li className="list-inside list-disc marker:text-cyan-300">
-                  Reads from <code>shadowspark-vault</code> by slug-aware prefix.
+                  Reads canonical audit markdown from <code>audits/{slug}/latest.md</code>.
                 </li>
                 <li className="list-inside list-disc marker:text-cyan-300">
-                  Falls back to a structured markdown shell if a fresh audit has not landed yet.
+                  Reads indexed signals from <code>indexes/{slug}/latest.json</code> with a global fallback.
                 </li>
                 <li className="list-inside list-disc marker:text-cyan-300">
                   Keeps the assistant bubble available for live follow-up questions while reviewing.
