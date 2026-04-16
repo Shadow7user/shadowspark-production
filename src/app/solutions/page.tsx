@@ -273,19 +273,35 @@ export default function SolutionsPage() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.4 }}
             >
-              <AppleCardsCarousel
-                items={layers.map((layer) => ({
-                  id: layer.id,
-                  title: layer.title,
-                  category: layer.step,
-                  summary: layer.solution,
-                  outcome: layer.outcome,
-                  accent: layer.accent,
-                  icon: layer.icon,
-                }))}
-                activeId={activeLayerId}
-                onSelect={setActiveLayerId}
-              />
+              <div className="relative w-full overflow-hidden rounded-[2.2rem]">
+                {/* The Veo Video Background */}
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="absolute top-0 left-0 w-full h-full object-cover opacity-30 z-0 pointer-events-none"
+                >
+                  <source src="/sovereign_manifesto.mp4" type="video/mp4" />
+                </video>
+
+                {/* Your content (Apple Cards, Bento Grid, etc) sits on top here */}
+                <div className="relative z-10">
+                  <AppleCardsCarousel
+                    items={layers.map((layer) => ({
+                      id: layer.id,
+                      title: layer.title,
+                      category: layer.step,
+                      summary: layer.solution,
+                      outcome: layer.outcome,
+                      accent: layer.accent,
+                      icon: layer.icon,
+                    }))}
+                    activeId={activeLayerId}
+                    onSelect={setActiveLayerId}
+                  />
+                </div>
+              </div>
             </motion.div>
 
             <motion.div

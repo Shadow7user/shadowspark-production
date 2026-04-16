@@ -5,6 +5,9 @@ RUN apk add --no-cache libc6-compat openssl
 
 WORKDIR /app
 
+# IMPORTANT: disable Prisma completely for worker globally
+ENV SKIP_PRISMA=true
+
 # ---------- Dependencies ----------
 FROM base AS deps
 
