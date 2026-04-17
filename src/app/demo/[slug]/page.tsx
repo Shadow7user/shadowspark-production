@@ -3,6 +3,7 @@ import Link from "next/link";
 import AssistantBubble from "@/components/ui/AssistantBubble";
 import { BrowserWindow } from "@/components/ui/BrowserWindow";
 import { ContextualFooter } from "@/components/ui/ContextualFooter";
+import LeadBranding from "@/components/ui/LeadBranding";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Vortex } from "@/components/ui/vortex-background";
@@ -226,6 +227,10 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
     ["companyName", "businessName", "name", "businessType"],
     prettifySlug(slug) || "ShadowSpark Prospect"
   );
+  
+  const rawUrl = pickFirstString(miniAuditData, ["rootUrl", "website", "url"], "");
+  const domain = rawUrl ? rawUrl.replace(/https?:\/\//, '').split('/')[0] : slug.replace('demo-', '');
+  
   const niche = pickFirstString(
     miniAuditData,
     ["niche", "businessType", "goals"],
@@ -285,7 +290,10 @@ export default async function DemoPreviewPage({ params }: DemoPageProps) {
                 <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.9)]" />
                 Live GCS Intelligence Feed
               </div>
-              <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl">
+              <div className="mt-8 mb-4 max-w-sm">
+                <LeadBranding domain={domain} />
+              </div>
+              <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl">
                 {businessName}
                 <span className="mt-3 block text-balance text-cyan-200/85">
                   Decision-grade audit rendered from the latest cloud intelligence snapshot.
