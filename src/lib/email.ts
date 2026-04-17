@@ -1,10 +1,17 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export async function sendWelcomeEmail(email: string, businessName: string, demoSlug: string) {
-  const baseUrl = process.env.NEXTAUTH_URL || 'https://shadowspark-tech.org';
-  const demoUrl = `${baseUrl}/demo/${demoSlug}`;
+  if (!resend) {
+    console.warn('[Email] RESEND_API_KEY is missing. Skipping welcome email.');
+    return null;
+  }
+
+  // Support Vercel deployments and custom cloud run URLs
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://shadowspark-tech.org';
+  const demoUrl = `${baseUrl.replace(/\/$/, '')}/demo/${demoSlug}`;
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; max-w: 600px; margin: 0 auto; padding: 20px; background-color: #0A0A0A; color: #E4E4E7; border: 1px solid #27272A; border-radius: 12px;">
@@ -54,3 +61,4 @@ export async function sendWelcomeEmail(email: string, businessName: string, demo
     return null;
   }
 }
+
