@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { enqueueCrawl } from "@/lib/crawl/queue";
+import { sendWelcomeEmail } from "@/lib/email";
 
 async function notifySlack(message: string) {
   const url = process.env.SLACK_WEBHOOK_URL;
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   const event = JSON.parse(body);
 
   if (event.event === "charge.success") {
-    const { reference, metadata } = event.data;
+    const { reference, metadata, customer } = event.data;
     
     // Extract leadId whether it's root level or nested in custom_fields
     let leadId = metadata?.leadId;
@@ -87,9 +88,10 @@ export async function POST(req: Request) {
         }),
       ]);
 
+      const audit = (lead.miniAuditData as any) || {};
+
       // Fire-and-forget crawl trigger
       try {
-        const audit = (lead.miniAuditData as any) || {};
         const rootUrl = audit.rootUrl || audit.website || audit.url;
         
         if (rootUrl) {
@@ -106,8 +108,14 @@ export async function POST(req: Request) {
         console.error("[Paystack Webhook] Failed to enqueue automated crawl:", crawlErr);
       }
 
-      // Fire-and-forget notification
-      const audit = (lead.miniAuditData as any) || {};
+      // Fire-and-forget customer welcome email
+      if (customer?.email) {
+        sendWelcomeEmail(customer.email, audit.companyName || "", demo.slug).catch(err => {
+          console.error("[Paystack Webhook] Failed to send welcome email:", err);
+        });
+      }
+
+      // Fire-and-forget internal Slack notification
       notifySlack(
         `🚀 *New ShadowSpark Sale!*\n*Lead:* ${lead.phoneNumber}\n*Business:* ${audit.companyName || 'Unknown'}\n*Amount:* $10 (Demo Fee)\n*Approve now:* ${process.env.NEXTAUTH_URL || 'https://shadowspark-tech.org'}/operator`
       );
