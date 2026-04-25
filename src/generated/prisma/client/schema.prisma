@@ -1,0 +1,183 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma/client"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+model Lead {
+  id             String       @id @default(cuid())
+  phoneNumber    String?      @unique
+  email          String?      @unique
+  intent         String?
+  status         String
+  leadScore      Int?
+  tier           String?
+  lastMessage    String?
+  nextFollowUpAt DateTime?
+  metadata       Json?
+  termsAccepted  Boolean      @default(false)
+  miniAuditData  Json?
+  paymentRef     String?
+  demoApproved   Boolean      @default(false)
+  demoScheduled  Boolean      @default(false)
+  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime     @default(now())
+  demo           Demo?
+  emailEvents    EmailEvent[]
+  payments       Payment[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  role      String?  @default("user")
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  amount    Int
+  status    String   @default("pending")
+  reference String   @unique
+  leadId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lead      Lead     @relation(fields: [leadId], references: [id])
+}
+
+model Demo {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  leadId    String   @unique
+  config    Json?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lead      Lead     @relation(fields: [leadId], references: [id])
+}
+
+model SystemEvent {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  digest    String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model SniperTarget {
+  id             String    @id @default(cuid())
+  source         String
+  domain         String
+  companyName    String
+  firstName      String?
+  email          String?
+  linkedinUrl    String?
+  signal         String?
+  status         String    @default("new")
+  generatedDraft String?
+  draftEmail     String?
+  sentAt         DateTime?
+  lastAttemptAt  DateTime?
+  attemptCount   Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([domain])
+  @@index([status])
+}
+
+model EmailEvent {
+  id        String   @id @default(cuid())
+  leadId    String
+  type      String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id])
+}
+
+model KnowledgeEmbedding {
+  id        String                @id @default(cuid())
+  source    String
+  url       String?
+  embedding Unsupported("vector")
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  chunkId   Int                   @unique
+  text      String
+  type      String
+  metadata  Json?
+}
+
+model Embedding {
+  id        String   @id @default(cuid())
+  content   String
+  embedding Float[]
+  source    String
+  type      String
+  createdAt DateTime @default(now())
+}
+
+// --- HARDENED FINANCIAL CORE ---
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum TransactionStatus {
+  PENDING
+  POSTED
+  FAILED
+  REVERSED
+}
+
+enum EntryDirection {
+  DEBIT
+  CREDIT
+}
+
+model Account {
+  id        String        @id @default(uuid())
+  name      String
+  type      AccountType
+  currency  String        @default("NGN")
+  metadata  Json?
+  entries   LedgerEntry[]
+  createdAt DateTime      @default(now())
+}
+
+model LedgerTransaction {
+  id             String            @id @default(uuid())
+  idempotencyKey String            @unique
+  status         TransactionStatus @default(PENDING)
+  description    String
+  reference      String?
+  metadata       Json?
+  entries        LedgerEntry[]
+  createdAt      DateTime          @default(now())
+}
+
+model LedgerEntry {
+  id            String            @id @default(uuid())
+  transactionId String
+  transaction   LedgerTransaction @relation(fields: [transactionId], references: [id])
+  accountId     String
+  account       Account           @relation(fields: [accountId], references: [id])
+  amount        BigInt
+  direction     EntryDirection
+  createdAt     DateTime          @default(now())
+
+  @@index([accountId])
+  @@index([transactionId])
+}

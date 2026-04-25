@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma/client"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma/client"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 model Lead {
@@ -99,4 +101,83 @@ model EmailEvent {
   metadata  Json?
   createdAt DateTime @default(now())
   lead      Lead     @relation(fields: [leadId], references: [id])
+}
+
+model KnowledgeEmbedding {
+  id        String                @id @default(cuid())
+  source    String
+  url       String?
+  embedding Unsupported("vector")
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  chunkId   Int                   @unique
+  text      String
+  type      String
+  metadata  Json?
+}
+
+model Embedding {
+  id        String   @id @default(cuid())
+  content   String
+  embedding Float[]
+  source    String
+  type      String
+  createdAt DateTime @default(now())
+}
+
+// --- HARDENED FINANCIAL CORE ---
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum TransactionStatus {
+  PENDING
+  POSTED
+  FAILED
+  REVERSED
+}
+
+enum EntryDirection {
+  DEBIT
+  CREDIT
+}
+
+model Account {
+  id        String        @id @default(uuid())
+  name      String
+  type      AccountType
+  currency  String        @default("NGN")
+  metadata  Json?
+  entries   LedgerEntry[]
+  createdAt DateTime      @default(now())
+}
+
+model LedgerTransaction {
+  id             String            @id @default(uuid())
+  idempotencyKey String            @unique
+  status         TransactionStatus @default(PENDING)
+  description    String
+  reference      String?
+  metadata       Json?
+  entries        LedgerEntry[]
+  createdAt      DateTime          @default(now())
+}
+
+model LedgerEntry {
+  id            String            @id @default(uuid())
+  transactionId String
+  transaction   LedgerTransaction @relation(fields: [transactionId], references: [id])
+  accountId     String
+  account       Account           @relation(fields: [accountId], references: [id])
+  amount        BigInt
+  direction     EntryDirection
+  createdAt     DateTime          @default(now())
+
+  @@index([accountId])
+  @@index([transactionId])
 }
